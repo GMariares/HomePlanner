@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-24T11:02:54.848Z",
+  "generatedAt": "2026-08-24T11:37:34Z",
   "title": "Design System: HomePlanner",
   "extensions": {
     "colorMeta": {
@@ -22,7 +22,7 @@
       "folha": {
         "role": "neutral",
         "displayName": "Folha",
-        "purpose": "The sheet itself, one step brighter than the stock; the opening, the menu surface, text on the cover.",
+        "purpose": "The sheet itself, one step brighter than the stock; the opening, the menu surface, the label card on the cover screens, and text on the cover.",
         "tonalRamp": [
           "oklch(15% 0.002 247.9)",
           "oklch(26% 0.002 247.9)",
@@ -52,7 +52,7 @@
       "pauta-forte": {
         "role": "neutral",
         "displayName": "Pauta Forte",
-        "purpose": "The heavier printed line: day-header divider, opening border, gutter crease, scrollbar thumb.",
+        "purpose": "The heavier printed line: day-header divider, opening border, gutter crease, menu and label-card borders, the resting underline of a cover-screen field, scrollbar thumb.",
         "tonalRamp": [
           "oklch(15% 0.024 254.9)",
           "oklch(26% 0.026 254.9)",
@@ -67,7 +67,7 @@
       "impresso-tinta": {
         "role": "neutral",
         "displayName": "Tinta do Impresso",
-        "purpose": "The grey-blue the book is printed in; every printed label and date, and the recessive state.",
+        "purpose": "The grey-blue the book is printed in; every printed label and date, the field labels and always-visible placeholders on a label card, and the recessive state.",
         "tonalRamp": [
           "oklch(15% 0.037 258.8)",
           "oklch(26% 0.039 258.8)",
@@ -82,7 +82,7 @@
       "margem": {
         "role": "tertiary",
         "displayName": "Vermelho da Margem",
-        "purpose": "Correction: the margin rule, the strike on a moved entry, destructive actions, the focus ring.",
+        "purpose": "Correction and identification: the margin rule on the page and down the left of the label card, the strike on a moved entry, destructive actions, failure strips, a form's error rule, and the focus ring everywhere but the navy.",
         "tonalRamp": [
           "oklch(15% 0.136 29.7)",
           "oklch(26% 0.147 29.7)",
@@ -97,7 +97,7 @@
       "capa": {
         "role": "primary",
         "displayName": "Azul da Capa",
-        "purpose": "The cover; the header band, day names, and hover-darkened controls. Never written content.",
+        "purpose": "The cover, in both jobs: the header band, the full navy ground behind every pre-week screen, day names, the label card's title, hover-darkened controls, and the one solid button fill. Never written content.",
         "tonalRamp": [
           "oklch(15% 0.071 268.3)",
           "oklch(26% 0.076 268.3)",
@@ -112,7 +112,7 @@
       "capa-funda": {
         "role": "primary",
         "displayName": "Fundo da Capa",
-        "purpose": "The cover's deepest tone; the gradient's foot, selected text, and today's day name.",
+        "purpose": "The cover's deepest tone: the bottom of both cover gradients, the ink of today's day name, selected text, and the solid button's hover fill.",
         "tonalRamp": [
           "oklch(15% 0.049 267.1)",
           "oklch(26% 0.050 267.1)",
@@ -127,7 +127,7 @@
       "fita": {
         "role": "secondary",
         "displayName": "Ocre da Fita",
-        "purpose": "The ribbon marker. Today, and the rule under the cursor. Nothing else.",
+        "purpose": "The marker colour, one job per ground: today and the focused rule on the sheet; focus and the household's join code on the navy cover.",
         "tonalRamp": [
           "oklch(15% 0.091 78.2)",
           "oklch(26% 0.099 78.2)",
@@ -157,7 +157,7 @@
       "pai": {
         "role": "primary",
         "displayName": "Esferográfica Azul",
-        "purpose": "The father's ballpoint and the dominant written ink; also the caret and the selection tint.",
+        "purpose": "The father's ballpoint in the week and the system's writing ink everywhere: the document caret, the selection tint, and the ink and caret of every text field on the cover screens.",
         "tonalRamp": [
           "oklch(15% 0.153 267.1)",
           "oklch(26% 0.164 267.1)",
@@ -222,19 +222,23 @@
       },
       "headline": {
         "displayName": "Destaque (--t-destaque)",
-        "purpose": "The raised step: each day's lead entry, and the household name on the cover. Nothing else."
+        "purpose": "The raised step: each day's lead entry, and the household name on the cover."
       },
       "body": {
         "displayName": "A Escrita (--t-escrita)",
-        "purpose": "Everything the household writes, plus menu items and notice copy. Line-height is locked to the rule pitch."
+        "purpose": "Everything the household writes, plus menu items, cover-screen fields, explanatory copy and every failure sentence. Line-height locks to the rule pitch in the week."
       },
       "label": {
         "displayName": "O Impresso (--t-impresso)",
-        "purpose": "Everything the book arrives with: dates, the week interval, role and meal tags, the HOJE chip, menu headings."
+        "purpose": "Everything the book arrives with: dates, the week interval, role and meal tags, the HOJE chip, menu headings, the brand line and field labels on a label card, every text-underline control, and the mark opening a failure strip."
       },
       "hand": {
         "displayName": "A Mão (Caveat)",
-        "purpose": "The household's name on the cover, and nowhere else. The single permitted handwriting setting."
+        "purpose": "The household's real name on the cover, and nowhere else. The single permitted handwriting setting."
+      },
+      "title": {
+        "displayName": "O Título da Etiqueta (--t-destaque, 700)",
+        "purpose": "The one heading on a label card. Same 1.5rem step as Headline, set hard at 700/112% width — the Four Steps Rule constrains size, not setting. Measured 14.74:1 on the label."
       }
     },
     "shadows": [
@@ -252,6 +256,11 @@
         "name": "menu",
         "value": "0 12px 28px -12px rgb(14 23 48 / 0.4), 0 2px 6px -2px rgb(14 23 48 / 0.25)",
         "purpose": "The only surface in the system that genuinely floats above the page."
+      },
+      {
+        "name": "label-card",
+        "value": "0 22px 44px -26px rgb(6 10 24 / 0.75), 0 2px 0 rgb(255 255 255 / 0.5) inset",
+        "purpose": "Paper glued to a navy board: the system's only deep shadow, deep because the ground behind it is dark. The inset white line is the glue's lip."
       },
       {
         "name": "ribbon",
@@ -425,21 +434,95 @@
       "name": "Capa",
       "kind": "nav",
       "refersTo": "capa-botao",
-      "description": "The cover band: the household name in the one handwriting face on a dashed rule, the week interval printed beneath it, and three ghost controls for moving between weeks. Focus rings here are ochre, because margin red does not read on navy.",
+      "description": "The cover band: the household's real name in the one handwriting face on a dashed rule, the week interval printed beneath it, three ghost controls for moving between weeks, and — beneath them — the account row carrying the join code, the signed-in email and Sair. Focus rings here are ochre, because margin red does not read on navy. The interval and the \"Esta semana\" label carry the printed class, which is defined after every component sheet and therefore sets their colour: they render in printed ink, not in the sheet mix their own rules declare (see The Override-Last Rule).",
       "html": "<header class=\"ds-capa\"><div class=\"ds-capa-interior\"><div><input class=\"ds-capa-nome\" placeholder=\"o nome da família\" aria-label=\"Nome da família, escrito na capa\" value=\"\"><p class=\"ds-capa-intervalo\">24 – 30 de agosto de 2026</p></div><nav class=\"ds-capa-navegacao\" aria-label=\"Semanas\"><button type=\"button\" class=\"ds-capa-botao\"><svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" aria-hidden=\"true\"><path d=\"M10 3 5 8l5 5\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button><button type=\"button\" class=\"ds-capa-botao ds-capa-botao--texto\" disabled>Esta semana</button><button type=\"button\" class=\"ds-capa-botao\"><svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" aria-hidden=\"true\"><path d=\"M6 3l5 5-5 5\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button></nav></div></header>",
-      "css": ".ds-capa { background: var(--capa, #16224a); background-image: linear-gradient(180deg, color-mix(in srgb, var(--capa, #16224a) 88%, white) 0%, var(--capa, #16224a) 62%, var(--capa-funda, #0e1730) 100%); color: var(--folha, #f8fafc); padding: 1.25rem 0 1.125rem; box-shadow: 0 2px 0 color-mix(in srgb, var(--capa-funda, #0e1730) 70%, transparent), 0 10px 24px -14px rgb(14 23 48 / 0.55); font-family: Archivo, ui-sans-serif, system-ui, sans-serif; } .ds-capa-interior { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; padding-inline: clamp(1rem, 4vw, 2.5rem); } .ds-capa-nome { appearance: none; background: transparent; border: 0; border-bottom: 1px dashed color-mix(in srgb, var(--folha, #f8fafc) 32%, transparent); padding: 0 0 0.125rem; font-family: Caveat, ui-sans-serif, cursive; font-size: var(--t-destaque, 1.5rem); line-height: 1.2; color: var(--folha, #f8fafc); width: min(20ch, 60vw); border-radius: 1px; } .ds-capa-nome::placeholder { color: color-mix(in srgb, var(--folha, #f8fafc) 52%, transparent); } .ds-capa-nome:focus { outline: none; border-bottom-color: var(--fita, #c8912b); } .ds-capa-nome:focus-visible { outline: 2px solid var(--fita, #c8912b); outline-offset: 4px; } .ds-capa-intervalo { margin: 0.5rem 0 0; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; color: color-mix(in srgb, var(--folha, #f8fafc) 72%, var(--capa, #16224a)); } .ds-capa-navegacao { display: flex; align-items: center; gap: 0.375rem; } .ds-capa-botao { appearance: none; background: transparent; border: 1px solid color-mix(in srgb, var(--folha, #f8fafc) 26%, transparent); color: var(--folha, #f8fafc); border-radius: 2px; min-height: 2.25rem; min-width: 2.25rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), border-color 160ms; } .ds-capa-botao--texto { padding-inline: 0.875rem; font-family: inherit; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; color: color-mix(in srgb, var(--folha, #f8fafc) 88%, transparent); } .ds-capa-botao:hover:not(:disabled) { background: color-mix(in srgb, var(--folha, #f8fafc) 12%, transparent); border-color: color-mix(in srgb, var(--folha, #f8fafc) 44%, transparent); } .ds-capa-botao:disabled { opacity: 0.38; cursor: default; } .ds-capa-botao:focus-visible { outline: 2px solid var(--fita, #c8912b); outline-offset: 2px; }"
+      "css": ".ds-capa { background: var(--capa, #16224a); background-image: linear-gradient(180deg, color-mix(in srgb, var(--capa, #16224a) 88%, white) 0%, var(--capa, #16224a) 62%, var(--capa-funda, #0e1730) 100%); color: var(--folha, #f8fafc); padding: 1.25rem 0 1.125rem; box-shadow: 0 2px 0 color-mix(in srgb, var(--capa-funda, #0e1730) 70%, transparent), 0 10px 24px -14px rgb(14 23 48 / 0.55); font-family: Archivo, ui-sans-serif, system-ui, sans-serif; } .ds-capa-interior { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; padding-inline: clamp(1rem, 4vw, 2.5rem); } .ds-capa-nome { appearance: none; background: transparent; border: 0; border-bottom: 1px dashed color-mix(in srgb, var(--folha, #f8fafc) 32%, transparent); padding: 0 0 0.125rem; font-family: Caveat, ui-sans-serif, cursive; font-size: var(--t-destaque, 1.5rem); line-height: 1.2; color: var(--folha, #f8fafc); width: min(20ch, 60vw); border-radius: 1px; } .ds-capa-nome::placeholder { color: color-mix(in srgb, var(--folha, #f8fafc) 52%, transparent); } .ds-capa-nome:focus { outline: none; border-bottom-color: var(--fita, #c8912b); } .ds-capa-nome:focus-visible { outline: 2px solid var(--fita, #c8912b); outline-offset: 4px; } .ds-capa-intervalo { margin: 0.5rem 0 0; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; color: var(--impresso-tinta, #5a6b85); } .ds-capa-navegacao { display: flex; align-items: center; gap: 0.375rem; } .ds-capa-botao { appearance: none; background: transparent; border: 1px solid color-mix(in srgb, var(--folha, #f8fafc) 26%, transparent); color: var(--folha, #f8fafc); border-radius: 2px; min-height: 2.25rem; min-width: 2.25rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), border-color 160ms; } .ds-capa-botao--texto { padding-inline: 0.875rem; font-family: inherit; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; color: var(--impresso-tinta, #5a6b85); } .ds-capa-botao:hover:not(:disabled) { background: color-mix(in srgb, var(--folha, #f8fafc) 12%, transparent); border-color: color-mix(in srgb, var(--folha, #f8fafc) 44%, transparent); } .ds-capa-botao:disabled { opacity: 0.38; cursor: default; } .ds-capa-botao:focus-visible { outline: 2px solid var(--fita, #c8912b); outline-offset: 2px; }"
+    },
+    {
+      "name": "Portada (Cover Screen)",
+      "kind": "custom",
+      "refersTo": "portada",
+      "description": "The navy ground behind every screen that comes before the week; one object centred on it.",
+      "html": "<div class=\"ds-portada\"><p class=\"ds-portada-espera\">A abrir a caderneta…</p></div>",
+      "css": ".ds-portada{min-height:16rem;display:grid;place-items:center;padding:clamp(1rem,5vw,3rem);background:var(--capa,#16224a);background-image:radial-gradient(120% 90% at 50% -10%, color-mix(in srgb, var(--capa,#16224a) 78%, white) 0%, transparent 60%),linear-gradient(180deg,var(--capa,#16224a) 0%,var(--capa-funda,#0e1730) 100%)}.ds-portada-espera{margin:0;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;font-size:.6875rem;font-weight:600;font-stretch:112%;letter-spacing:.14em;text-transform:uppercase;color:color-mix(in srgb, var(--folha,#f8fafc) 70%, var(--capa,#16224a))}"
+    },
+    {
+      "name": "Etiqueta de Capa (Label Card)",
+      "kind": "card",
+      "refersTo": "etiqueta-capa",
+      "description": "The glued name label of a school notebook: the one container for every pre-week screen.",
+      "html": "<form class=\"ds-etiqueta\"><p class=\"ds-etiqueta-marca\">HomePlanner</p><h1 class=\"ds-etiqueta-titulo\">A semana da família</h1><p class=\"ds-etiqueta-texto\">Fica com um código de seis letras. Quem o tiver entra na mesma caderneta.</p></form>",
+      "css": ".ds-etiqueta{position:relative;box-sizing:border-box;width:min(26rem,100%);background:var(--folha,#f8fafc);border:1px solid color-mix(in srgb, var(--pauta-forte,#a5b6cc) 70%, transparent);border-radius:3px;padding:clamp(1.5rem,4vw,2rem);padding-inline-start:clamp(2.75rem,7vw,3.5rem);display:flex;flex-direction:column;gap:1rem;rotate:-.35deg;box-shadow:0 22px 44px -26px rgb(6 10 24/.75),0 2px 0 rgb(255 255 255/.5) inset;font-family:Archivo,ui-sans-serif,system-ui,sans-serif}.ds-etiqueta::before{content:\"\";position:absolute;inset-block:0;inset-inline-start:clamp(1.75rem,4.5vw,2.25rem);width:1px;background:color-mix(in srgb, var(--margem,#c0392b) 55%, transparent)}.ds-etiqueta-marca{margin:0;font-size:.6875rem;font-weight:600;font-stretch:112%;letter-spacing:.14em;text-transform:uppercase;color:var(--impresso-tinta,#5a6b85)}.ds-etiqueta-titulo{margin:0;font-size:1.5rem;font-weight:700;font-stretch:112%;letter-spacing:-.015em;line-height:1.15;color:var(--capa,#16224a)}.ds-etiqueta-texto{margin:0;font-size:1.0625rem;line-height:1.5;color:var(--impresso-tinta,#5a6b85)}"
+    },
+    {
+      "name": "Campo (Cover-Screen Field)",
+      "kind": "input",
+      "refersTo": "campo-escrita",
+      "description": "A printed name over a ruled line. No box: the underline is the field, and the value is written in the blue pen.",
+      "html": "<label class=\"ds-campo\"><span class=\"ds-campo-nome\">Nome da família</span><input class=\"ds-campo-escrita\" placeholder=\"os Silva\"></label>",
+      "css": ".ds-campo{display:flex;flex-direction:column;gap:.25rem;font-family:Archivo,ui-sans-serif,system-ui,sans-serif}.ds-campo-nome{font-size:.6875rem;font-weight:600;font-stretch:112%;letter-spacing:.14em;text-transform:uppercase;color:var(--impresso-tinta,#5a6b85)}.ds-campo-escrita{appearance:none;background:transparent;border:0;border-bottom:1px solid var(--pauta-forte,#a5b6cc);border-radius:1px;padding:.25rem 0 .375rem;font:inherit;font-size:1.0625rem;color:var(--pai,#2440b0);caret-color:var(--pai,#2440b0)}.ds-campo-escrita::placeholder{color:var(--impresso-tinta,#5a6b85)}.ds-campo-escrita:focus{outline:none;border-bottom-color:var(--pai,#2440b0)}.ds-campo-escrita:focus-visible{outline:2px solid var(--margem,#c0392b);outline-offset:3px}"
+    },
+    {
+      "name": "Campo de Código",
+      "kind": "input",
+      "refersTo": "campo-escrita-codigo",
+      "description": "The six-letter join code, at the title step and widely tracked: six letters read as a serial number.",
+      "html": "<label class=\"ds-campo\"><span class=\"ds-campo-nome\">Código da casa</span><input class=\"ds-campo-escrita ds-campo-codigo\" placeholder=\"ABC234\" maxlength=\"6\"></label>",
+      "css": ".ds-campo-codigo{font-size:1.5rem;letter-spacing:.22em;text-transform:uppercase;font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Botão de Capa (Solid Button)",
+      "kind": "button",
+      "refersTo": "botao-capa",
+      "description": "The one filled button in the system, and at most one per screen. Everything else is a text-underline.",
+      "html": "<button class=\"ds-botao-capa\">Abrir a caderneta</button>",
+      "css": ".ds-botao-capa{appearance:none;border:0;border-radius:2px;background:var(--capa,#16224a);color:var(--folha,#f8fafc);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;font-size:1.0625rem;font-weight:600;min-height:2.875rem;width:100%;cursor:pointer;transition:background-color 160ms cubic-bezier(.16,1,.3,1)}.ds-botao-capa:hover:not(:disabled){background:var(--capa-funda,#0e1730)}.ds-botao-capa:focus-visible{outline:2px solid var(--margem,#c0392b);outline-offset:2px;border-radius:1px}.ds-botao-capa:disabled{opacity:.55;cursor:default}"
+    },
+    {
+      "name": "Botão de Linha (Text-Underline)",
+      "kind": "button",
+      "refersTo": "botao-linha",
+      "description": "Every secondary action in the application: printed caps with a 1px underline, no box at all.",
+      "html": "<button class=\"ds-botao-linha\">Já tenho conta</button>",
+      "css": ".ds-botao-linha{appearance:none;background:none;border:0;padding:0;align-self:flex-start;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;font-size:.6875rem;font-weight:600;font-stretch:112%;letter-spacing:.14em;text-transform:uppercase;color:var(--impresso-tinta,#5a6b85);border-bottom:1px solid currentColor;cursor:pointer}.ds-botao-linha:hover{color:var(--capa,#16224a)}.ds-botao-linha:focus-visible{outline:2px solid var(--margem,#c0392b);outline-offset:2px}"
+    },
+    {
+      "name": "Recado de Erro",
+      "kind": "custom",
+      "refersTo": "recado-erro",
+      "description": "A form's failure, in Portuguese and naming the recovery. A red left rule, never a box or a toast.",
+      "html": "<p class=\"ds-recado-erro\" role=\"alert\">Falta confirmar o email. Veja a caixa de entrada — a mensagem tem um link.</p>",
+      "css": ".ds-recado-erro{margin:0;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;font-size:1.0625rem;line-height:1.45;color:var(--margem,#c0392b);border-left:1px solid var(--margem,#c0392b);padding-inline-start:.625rem}"
+    },
+    {
+      "name": "Faixa de Falha",
+      "kind": "custom",
+      "refersTo": "falha",
+      "description": "A named data-layer state printed above the opening: a tracked mark, then a sentence saying what happened to what is written.",
+      "html": "<p class=\"ds-falha\" role=\"status\"><span class=\"ds-falha-marca\">Não guardado</span><span>Alguma coisa não chegou ao servidor. O que está escrito continua aqui, mas pode não estar na caderneta dos outros.</span></p>",
+      "css": ".ds-falha{max-width:82rem;margin:.75rem auto 0;padding:.625rem clamp(.75rem,4vw,2.5rem);display:flex;align-items:baseline;gap:.625rem;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;font-size:1.0625rem;color:var(--margem,#c0392b)}.ds-falha-marca{flex:none;font-size:.6875rem;font-weight:600;font-stretch:112%;letter-spacing:.14em;text-transform:uppercase;color:var(--impresso-tinta,#5a6b85);border-bottom:1.5px solid currentColor}"
+    },
+    {
+      "name": "Código da Casa",
+      "kind": "chip",
+      "refersTo": "capa-codigo",
+      "description": "The join code on the navy cover, in ribbon ochre — the cover's one accent, marking the one thing on it that is unique to this household.",
+      "html": "<p class=\"ds-capa-conta\"><span>Código <strong class=\"ds-capa-codigo\">ABC234</strong></span><span class=\"ds-capa-email\">alguem@exemplo.pt</span><button class=\"ds-capa-sair\">Sair</button></p>",
+      "css": ".ds-capa-conta{margin:0;padding:1rem;background:var(--capa,#16224a);display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;justify-content:flex-end;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;font-size:.6875rem;font-weight:600;font-stretch:112%;letter-spacing:.14em;text-transform:uppercase;color:var(--impresso-tinta,#5a6b85)}.ds-capa-codigo{color:var(--fita,#c8912b);letter-spacing:.16em;font-weight:700}.ds-capa-email{max-width:14ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ds-capa-sair{appearance:none;background:none;border:0;padding:0;font:inherit;color:inherit;border-bottom:1px solid currentColor;cursor:pointer}.ds-capa-sair:hover{color:var(--folha,#f8fafc)}"
     }
   ],
   "narrative": {
     "northStar": "A Caderneta",
-    "overview": "The Portuguese school agenda, opened flat to this week. Everything the application provides is printed — day names, rules, dates, the red margin, the role tags. Everything the household provides is written — each member's own pen, sitting on the rule. Those two registers carry the whole identity, and they never mix. Nothing else in this system is load-bearing: no texture, no skeuomorphic paper photograph, no drop-shadowed cards pretending to be sheets. The book is conveyed by the rule pitch, the margin, the gutter and the ribbon, and by nothing else.\n\nThe paper is cool, not cream. The stock is a blue-grey papel field with a slightly brighter folha sheet laid on it; the covers are saturated navy. Warm parchment, lamplight and sepia are outside this world — the surface is read at 7:40am in a kitchen with sun on the screen, and the primary register has to survive that. Density is deliberately light: a household week is about ten entries, so the design refuses the seven-column hour grid that would render those ten entries as ninety percent empty scaffolding, and instead rules every day whether or not anything is on it. An empty day is not a void or an illustration; it is clear ruling, waiting.\n\nType is set at four sizes with wide jumps and nothing between them — a specimen ramp, not a smooth scale. Day names run at poster scale. Each day's lead entry is raised one step, because it is what gets read before the day name. The one handwriting face in the entire application is the household's own name on the cover, the way a name label is written on a school book; every other written thing is carried by ink colour and by the baseline sitting on the rule, never by a script font.",
+    "overview": "The Portuguese school agenda, opened flat to this week. Everything the application provides is *printed* — day names, rules, dates, the red margin, the role tags, the field labels. Everything the household provides is *written* — each member's own pen, sitting on the rule. Those two registers carry the whole identity, and they never mix. Nothing else in this system is load-bearing: no texture, no skeuomorphic paper photograph, no drop-shadowed cards pretending to be sheets. The book is conveyed by the rule pitch, the margin, the gutter and the ribbon, and by nothing else.\n\nThe world has exactly two grounds, and they are the two faces of one object. The **cover** is saturated navy: the header band on the week, and the full-bleed field behind every screen that comes before the week. The **sheet** is a cool blue-grey `papel` stock with a slightly brighter `folha` sheet laid on it. Warm parchment, lamplight and sepia are outside this world — the surface is read at 7:40am in a kitchen with sun on the screen, and the primary register has to survive that. Density is deliberately light: a household week is about ten entries, so the design refuses the seven-column hour grid that would render those ten entries as ninety percent empty scaffolding, and instead rules every day whether or not anything is on it. An empty day is not a void or an illustration; it is clear ruling, waiting.\n\nEverything that happens before the week — signing in, creating an account, confirming an email, opening a household, joining one with its six-letter code, and the two configuration messages the application can print about itself — happens on one recurring object: a single white name label, glued slightly crooked to the navy cover, carrying the same red margin rule as the pages inside. There is no second layout for authentication and no marketing front door. The book identifies itself the way a school notebook does, by the label on its cover.\n\nType is set at four sizes with wide jumps and nothing between them — a specimen ramp, not a smooth scale. Day names run at poster scale. Each day's lead entry is raised one step, because it is what gets read before the day name. The one handwriting face in the entire application is the household's own name on the cover, the way a name label is written on a school book; every other written thing is carried by ink colour and by the baseline sitting on the rule, never by a script font.",
     "keyCharacteristics": [
       "Two registers that never mix: printed structure versus written content.",
+      "Two grounds, one object: the navy cover and the ruled sheet.",
       "The rule pitch is the layout unit — one entry is exactly one rule.",
       "No edit mode: every entry and every blank rule is a live field.",
       "Four type sizes, wide jumps, nothing between.",
-      "Attribution is the ink and a printed role tag — never colour alone.",
+      "Attribution is the ink *and* a printed role tag — never colour alone.",
       "Completion is a stamp where the ink lands, not a checkbox in a gutter.",
+      "Every failure has a named, printed state that says what happened in plain Portuguese.",
       "One authored motion moment: the stamp press.",
       "Interface language is Portuguese (pt-PT), and so is the code — class names, custom properties and comments."
     ],
@@ -447,73 +530,89 @@
       {
         "name": "The Two Registers Rule",
         "section": "colors",
-        "body": "Printed and written never mix. A colour from the printed group (impresso-tinta, pauta, pauta-forte, capa) never carries a household entry, and a pen (pai, mae, filha, casa) never draws structure. The only sanctioned crossing is recession: a continuation of a multi-day block, or a completed task, drops from its pen to impresso-tinta — it stays readable but stops competing with what has not happened yet."
+        "body": "Printed and written never mix. A colour from the printed group (`impresso-tinta`, `pauta`, `pauta-forte`, `capa`) never carries a household entry, and a pen (`pai`, `mae`, `filha`, `casa`) never draws structure. This holds on the cover screens exactly as it holds on the page: the label above a field is printed, the value typed into it is written in `pai`. The only sanctioned crossing is recession: a continuation of a multi-day block, or a completed task, drops from its pen to `impresso-tinta` — it stays readable but stops competing with what has not happened yet."
       },
       {
         "name": "The Ink-Plus-Tag Rule",
         "section": "colors",
-        "body": "A member is never identified by colour alone. Every entry carries its author’s ink and a printed role tag in that same ink (PAI, MÃE, FILHA, TODOS, or an em dash when unassigned). Remove the tag and the attribution is gone, not merely weakened."
+        "body": "Inside the week, a member is never identified by colour alone. Every entry carries its author's ink *and* a printed role tag in that same ink (`PAI`, `MÃE`, `FILHA`, `TODOS`, or an em dash when unassigned). Remove the tag and the attribution is gone, not merely weakened."
       },
       {
         "name": "The One Ribbon Rule",
         "section": "colors",
-        "body": "fita marks today and the line under the cursor, and nothing else. It is never a general accent, a button fill, or a highlight for importance."
+        "body": "`fita` is the marker colour, and it marks one thing per ground. On the sheet: today, and the line under the cursor. On the navy cover: focus, and the join code. It is never a general accent, a button fill, or a highlight for importance, and it never appears twice on the same ground for two different reasons."
       },
       {
         "name": "The Four Steps Rule",
         "section": "typography",
-        "body": "There are four sizes — 0.6875 / 1.0625 / 1.5 / 2.5rem, with mobile substitutions — and nothing lives between one step and the next. A new element takes an existing step or it does not ship. No intermediate size, no smooth ramp, no clamp() on type."
+        "body": "There are four sizes — 0.6875 / 1.0625 / 1.5 / 2.5rem, with mobile substitutions — and nothing lives between one step and the next. A new element takes an existing step or it does not ship. Weight, width, tracking and case may differ freely within a step (Headline and Title are the same 1.5rem, set differently); the size may not. No intermediate size, no smooth ramp, no `clamp()` on type."
       },
       {
         "name": "The Fixed Time Column Rule",
         "section": "typography",
-        "body": "The time is bound to --t-escrita at doubled specificity (.escrita.escrita--hora) precisely so it does not rise with a raised lead row. Its column has a fixed width; letting the time scale overflows it. Any value that lives in a fixed-width column must be pinned the same way."
+        "body": "The time is bound to `--t-escrita` at doubled specificity (`.escrita.escrita--hora`) precisely so it does *not* rise with a raised lead row. Its column has a fixed width; letting the time scale overflows it. Any value that lives in a fixed-width column must be pinned the same way."
       },
       {
         "name": "The One Hand Rule",
         "section": "typography",
-        "body": "Caveat appears on the cover name and nowhere else. Written content is carried by ink, weight and the baseline on the rule — a script face across the entries is costume, and it costs legibility on the device that matters most."
+        "body": "Caveat appears on the cover name and nowhere else — not on the label card, whose title is Archivo. Written content is carried by ink, weight and the baseline on the rule; a script face across the entries is costume, and it costs legibility on the device that matters most."
       },
       {
         "name": "The One Rule, One Entry Rule",
         "section": "layout",
-        "body": "An entry occupies exactly one rule pitch, or a whole number of them. Nothing sits between rules, nothing straddles a rule, and no element introduces a height that is not a multiple of --pauta-passo."
+        "body": "An entry occupies exactly one rule pitch, or a whole number of them. Nothing sits between rules, nothing straddles a rule, and no element introduces a height that is not a multiple of `--pauta-passo`."
+      },
+      {
+        "name": "The One Label Rule",
+        "section": "layout",
+        "body": "Every screen that is not the week is the same navy ground with the same white label card on it — sign in, create account, confirm your email, open a household, join a household, missing configuration, missing migration. A new pre-week screen is new copy inside that card, never a new layout. The single exception is the loading phase, which prints one tracked line straight onto the navy and shows no card at all, because a card that appears and is then replaced is a flash, not a state."
       },
       {
         "name": "The Override-Last Rule",
         "section": "layout",
-        "body": "In these stylesheets a declaration only counts if nothing at equal specificity overrides it later. This build shipped four dead rules before they were caught: a token declared above the media query that redefined it, a raised-row rule written before the base row rule that beat it, and two colour rules that could never win against an inline style. Three consequences are load-bearing and are commented in place: .linha’s base declarations come before .linha--destaque; .escrita.escrita--hora doubles its specificity on purpose; and text ink is passed as an inline style from the component rather than declared in CSS. Before adding a rule, check what follows it — and prefer to delete a rule that cannot win over leaving it as decoration."
+        "body": "In these stylesheets a declaration only counts if nothing at equal specificity overrides it later — and an inline `style` prop in a component beats every one of them. This build shipped four dead rules before they were caught: a token declared above the media query that redefined it, a raised-row rule written before the base row rule that beat it, and two colour rules that could never win against an inline `style`. Three consequences are load-bearing and are commented in place: `.linha`'s base declarations come *before* `.linha--destaque`; `.escrita.escrita--hora` doubles its specificity on purpose; and text ink is passed as an inline `style` from the component rather than declared in CSS (the row's ink, the row tag, the writing field, and a coloured menu option all take their colour that way). Two orderings in the current build follow from the same rule and are worth knowing before editing: `.impresso` is defined after every component sheet, so any element carrying that class takes printed ink no matter what colour its own class declares; and any element that needs a different colour while printed must win on specificity or state (`:hover`, `:disabled`), not on being written later in its own file. Before adding a rule, check what follows it — and prefer to delete a rule that cannot win over leaving it as decoration."
       },
       {
         "name": "The Flat Page Rule",
         "section": "elevation",
-        "body": "Nothing in the opening is elevated. A row, a tag, a stamp and a blank rule all sit in the paper. If a new element wants a shadow, it needs a physical justification in the book — an edge, a crease, or a thing genuinely lying on top."
+        "body": "Nothing in the opening is elevated. A row, a tag, a stamp and a blank rule all sit in the paper. If a new element wants a shadow, it needs a physical justification in the book — an edge, a crease, a glued label, or a thing genuinely lying on top."
+      },
+      {
+        "name": "The Named State Rule",
+        "section": "components",
+        "body": "Every way this application can fail has a designed state with a Portuguese name printed on it, and that state says what happened and what to do next. There is no spinner standing in for a failure, no raw provider error on screen, and no silent retry: missing configuration prints the two variables to set, a missing migration prints the file to run, a lost connection says which copy you are reading, and a failed save says where what you wrote still lives. Adding a way to fail means adding its strip and its Portuguese sentence."
       }
     ],
     "dos": [
-      "Do keep the two registers separate. Structure is printed (impresso-tinta, tracked Archivo caps at --t-impresso); household content is written, in its author’s pen.",
+      "Do keep the two registers separate, on the label as on the page. Structure is printed (`impresso-tinta`, tracked Archivo caps at `--t-impresso`); household content is written, in its author's pen.",
       "Do give every entry both its ink and its printed role tag. Colour alone is not attribution.",
-      "Do size everything in whole rule pitches (--pauta-passo), and let a long entry wrap onto the next rule rather than stretch its own.",
+      "Do size everything in whole rule pitches (`--pauta-passo`), and let a long entry wrap onto the next rule rather than stretch its own.",
       "Do render a day's rules whether or not anything is on it, and keep at least one blank, writable rule below the last entry.",
-      "Do make every entry editable exactly where it sits.",
+      "Do make every entry editable exactly where it sits, and write it to the page before writing it to the network.",
       "Do restyle a row in place when its state changes — struck and rewritten when moved, stamped when done — and keep the old line visible.",
+      "Do put any new pre-week screen inside the label card, in its existing order: printed line, title, fields, error, solid button, text-underline alternatives.",
+      "Do give every failure a printed mark and a Portuguese sentence that names the recovery, per The Named State Rule.",
       "Do take one of the four type steps, or do not ship the element.",
       "Do pin any value in a fixed-width column to its own size at doubled specificity, so a raised row cannot overflow it.",
-      "Do check what follows a new rule in the stylesheet before trusting it, per The Override-Last Rule.",
-      "Do write new code in the same Portuguese vocabulary the build uses — linha, pauta, escrita, impresso, carimbo, fita. It is the project’s language, not an accident."
+      "Do check what follows a new rule in the stylesheet — and whether a component passes an inline `style` — before trusting it, per The Override-Last Rule.",
+      "Do write new code in the same Portuguese vocabulary the build uses — `linha`, `pauta`, `escrita`, `impresso`, `carimbo`, `fita`, `portada`, `etiqueta`, `recado`. It is the project's language, not an accident."
     ],
     "donts": [
-      "Don’t introduce an edit mode, a save button, or a modal for editing an entry.",
-      "Don’t build an hour grid. The week is ruled lines, not a seven-column timetable.",
-      "Don’t put a checkbox in the margin gutter or a checkmark glyph anywhere. Completion is the VISTO stamp, in the column where the ink lands.",
-      "Don’t use a pen colour (pai, mae, filha, casa) for structure, or printed ink for a live entry — the one sanctioned crossing is recession for continuations and completed tasks.",
-      "Don’t spend fita on anything but today and the focused rule.",
-      "Don’t set household content in Caveat. The hand face belongs to the cover name only.",
-      "Don’t add a paper photo-texture, a cream or parchment ground, or a warm lamplight cast. This paper is cool and slightly blue.",
-      "Don’t add elevation tiers or hover lifts. Nothing in the opening floats except the menu.",
-      "Don’t add a second motion moment. The stamp press is the one authored animation, and it fires on the act of stamping, not on render.",
-      "Don’t introduce a type size between the four steps, or a fluid clamp() on type.",
-      "Don’t ship English in the interface, and don’t ship invented household data as real — sample content states that it is sample content."
+      "Don't introduce an edit mode, a save button, or a modal for editing an entry.",
+      "Don't build an hour grid. The week is ruled lines, not a seven-column timetable.",
+      "Don't put a checkbox in the margin gutter or a checkmark glyph anywhere. Completion is the `VISTO` stamp, in the column where the ink lands.",
+      "Don't use a pen colour (`pai`, `mae`, `filha`, `casa`) for structure, or printed ink for a live entry — the one sanctioned crossing is recession for continuations and completed tasks.",
+      "Don't spend `fita` on more than one thing per ground: today and the focused rule on the sheet, focus and the join code on the navy.",
+      "Don't set household content in Caveat. The hand face belongs to the cover name only.",
+      "Don't give a cover screen its own layout, split panel, illustration or marketing header. It is the label card on the navy ground.",
+      "Don't add a second solid button to a screen. One `botao-capa`; every other action is a text-underline.",
+      "Don't add a paper photo-texture, a cream or parchment ground, or a warm lamplight cast. This paper is cool and slightly blue.",
+      "Don't add elevation tiers or hover lifts. Nothing in the opening floats except the menu.",
+      "Don't rotate anything structural. Rotation means a person put it there — the stamp and the glued label, and nothing else.",
+      "Don't add a second motion moment. The stamp press is the one authored animation, and it fires on the act of stamping, not on render.",
+      "Don't introduce a type size between the four steps, or a fluid `clamp()` on type.",
+      "Don't ship English in the interface — including a provider's error text; map it through the error dictionary first.",
+      "Don't write invented household data into a real database. The example week exists, and it is only ever written when someone asks for it."
     ]
   }
 }
