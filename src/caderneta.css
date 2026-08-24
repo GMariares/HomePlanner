@@ -388,10 +388,11 @@
     top: 0;
     opacity: 0;
     pointer-events: none;
-    background: var(--folha);
-    box-shadow: -0.875rem 0 0.75rem var(--folha);
   }
   .linha:focus-within .linha-accoes { opacity: 1; pointer-events: auto; }
+  /* O menu não tapa o que está escrito: a linha encolhe para o deixar entrar.
+     Encostava-se por cima da quantidade e da conta, e escondia dados a sério. */
+  .linha:focus-within { padding-inline-end: 1.75rem; }
 }
 
 /* uma refeição nunca tem hora: a coluna fecha e a medida cresce */
@@ -751,3 +752,84 @@
 @media (min-width: 64rem) {
   .abertura--ementa { grid-template-columns: 1fr; }
 }
+
+/* ---------------- o livro dos pratos, com casa própria ---------------- */
+.linha--prato {
+  grid-template-columns: var(--margem-x) minmax(0, 1fr) var(--qtd-x) var(--largura-accoes);
+}
+.linha--prato[data-aberto] { box-shadow: inset 2px 0 0 var(--fita); }
+.prato-conta {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0 0.25rem;
+  height: var(--pauta-passo);
+  line-height: var(--pauta-passo);
+  color: var(--impresso-tinta);
+  cursor: pointer;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.prato-conta:hover { color: var(--capa); background: color-mix(in srgb, var(--pauta) 40%, transparent); }
+
+.campo--procura { max-width: 22rem; margin-bottom: 1rem; }
+
+.livro-vazio {
+  margin: 0 0 1.25rem;
+  max-width: 46ch;
+  font-size: var(--t-escrita);
+  line-height: 1.55;
+  color: var(--impresso-tinta);
+}
+
+/* Os ingredientes são linhas da mesma página, recuadas — não outra página
+   por cima desta. Uma pauta dentro de uma pauta dá duas margens e dois ritmos. */
+.linha--dentro {
+  grid-template-columns: calc(var(--margem-x) + 1.5rem) minmax(0, 1fr) var(--qtd-x) var(--largura-accoes);
+}
+.linha--legenda .linha-corpo { align-items: center; }
+.linha--legenda .impresso { line-height: var(--pauta-passo); }
+
+/* Tirar do livro é raro e não se desfaz: pergunta-se na própria linha,
+   sem tapar a página com uma caixa. */
+.confirmar {
+  margin: 0;
+  padding: 0.625rem 0 0.625rem var(--margem-x);
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  font-size: var(--t-escrita);
+  line-height: 1.45;
+  color: var(--casa);
+  background: color-mix(in srgb, var(--margem) 7%, transparent);
+  box-shadow: inset 2px 0 0 var(--margem);
+}
+.confirmar-sim {
+  appearance: none;
+  border: 1px solid var(--margem);
+  background: none;
+  color: var(--margem);
+  border-radius: 2px;
+  padding: 0.3125rem 0.625rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.confirmar-sim:hover { background: var(--margem); color: var(--folha); }
+
+.livro-mais { padding: 0.4375rem 0.25rem; color: var(--impresso-tinta); }
+.prato-sem-livro { margin: 0.625rem 0 0; color: var(--impresso-tinta); }
+
+/* Um nome de prato muito comprido não pode esticar a tira toda. */
+.tira-prato {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+@media (max-width: 63.99rem) {
+  .tira-prato { -webkit-line-clamp: 2; }
+}
+
+/* Um livro em branco é uma página pautada à espera, como um dia sem nada. */
+.dia-corpo[data-vazio] { min-height: calc(var(--pauta-passo) * 4); }

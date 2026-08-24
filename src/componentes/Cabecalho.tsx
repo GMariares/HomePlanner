@@ -9,12 +9,14 @@ import { Anterior, Seguinte } from './Icones'
  * uma letra de mão — como a etiqueta escrita à mão num caderno da escola.
  * Agora é o nome da casa a sério, partilhado por quem lá vive.
  */
-export function Cabecalho({ casa, email, inicio, aoRecuar, aoAvancar, aoHoje, naSemanaCorrente, aoSair, vista, aoTrocarDeVista }: {
+export function Cabecalho({ casa, email, inicio, aoRecuar, aoAvancar, aoHoje, naSemanaCorrente, aoSair, vista, aoTrocarDeVista, semSemana }: {
   casa: Casa
   email: string
   /** Que aba está aberta. As abas são as do polegar, no impresso. */
-  vista: 'semana' | 'ementa'
-  aoTrocarDeVista: (v: 'semana' | 'ementa') => void
+  vista: 'semana' | 'ementa' | 'livro'
+  aoTrocarDeVista: (v: 'semana' | 'ementa' | 'livro') => void
+  /** O livro não é de nenhuma semana: nessa aba a navegação por semanas sai. */
+  semSemana?: boolean
   inicio: Date
   aoRecuar: () => void
   aoAvancar: () => void
@@ -48,7 +50,7 @@ export function Cabecalho({ casa, email, inicio, aoRecuar, aoAvancar, aoHoje, na
             aria-label="Nome da família, escrito na capa"
             maxLength={32}
           />
-          <p className="capa-intervalo impresso">{intervalo(inicio)}</p>
+          {!semSemana && <p className="capa-intervalo impresso">{intervalo(inicio)}</p>}
         </div>
 
         <nav className="abas" aria-label="Secções da caderneta">
@@ -68,9 +70,18 @@ export function Cabecalho({ casa, email, inicio, aoRecuar, aoAvancar, aoHoje, na
           >
             Ementa e compras
           </button>
+          <button
+            type="button"
+            className="aba impresso"
+            aria-current={vista === 'livro' || undefined}
+            onClick={() => aoTrocarDeVista('livro')}
+          >
+            O livro
+          </button>
         </nav>
 
         <div className="capa-lado">
+          {!semSemana && (
           <nav className="capa-navegacao" aria-label="Semanas">
             <button type="button" className="capa-botao" onClick={aoRecuar}>
               <Anterior />
@@ -89,6 +100,7 @@ export function Cabecalho({ casa, email, inicio, aoRecuar, aoAvancar, aoHoje, na
               <span className="sr-only">Semana seguinte</span>
             </button>
           </nav>
+          )}
 
           <p className="capa-conta impresso">
             <span title="Quem tiver este código entra nesta caderneta">

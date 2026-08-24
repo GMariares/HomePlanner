@@ -40,10 +40,15 @@ times, a stamp field to tick each item off.
 **Why this one earns its place:** it is the only dealt structure that is the same object on
 both devices. In the aisle you hold the list with the plan above it.
 
-**Dish book.** Writing in a day cell opens the house's dishes as an inline menu — the same
-component the week uses for moving a line. Choosing one writes the dinner and drops its
-ingredients into the list. The chosen dish's ingredients appear as ruled, editable lines
-directly beneath the strip: reading and writing are one object, as everywhere else here.
+**Dish book.** The book has its own page, reached by a third thumb tab (*O livro*): every
+dish the house cooks, with its ingredients, renamable in place, removable, and readable
+without planning anything. It is a durable asset of the household, not a per-week object,
+and it was homeless in the first build — reachable only by opening a day and typing, which
+meant a dish you were not cooking this week could not be seen, corrected or deleted at all.
+
+Writing in a day cell still opens the book as an inline menu — the fast path while
+planning — and the chosen dish's ingredients appear as ruled, editable lines beneath the
+strip. Reading and writing are one object in both places.
 
 **Honest risk, named at selection:** seven cells across a 390px phone is about 50px each.
 Resolved by the strip becoming seven stacked rules on a phone rather than scrolling
@@ -91,6 +96,10 @@ separate edit mode for ingredients; any invented dish or family data presented a
 **Binding:** the recorded design system; Portuguese throughout; the household owns every
 row; quantities are free text ("2 kg", "1 molho", "meia dúzia") because that is how they
 are written by hand.
+
+**Removing a dish does not rewrite the past.** Dinners already marked keep the name that
+was written, because that is what was eaten; only the dish leaves the book. The confirmation
+says so, in the line itself rather than in a modal.
 
 **Open, and not to be invented:** whether the list should ever group by shop or aisle;
 whether a dish should carry portions that scale its quantities; whether past weeks' lists

@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { Casa } from './componentes/Casa'
 import { Ementa } from './componentes/Ementa'
+import { Livro } from './componentes/Livro'
 import { Entrar } from './componentes/Entrar'
 import { Semana } from './componentes/Semana'
 import { useSessao } from './dominio/sessao'
 
 export default function App() {
   const { sessao, recarregar, sair } = useSessao()
-  const [vista, definirVista] = useState<'semana' | 'ementa'>('semana')
+  const [vista, definirVista] = useState<'semana' | 'ementa' | 'livro'>('semana')
 
   switch (sessao.fase) {
     case 'a-carregar':
@@ -50,8 +51,8 @@ export default function App() {
       return <Casa email={sessao.email} aoEntrar={recarregar} aoSair={sair} />
 
     case 'pronto':
-      return vista === 'semana'
-        ? <Semana casa={sessao.casa} email={sessao.email} aoSair={sair} aoTrocarDeVista={definirVista} />
-        : <Ementa casa={sessao.casa} email={sessao.email} aoSair={sair} aoTrocarDeVista={definirVista} />
+      if (vista === 'semana') return <Semana casa={sessao.casa} email={sessao.email} aoSair={sair} aoTrocarDeVista={definirVista} />
+      if (vista === 'ementa') return <Ementa casa={sessao.casa} email={sessao.email} aoSair={sair} aoTrocarDeVista={definirVista} />
+      return <Livro casa={sessao.casa} email={sessao.email} aoSair={sair} aoTrocarDeVista={definirVista} />
   }
 }

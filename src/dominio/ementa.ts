@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { supabase, semTabelas } from './supabase'
 import { novoId } from './estado'
+import { useAdiar } from './adiar'
 import type { Compra, Entrada, EntradaDb, Ingrediente, Prato } from './tipos'
 import { daBaseDeDados } from './tipos'
 
@@ -133,12 +134,19 @@ export function useEmenta(casaId: string | null, semana: string) {
       : p))
   }, [casaId, pratos])
 
-  const alterarIngrediente = useCallback(async (id: string, mudanca: Partial<Ingrediente>) => {
+  const gravarIngrediente = useCallback((id: string, junto: Partial<Ingrediente>) => {
+    supabase.from('ingredientes').update(junto).eq('id', id).then(({ error }) => {
+      if (error) definirFalhou(true)
+    })
+  }, [])
+  const adiarIngrediente = useAdiar<Partial<Ingrediente>>(gravarIngrediente)
+
+  const alterarIngrediente = useCallback((id: string, mudanca: Partial<Ingrediente>) => {
     definirPratos(ps => ps.map(p => ({
       ...p, ingredientes: p.ingredientes.map(i => (i.id === id ? { ...i, ...mudanca } : i)),
     })))
-    await supabase.from('ingredientes').update(mudanca).eq('id', id)
-  }, [])
+    adiarIngrediente(id, mudanca)
+  }, [adiarIngrediente])
 
   const apagarIngrediente = useCallback(async (id: string) => {
     definirPratos(ps => ps.map(p => ({ ...p, ingredientes: p.ingredientes.filter(i => i.id !== id) })))
@@ -153,14 +161,19 @@ export function useEmenta(casaId: string | null, semana: string) {
       .eq('id', c.id)
   }, [])
 
+  const gravarCompra = useCallback((id: string, junto: Partial<Compra>) => {
+    supabase.from('compras').update(junto).eq('id', id).then(({ error }) => {
+      if (error) definirFalhou(true)
+    })
+  }, [])
+  const adiarCompra = useAdiar<Partial<Compra>>(gravarCompra)
+
   /** Mexer à mão numa linha vinda de um prato faz dela uma linha da casa. */
-  const alterarCompra = useCallback(async (c: Compra, mudanca: Partial<Compra>) => {
+  const alterarCompra = useCallback((c: Compra, mudanca: Partial<Compra>) => {
     const passaASerDaCasa = Boolean(c.origem_entrada_id) && !c.editado
     definirCompras(cs => cs.map(x => (x.id === c.id ? { ...x, ...mudanca, editado: x.editado || passaASerDaCasa } : x)))
-    await supabase.from('compras')
-      .update({ ...mudanca, ...(passaASerDaCasa ? { editado: true } : {}) })
-      .eq('id', c.id)
-  }, [])
+    adiarCompra(c.id, { ...mudanca, ...(passaASerDaCasa ? { editado: true } : {}) })
+  }, [adiarCompra])
 
   const acrescentarCompra = useCallback(async (nome: string, quantidade: string | null = null) => {
     if (!casaId || !nome.trim()) return

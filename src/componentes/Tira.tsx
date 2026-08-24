@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { DIAS, curto, diaDaSemana } from '../dominio/semana'
 import type { Entrada, Prato } from '../dominio/tipos'
+import { chaveDeNome } from '../dominio/adiar'
 import { Escrita } from './Escrita'
 import { Reticencias } from './Icones'
 
@@ -19,16 +20,23 @@ function PratoDoDia({ dia, data, jantar, pratos, aoMarcar, aoCriarPrato, aoAcres
   const [procura, definirProcura] = useState('')
   const [novoNome, definirNovoNome] = useState('')
   const [novaQtd, definirNovaQtd] = useState('')
+  const [aEscrever, definirAEscrever] = useState(false)
 
   const prato = jantar?.pratoId ? pratos.find(p => p.id === jantar.pratoId) ?? null : null
-  const encontrados = pratos.filter(p =>
-    p.nome.toLocaleLowerCase('pt').includes(procura.toLocaleLowerCase('pt')),
-  )
-  const podeCriar = procura.trim() && !pratos.some(p => p.nome.toLocaleLowerCase('pt') === procura.trim().toLocaleLowerCase('pt'))
+  const chave = chaveDeNome(procura)
+  const todos = chave ? pratos.filter(p => chaveDeNome(p.nome).includes(chave)) : pratos
+  // O livro inteiro não cabe aqui, nem precisa: escreve-se para ir buscar o resto.
+  const TETO = 8
+  const encontrados = todos.slice(0, TETO)
+  const escondidos = todos.length - encontrados.length
+  const podeCriar = chave.length > 0 && !pratos.some(p => chaveDeNome(p.nome) === chave)
 
-  const escolher = async (p: Prato) => { aoMarcar(p); definirProcura('') }
+  const escolher = (p: Prato) => { aoMarcar(p); definirProcura('') }
   const criar = async () => {
+    if (aEscrever) return
+    definirAEscrever(true)
     const novo = await aoCriarPrato(procura.trim())
+    definirAEscrever(false)
     if (novo) { aoMarcar(novo); definirProcura('') }
   }
 
@@ -56,10 +64,17 @@ function PratoDoDia({ dia, data, jantar, pratos, aoMarcar, aoCriarPrato, aoAcres
             value={procura}
             onChange={e => definirProcura(e.target.value)}
             placeholder="escrever ou procurar no livro"
+            maxLength={80}
           />
         </label>
 
-        {procura.trim() && (
+        {pratos.length === 0 && (
+          <p className="impresso prato-sem-livro">
+            O livro ainda está em branco. Escreva aqui o nome e o prato entra no livro.
+          </p>
+        )}
+
+        {(pratos.length > 0 || procura.trim()) && (
           <ul className="livro">
             {encontrados.map(p => (
               <li key={p.id}>
@@ -69,10 +84,15 @@ function PratoDoDia({ dia, data, jantar, pratos, aoMarcar, aoCriarPrato, aoAcres
                 </button>
               </li>
             ))}
+            {escondidos > 0 && (
+              <li className="livro-mais impresso">
+                e mais {escondidos} — escreva para procurar
+              </li>
+            )}
             {podeCriar && (
               <li>
-                <button type="button" className="livro-linha livro-linha--novo" onClick={criar}>
-                  <span>Escrever “{procura.trim()}” no livro</span>
+                <button type="button" className="livro-linha livro-linha--novo" onClick={criar} disabled={aEscrever}>
+                  <span>{aEscrever ? 'Um momento…' : `Escrever “${procura.trim()}” no livro`}</span>
                   <span className="impresso">prato novo</span>
                 </button>
               </li>

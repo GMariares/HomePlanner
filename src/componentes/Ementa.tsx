@@ -10,7 +10,7 @@ export function Ementa({ casa, email, aoSair, aoTrocarDeVista }: {
   casa: Casa
   email: string
   aoSair: () => void
-  aoTrocarDeVista: (v: 'semana' | 'ementa') => void
+  aoTrocarDeVista: (v: 'semana' | 'ementa' | 'livro') => void
 }) {
   const [inicio, definirInicio] = useState(() => inicioDaSemana())
   const [aberto, definirAberto] = useState<number | null>(null)
