@@ -1,0 +1,91 @@
+import { useState, type FormEvent } from 'react'
+import { supabase } from '../dominio/supabase'
+import { recado } from '../dominio/recados'
+
+/** Uma caderneta é de uma casa. Ou se abre uma, ou se entra na que já existe. */
+export function Casa({ email, aoEntrar, aoSair }: {
+  email: string
+  aoEntrar: () => void | Promise<void>
+  aoSair: () => void
+}) {
+  const [modo, definirModo] = useState<'criar' | 'juntar'>('criar')
+  const [nome, definirNome] = useState('')
+  const [codigo, definirCodigo] = useState('')
+  const [aTratar, definirATratar] = useState(false)
+  const [erro, definirErro] = useState<string | null>(null)
+
+  const submeter = async (e: FormEvent) => {
+    e.preventDefault()
+    definirErro(null)
+    definirATratar(true)
+    try {
+      const { error } =
+        modo === 'criar'
+          ? await supabase.rpc('criar_casa', { nome })
+          : await supabase.rpc('entrar_em_casa', { codigo })
+      if (error) throw error
+      await aoEntrar()
+    } catch (falha) {
+      definirErro(recado(falha))
+    } finally {
+      definirATratar(false)
+    }
+  }
+
+  return (
+    <main className="portada">
+      <form className="etiqueta-capa" onSubmit={submeter}>
+        <p className="etiqueta-marca impresso">{email}</p>
+        <h1 className="etiqueta-titulo">
+          {modo === 'criar' ? 'Abrir uma caderneta' : 'Entrar numa caderneta'}
+        </h1>
+
+        {modo === 'criar' ? (
+          <>
+            <label className="campo">
+              <span className="impresso">Nome da família</span>
+              <input
+                className="campo-escrita"
+                value={nome}
+                onChange={e => definirNome(e.target.value)}
+                placeholder="os Silva"
+                maxLength={32}
+              />
+            </label>
+            <p className="etiqueta-texto">
+              Fica com um código de seis letras. Quem o tiver entra na mesma caderneta.
+            </p>
+          </>
+        ) : (
+          <>
+            <label className="campo">
+              <span className="impresso">Código da casa</span>
+              <input
+                className="campo-escrita campo-escrita--codigo"
+                value={codigo}
+                onChange={e => definirCodigo(e.target.value.toUpperCase())}
+                placeholder="ABC234"
+                maxLength={6}
+                required
+              />
+            </label>
+            <p className="etiqueta-texto">Peça o código a quem já tem a caderneta aberta.</p>
+          </>
+        )}
+
+        {erro && <p className="recado-erro" role="alert">{erro}</p>}
+
+        <button type="submit" className="botao-capa" disabled={aTratar}>
+          {aTratar ? 'Um momento…' : modo === 'criar' ? 'Abrir a caderneta' : 'Entrar'}
+        </button>
+
+        <button type="button" className="botao-linha impresso"
+          onClick={() => { definirModo(m => (m === 'criar' ? 'juntar' : 'criar')); definirErro(null) }}>
+          {modo === 'criar' ? 'Já existe uma caderneta cá em casa' : 'Quero abrir uma caderneta nova'}
+        </button>
+
+        <button type="button" className="botao-linha impresso" onClick={aoSair}>Sair desta conta</button>
+      </form>
+    </main>
+  )
+}

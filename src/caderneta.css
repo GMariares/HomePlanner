@@ -85,13 +85,6 @@
   font-size: var(--t-escrita);
   color: var(--impresso-tinta);
 }
-.aviso-selo {
-  border: 1.5px solid color-mix(in srgb, var(--margem) 70%, transparent);
-  color: var(--margem);
-  padding: 0.1875rem 0.4375rem;
-  border-radius: 2px;
-  transform: rotate(-2.5deg);
-}
 .aviso-repor {
   appearance: none;
   background: none;
@@ -419,3 +412,155 @@
 }
 .menu-item:hover { background: color-mix(in srgb, var(--pauta) 45%, transparent); }
 .menu-item[aria-current] { font-weight: 700; }
+
+/* ---------------- a portada: entrar, e escolher a casa ----------------
+   O caminho até à semana passa pela capa do caderno. A etiqueta branca é
+   a que se cola à frente e onde se escreve o nome — aqui é o formulário. */
+.portada {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 5vw, 3rem);
+  background: var(--capa);
+  background-image:
+    radial-gradient(120% 90% at 50% -10%, color-mix(in srgb, var(--capa) 78%, white) 0%, transparent 60%),
+    linear-gradient(180deg, var(--capa) 0%, var(--capa-funda) 100%);
+}
+.portada-espera { color: color-mix(in srgb, var(--folha) 70%, var(--capa)); }
+
+.etiqueta-capa {
+  position: relative;
+  width: min(26rem, 100%);
+  background: var(--folha);
+  border: 1px solid color-mix(in srgb, var(--pauta-forte) 70%, transparent);
+  border-radius: 3px;
+  padding: clamp(1.5rem, 4vw, 2rem);
+  padding-inline-start: clamp(2.75rem, 7vw, 3.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  rotate: -0.35deg;
+  box-shadow: 0 22px 44px -26px rgb(6 10 24 / 0.75), 0 2px 0 rgb(255 255 255 / 0.5) inset;
+}
+/* a margem vermelha: a marca que diz de que caderno é esta folha */
+.etiqueta-capa::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: clamp(1.75rem, 4.5vw, 2.25rem);
+  width: 1px;
+  background: color-mix(in srgb, var(--margem) 55%, transparent);
+}
+.etiqueta-marca { margin: 0; color: var(--impresso-tinta); }
+.etiqueta-titulo {
+  margin: 0;
+  font-size: var(--t-destaque);
+  font-weight: 700;
+  font-stretch: 112%;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--capa);
+}
+.etiqueta-texto { margin: 0; font-size: var(--t-escrita); line-height: 1.5; color: var(--impresso-tinta); }
+.etiqueta-texto code, .falha code {
+  font-family: inherit;
+  font-weight: 700;
+  color: var(--capa);
+  overflow-wrap: anywhere;
+}
+
+/* um campo é uma pauta com o seu nome impresso por cima */
+.campo { display: flex; flex-direction: column; gap: 0.25rem; }
+.campo-escrita {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--pauta-forte);
+  border-radius: 1px;
+  padding: 0.25rem 0 0.375rem;
+  font: inherit;
+  font-size: var(--t-escrita);
+  color: var(--pai);
+  caret-color: var(--pai);
+}
+.campo-escrita::placeholder { color: color-mix(in srgb, var(--impresso-tinta) 70%, var(--folha)); }
+.campo-escrita:focus { outline: none; border-bottom-color: var(--pai); }
+.campo-escrita:focus-visible { outline: 2px solid var(--margem); outline-offset: 3px; }
+.campo-escrita--codigo {
+  font-size: var(--t-destaque);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.recado-erro {
+  margin: 0;
+  font-size: var(--t-escrita);
+  line-height: 1.45;
+  color: var(--margem);
+  border-left: 1px solid var(--margem);
+  padding-inline-start: 0.625rem;
+}
+
+.botao-capa {
+  appearance: none;
+  border: 0;
+  border-radius: 2px;
+  background: var(--capa);
+  color: var(--folha);
+  font: inherit;
+  font-size: var(--t-escrita);
+  font-weight: 600;
+  min-height: 2.875rem;
+  cursor: pointer;
+  transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.botao-capa:hover:not(:disabled) { background: var(--capa-funda); }
+.botao-capa:disabled { opacity: 0.55; cursor: default; }
+
+.botao-linha {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  align-self: flex-start;
+  color: var(--impresso-tinta);
+  border-bottom: 1px solid currentColor;
+  cursor: pointer;
+}
+.botao-linha:hover { color: var(--capa); }
+
+/* ---------------- a conta e o código, na capa ---------------- */
+.capa-lado { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; }
+.capa-conta {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  color: color-mix(in srgb, var(--folha) 68%, var(--capa));
+}
+.capa-codigo { color: var(--fita); letter-spacing: 0.16em; font-weight: 700; }
+.capa-email {
+  max-width: 14ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.capa-sair {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  border-bottom: 1px solid currentColor;
+  cursor: pointer;
+}
+.capa-sair:hover { color: var(--folha); }
+
+@media (max-width: 47.99rem) {
+  .capa-lado { align-items: flex-start; }
+  .capa-conta { justify-content: flex-start; }
+}

@@ -34,3 +34,63 @@ export const AUTORES: Record<Autor, { etiqueta: string; nome: string; tinta: str
 }
 
 export const tintaDe = (autor: Autor | null) => (autor ? AUTORES[autor].tinta : 'var(--casa)')
+
+/** Uma casa. Tudo o que está escrito pertence-lhe a ela, não a uma pessoa. */
+export interface Casa {
+  id: string
+  nome: string
+  codigo: string
+}
+
+export interface Membro {
+  id: string
+  casa_id: string
+  utilizador_id: string
+  papel: Autor
+}
+
+/** Como uma entrada vive na base de dados. */
+export interface EntradaDb {
+  id: string
+  casa_id: string
+  semana: string
+  dia: number | null
+  genero: Genero
+  autor: Autor | null
+  texto: string
+  hora: string | null
+  refeicao: Refeicao | null
+  feita: boolean
+  extensao: 'inicio' | 'meio' | 'fim' | null
+  riscada: boolean
+  movida_para: number | null
+}
+
+export const daBaseDeDados = (l: EntradaDb): Entrada => ({
+  id: l.id,
+  dia: l.dia,
+  genero: l.genero,
+  autor: l.autor,
+  texto: l.texto,
+  hora: l.hora,
+  refeicao: l.refeicao ?? undefined,
+  feita: l.feita,
+  extensao: l.extensao ?? undefined,
+  riscada: l.riscada || undefined,
+  movidaPara: l.movida_para,
+})
+
+export const paraBaseDeDados = (e: Partial<Entrada>): Record<string, unknown> => {
+  const l: Record<string, unknown> = {}
+  if ('dia' in e) l.dia = e.dia
+  if ('genero' in e) l.genero = e.genero
+  if ('autor' in e) l.autor = e.autor ?? null
+  if ('texto' in e) l.texto = e.texto
+  if ('hora' in e) l.hora = e.hora ?? null
+  if ('refeicao' in e) l.refeicao = e.refeicao ?? null
+  if ('feita' in e) l.feita = e.feita ?? false
+  if ('extensao' in e) l.extensao = e.extensao ?? null
+  if ('riscada' in e) l.riscada = e.riscada ?? false
+  if ('movidaPara' in e) l.movida_para = e.movidaPara ?? null
+  return l
+}

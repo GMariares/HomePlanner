@@ -83,6 +83,13 @@ Five areas, all confirmed by the user:
 5. **Tasks.** Standalone household to-dos that are not calendar events. Examples given:
    register daughter in the school meal plan; buy school books; fix the bathroom.
 
+Households: a member belongs to one household at a time. A household is opened by
+its first member and joined by the others with a six-letter code, deliberately
+drawn from an alphabet without I, O, 0 or 1 because it gets read aloud and written
+by hand. Everything written belongs to the household, not to the person who wrote
+it; privacy between members is not implemented and remains an undecided product
+question.
+
 Locale: Euro, Portuguese conventions — `€`, dd/mm/yyyy, comma as decimal separator,
 Monday-first weeks. Single currency; multi-currency was offered and not taken.
 
