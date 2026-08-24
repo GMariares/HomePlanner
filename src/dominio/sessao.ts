@@ -31,7 +31,7 @@ export function useSessao() {
 
     const { data: casa, error: erroCasa } = await supabase
       .from('casas')
-      .select('id, nome, codigo')
+      .select('id, nome, codigo, mostrar_precos')
       .eq('id', membro.casa_id)
       .maybeSingle()
 

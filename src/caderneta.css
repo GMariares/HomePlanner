@@ -746,6 +746,8 @@
    precisa de saber que é cebola. A proveniência é da mesa, não do corredor. */
 @media (max-width: 63.99rem) {
   .compra-origem { display: none; }
+  /* De que semana veio importa a planear, não no corredor. */
+  .compra-atrasada { display: none; }
 }
 
 .abertura--ementa { grid-template-columns: 1fr; }
@@ -833,3 +835,105 @@
 
 /* Um livro em branco é uma página pautada à espera, como um dia sem nada. */
 .dia-corpo[data-vazio] { min-height: calc(var(--pauta-passo) * 4); }
+
+/* ---------------- a linha nova: onde se ganha ou se perde tempo ---------------- */
+.linha-nova { position: relative; }
+
+/* com preço a lista passa a seis colunas; sem ele fica como estava */
+.linha--compra[data-com-preco] {
+  grid-template-columns: var(--margem-x) minmax(0, 1fr) var(--qtd-x) var(--preco-x) var(--hora-x) var(--largura-accoes);
+}
+:root { --preco-x: 4.5rem; }
+/* Com preço a linha passa a seis colunas. Num telemóvel isso rouba a medida
+   ao que interessa — o nome — por isso as duas colunas de números encolhem
+   ao que os números precisam, e não mais. */
+@media (max-width: 47.99rem) {
+  :root { --preco-x: 3rem; }
+  .linha--compra[data-com-preco] { --qtd-x: 3.25rem; }
+}
+.linha-preco { position: relative; height: var(--pauta-passo); padding-inline-end: 0.375rem; }
+
+.sugestoes {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem;
+  position: absolute;
+  z-index: 30;
+  inset-inline-start: var(--margem-x);
+  inset-inline-end: 0;
+  top: calc(var(--pauta-passo) - 0.125rem);
+  background: var(--folha);
+  border: 1px solid var(--pauta-forte);
+  border-radius: 3px;
+  box-shadow: 0 14px 30px -14px rgb(14 23 48 / 0.42);
+  animation: abrir 160ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.sugestao {
+  appearance: none;
+  background: none;
+  border: 0;
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.375rem 0.5rem;
+  font: inherit;
+  font-size: var(--t-escrita);
+  color: var(--casa);
+  text-align: start;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.sugestao[data-activa] { background: color-mix(in srgb, var(--fita) 16%, transparent); }
+.sugestao-nome { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sugestao-costume { flex: none; color: var(--impresso-tinta); }
+
+/* ---------------- os conjuntos, à mão de semear ---------------- */
+.conjuntos-atalho {
+  margin: 0 0 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  color: var(--impresso-tinta);
+}
+.conjunto-chip {
+  appearance: none;
+  background: none;
+  border: 1px solid var(--pauta-forte);
+  border-radius: 2px;
+  padding: 0.25rem 0.5rem;
+  font: inherit;
+  font-size: var(--t-escrita);
+  color: var(--casa);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4375rem;
+  transition: border-color 160ms cubic-bezier(0.16, 1, 0.3, 1), background-color 160ms;
+}
+.conjunto-chip:hover { border-color: var(--pai); background: color-mix(in srgb, var(--pai) 7%, transparent); }
+.conjunto-conta { color: var(--impresso-tinta); }
+
+.lista-conta { display: inline-flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
+.lista-compras .dia-cabecalho { flex-wrap: wrap; row-gap: 0.375rem; }
+
+.lista-total {
+  margin: 0.75rem 0 0;
+  padding-inline-start: var(--margem-x);
+  display: flex;
+  align-items: baseline;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+  font-size: var(--t-escrita);
+  color: var(--casa);
+}
+.lista-total strong { font-size: var(--t-destaque); letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.lista-total-nota { color: var(--impresso-tinta); }
+
+.seccao-conjuntos { margin-top: 2.5rem; }
+
+/* a legenda das colunas alinha-se com elas, e é impressa */
+.linha--compra.linha--legenda .linha-hora,
+.linha--compra.linha--legenda .linha-preco { text-align: right; line-height: var(--pauta-passo); }

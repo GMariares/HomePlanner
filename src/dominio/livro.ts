@@ -2,23 +2,26 @@ import { useCallback, useEffect, useState } from 'react'
 import { semTabelas, supabase } from './supabase'
 import { novoId } from './estado'
 import { chaveDeNome, useAdiar } from './adiar'
-import type { Ingrediente, Prato } from './tipos'
+import type { Conjunto, Ingrediente, ItemDeConjunto, Prato } from './tipos'
 
 export type EstadoDoLivro = 'a-carregar' | 'pronto' | 'sem-rede' | 'sem-migracao'
 
 /** O livro dos pratos da casa. Existe fora de qualquer semana — é o que a casa cozinha. */
 export function useLivro(casaId: string | null) {
   const [pratos, definirPratos] = useState<Prato[]>([])
+  const [conjuntos, definirConjuntos] = useState<Conjunto[]>([])
   const [estado, definirEstado] = useState<EstadoDoLivro>('a-carregar')
   const [recado, definirRecado] = useState<string | null>(null)
 
   const buscar = useCallback(async () => {
     if (!casaId) return
-    const [prt, ing] = await Promise.all([
+    const [prt, ing, cj, cji] = await Promise.all([
       supabase.from('pratos').select('id, nome').eq('casa_id', casaId).order('nome'),
       supabase.from('ingredientes').select('*').eq('casa_id', casaId).order('ordem'),
+      supabase.from('conjuntos').select('id, nome').eq('casa_id', casaId).order('nome'),
+      supabase.from('conjunto_itens').select('*').eq('casa_id', casaId).order('ordem'),
     ])
-    const erro = prt.error ?? ing.error
+    const erro = prt.error ?? ing.error ?? cj.error ?? cji.error
     if (erro) { definirEstado(semTabelas(erro) ? 'sem-migracao' : 'sem-rede'); return }
 
     const porPrato = new Map<string, Ingrediente[]>()
@@ -28,6 +31,14 @@ export function useLivro(casaId: string | null) {
     }
     definirPratos(((prt.data ?? []) as { id: string; nome: string }[])
       .map(p => ({ ...p, ingredientes: porPrato.get(p.id) ?? [] })))
+    const porConjunto = new Map<string, ItemDeConjunto[]>()
+    for (const i of (cji.data ?? []) as ItemDeConjunto[]) {
+      const l = porConjunto.get(i.conjunto_id) ?? []
+      l.push(i); porConjunto.set(i.conjunto_id, l)
+    }
+    definirConjuntos(((cj.data ?? []) as { id: string; nome: string }[])
+      .map(c => ({ ...c, itens: porConjunto.get(c.id) ?? [] })))
+
     definirEstado('pronto')
   }, [casaId])
 
@@ -116,8 +127,73 @@ export function useLivro(casaId: string | null) {
     await supabase.from('ingredientes').delete().eq('id', id)
   }, [])
 
+  // ---- os conjuntos: coisas que se compram sempre juntas ----
+  const gravarItem = useCallback((id: string, junto: Partial<ItemDeConjunto>) => {
+    supabase.from('conjunto_itens').update(junto).eq('id', id).then(({ error }) => {
+      if (error) definirRecado('Não foi possível guardar.')
+    })
+  }, [])
+  const adiarItem = useAdiar<Partial<ItemDeConjunto>>(gravarItem)
+
+  const gravarConjunto = useCallback((id: string, junto: { nome?: string }) => {
+    supabase.from('conjuntos').update(junto).eq('id', id).then(({ error }) => {
+      if (error) { definirRecado('Já existe um conjunto com esse nome.'); buscar() }
+    })
+  }, [buscar])
+  const adiarConjunto = useAdiar<{ nome?: string }>(gravarConjunto)
+
+  const criarConjunto = useCallback(async (nome: string): Promise<Conjunto | null> => {
+    const limpo = nome.trim()
+    if (!casaId || !limpo) return null
+    const ja = conjuntos.find(c => chaveDeNome(c.nome) === chaveDeNome(limpo))
+    if (ja) { definirRecado(`“${ja.nome}” já existe.`); return ja }
+    const id = novoId()
+    const { error } = await supabase.from('conjuntos').insert({ id, casa_id: casaId, nome: limpo })
+    if (error) { definirRecado('Não foi possível criar o conjunto.'); return null }
+    const novo: Conjunto = { id, nome: limpo, itens: [] }
+    definirConjuntos(cs => [...cs, novo].sort((a, b) => a.nome.localeCompare(b.nome, 'pt')))
+    return novo
+  }, [casaId, conjuntos])
+
+  const renomearConjunto = useCallback((id: string, nome: string) => {
+    definirConjuntos(cs => cs.map(c => (c.id === id ? { ...c, nome } : c)))
+    if (nome.trim()) adiarConjunto(id, { nome: nome.trim() })
+  }, [adiarConjunto])
+
+  const apagarConjunto = useCallback(async (id: string) => {
+    definirConjuntos(cs => cs.filter(c => c.id !== id))
+    const { error } = await supabase.from('conjuntos').delete().eq('id', id)
+    if (error) { definirRecado('Não foi possível apagar o conjunto.'); buscar() }
+  }, [buscar])
+
+  const acrescentarItem = useCallback(async (conjuntoId: string, nome: string, quantidade: string | null) => {
+    const limpo = nome.trim()
+    if (!casaId || !limpo) return
+    const id = novoId()
+    let ordem = 0
+    definirConjuntos(cs => cs.map(c => {
+      if (c.id !== conjuntoId) return c
+      ordem = c.itens.length
+      return { ...c, itens: [...c.itens, { id, conjunto_id: conjuntoId, nome: limpo, quantidade, ordem }] }
+    }))
+    const { error } = await supabase.from('conjunto_itens')
+      .insert({ id, casa_id: casaId, conjunto_id: conjuntoId, nome: limpo, quantidade, ordem })
+    if (error) { definirRecado('Não foi possível guardar a coisa.'); buscar() }
+  }, [buscar, casaId])
+
+  const alterarItem = useCallback((id: string, mudanca: Partial<ItemDeConjunto>) => {
+    definirConjuntos(cs => cs.map(c => ({ ...c, itens: c.itens.map(i => (i.id === id ? { ...i, ...mudanca } : i)) })))
+    adiarItem(id, mudanca)
+  }, [adiarItem])
+
+  const apagarItem = useCallback(async (id: string) => {
+    definirConjuntos(cs => cs.map(c => ({ ...c, itens: c.itens.filter(i => i.id !== id) })))
+    await supabase.from('conjunto_itens').delete().eq('id', id)
+  }, [])
+
   return {
-    pratos, estado, recado, limparRecado: () => definirRecado(null),
+    pratos, conjuntos, estado, recado, limparRecado: () => definirRecado(null),
+    criarConjunto, renomearConjunto, apagarConjunto, acrescentarItem, alterarItem, apagarItem,
     criarPrato, renomearPrato, apagarPrato,
     acrescentarIngrediente, alterarIngrediente, apagarIngrediente,
   }

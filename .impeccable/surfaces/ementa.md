@@ -66,6 +66,27 @@ methods, portions or nutrition; splitting the list by shop; the finance and reco
 **Anti-goals:** a recipe app; cards as the page structure; a modal for picking a dish; a
 separate edit mode for ingredients; any invented dish or family data presented as real.
 
+## 4b. Writing the list is the work
+
+Real use showed the list was the slow, fragile part, so the draft row carries the
+weight of this surface:
+
+- **Tab moves along the row** — name, quantity, price — and never closes the line. It
+  used to commit on blur, which meant tabbing filed the item without its quantity and
+  the quantity you typed next landed on the following line.
+- **Enter closes the line and leaves the cursor ready for the next one.** Escape clears
+  the draft.
+- **The house remembers.** Every line written teaches a pantry (`artigos`), learned by a
+  database trigger rather than by anyone maintaining it. Typing suggests what this house
+  buys, most-bought first; choosing one fills the usual quantity and price. Typing a
+  known name and leaving quantity blank borrows the remembered one.
+- **Bundles** (`conjuntos`) are things bought together — "Pequeno-almoço". One press adds
+  them all, skipping anything already on the list. They live in *O livro* alongside the
+  dishes, because a homeless feature is the mistake this project already made once.
+- **Price is optional and per household**, off by default. When on, the row gains a price
+  column and the list gains a total of what is still to buy — counting only lines that
+  carry a price, and saying so.
+
 ## 5. States and ranges
 
 - **Typical:** 5–7 dinners planned; a list of 15–30 items; a dish book of 20–30 dishes.
@@ -101,6 +122,7 @@ are written by hand.
 was written, because that is what was eaten; only the dish leaves the book. The confirmation
 says so, in the line itself rather than in a modal.
 
-**Open, and not to be invented:** whether the list should ever group by shop or aisle;
+**Open, and not to be invented:** whether the pantry should ever be prunable by hand;
+whether a price should be remembered per shop; whether the list should group by shop or aisle;
 whether a dish should carry portions that scale its quantities; whether past weeks' lists
 stay readable or are archived.

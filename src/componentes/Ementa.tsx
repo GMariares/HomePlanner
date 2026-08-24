@@ -3,6 +3,7 @@ import { Cabecalho } from './Cabecalho'
 import { ListaCompras } from './ListaCompras'
 import { Tira } from './Tira'
 import { useEmenta } from '../dominio/ementa'
+import { supabase } from '../dominio/supabase'
 import { chaveDaSemana, indiceDeHoje, inicioDaSemana } from '../dominio/semana'
 import type { Casa } from '../dominio/tipos'
 
@@ -14,6 +15,13 @@ export function Ementa({ casa, email, aoSair, aoTrocarDeVista }: {
 }) {
   const [inicio, definirInicio] = useState(() => inicioDaSemana())
   const [aberto, definirAberto] = useState<number | null>(null)
+  const [mostrarPrecos, definirMostrarPrecos] = useState(casa.mostrar_precos)
+
+  /* Mostrar preços é decisão da casa, não do aparelho: fica guardada com ela. */
+  const guardarMostrarPrecos = (v: boolean) => {
+    definirMostrarPrecos(v)
+    supabase.from('casas').update({ mostrar_precos: v }).eq('id', casa.id)
+  }
   const chave = chaveDaSemana(inicio)
   const hoje = indiceDeHoje(inicio)
   const e = useEmenta(casa.id, chave)
@@ -79,10 +87,16 @@ export function Ementa({ casa, email, aoSair, aoTrocarDeVista }: {
               compras={e.compras}
               semana={chave}
               porComprar={e.porComprar}
+              total={e.total}
+              artigos={e.artigos}
+              conjuntos={e.conjuntos}
+              mostrarPrecos={mostrarPrecos}
               aoAlternar={e.alternarComprado}
               aoAlterar={e.alterarCompra}
               aoAcrescentar={e.acrescentarCompra}
               aoApagar={e.apagarCompra}
+              aoAplicarConjunto={e.aplicarConjunto}
+              aoMostrarPrecos={guardarMostrarPrecos}
             />
           </div>
         </div>

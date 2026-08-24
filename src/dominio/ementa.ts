@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { supabase, semTabelas } from './supabase'
 import { novoId } from './estado'
-import { useAdiar } from './adiar'
-import type { Compra, Entrada, EntradaDb, Ingrediente, Prato } from './tipos'
+import { chaveDeNome, useAdiar } from './adiar'
+import type { Artigo, Compra, Conjunto, Entrada, EntradaDb, Ingrediente, ItemDeConjunto, Prato } from './tipos'
 import { daBaseDeDados } from './tipos'
 
 export type EstadoDaEmenta = 'a-carregar' | 'pronto' | 'sem-rede' | 'sem-migracao'
@@ -19,20 +19,26 @@ export function useEmenta(casaId: string | null, semana: string) {
   const [jantares, definirJantares] = useState<Entrada[]>([])
   const [pratos, definirPratos] = useState<Prato[]>([])
   const [compras, definirCompras] = useState<Compra[]>([])
+  const [artigos, definirArtigos] = useState<Artigo[]>([])
+  const [conjuntos, definirConjuntos] = useState<Conjunto[]>([])
   const [estado, definirEstado] = useState<EstadoDaEmenta>('a-carregar')
   const [falhou, definirFalhou] = useState(false)
 
   const buscar = useCallback(async () => {
     if (!casaId) return
-    const [ent, prt, ing, cmp] = await Promise.all([
+    const [ent, prt, ing, cmp, art, cj, cji] = await Promise.all([
       supabase.from('entradas').select('*').eq('casa_id', casaId).eq('semana', semana).eq('genero', 'refeicao'),
       supabase.from('pratos').select('id, nome').eq('casa_id', casaId).order('nome'),
       supabase.from('ingredientes').select('*').eq('casa_id', casaId).order('ordem'),
       supabase.from('compras').select('*, pratos(nome)').eq('casa_id', casaId)
         .or(`comprado.eq.false,semana.eq.${semana}`).order('criada_em'),
+      supabase.from('artigos').select('id, chave, nome, quantidade, preco, vezes')
+        .eq('casa_id', casaId).order('vezes', { ascending: false }).limit(400),
+      supabase.from('conjuntos').select('id, nome').eq('casa_id', casaId).order('nome'),
+      supabase.from('conjunto_itens').select('*').eq('casa_id', casaId).order('ordem'),
     ])
 
-    const erro = ent.error ?? prt.error ?? ing.error ?? cmp.error
+    const erro = ent.error ?? prt.error ?? ing.error ?? cmp.error ?? art.error ?? cj.error ?? cji.error
     if (erro) { definirEstado(semTabelas(erro) ? 'sem-migracao' : 'sem-rede'); return }
 
     definirJantares((ent.data as EntradaDb[]).map(daBaseDeDados).filter(e => e.refeicao === 'jantar'))
@@ -50,6 +56,17 @@ export function useEmenta(casaId: string | null, semana: string) {
     definirCompras(((cmp.data ?? []) as (Compra & { pratos?: { nome: string } | null })[]).map(c => ({
       ...c, prato_nome: c.pratos?.nome ?? null,
     })))
+
+    definirArtigos((art.data ?? []) as Artigo[])
+
+    const porConjunto = new Map<string, ItemDeConjunto[]>()
+    for (const i of (cji.data ?? []) as ItemDeConjunto[]) {
+      const l = porConjunto.get(i.conjunto_id) ?? []
+      l.push(i); porConjunto.set(i.conjunto_id, l)
+    }
+    definirConjuntos(((cj.data ?? []) as { id: string; nome: string }[])
+      .map(c => ({ ...c, itens: porConjunto.get(c.id) ?? [] })))
+
     definirEstado('pronto')
   }, [casaId, semana])
 
@@ -175,13 +192,47 @@ export function useEmenta(casaId: string | null, semana: string) {
     adiarCompra(c.id, { ...mudanca, ...(passaASerDaCasa ? { editado: true } : {}) })
   }, [adiarCompra])
 
-  const acrescentarCompra = useCallback(async (nome: string, quantidade: string | null = null) => {
+  /**
+   * Escrever "Maçãs" sem mais nada não devia obrigar a escrever "1 kg" outra vez.
+   * O que a casa já sabe preenche o que ficou em branco — e só o que ficou.
+   */
+  const acrescentarCompra = useCallback(async (
+    nome: string,
+    quantidade: string | null = null,
+    preco: number | null = null,
+  ) => {
     if (!casaId || !nome.trim()) return
-    const linha = { id: novoId(), casa_id: casaId, semana, nome: nome.trim(), quantidade }
+    const limpo = nome.trim()
+    const sabido = artigos.find(a => a.chave === chaveDeNome(limpo))
+    const linha = {
+      id: novoId(), casa_id: casaId, semana, nome: limpo,
+      quantidade: quantidade ?? sabido?.quantidade ?? null,
+      preco: preco ?? sabido?.preco ?? null,
+    }
     definirCompras(cs => [...cs, { ...linha, comprado: false, origem_entrada_id: null, prato_id: null, editado: false }])
     const { error } = await supabase.from('compras').insert(linha)
-    if (error) definirFalhou(true)
-  }, [casaId, semana])
+    if (error) definirFalhou(true); else buscar()
+  }, [artigos, buscar, casaId, semana])
+
+  /** Um conjunto entra de uma vez, sem repetir o que já lá está. */
+  const aplicarConjunto = useCallback(async (conjunto: Conjunto) => {
+    if (!casaId || conjunto.itens.length === 0) return
+    const jaLa = new Set(compras.filter(c => !c.comprado).map(c => chaveDeNome(c.nome)))
+    const novas = conjunto.itens.filter(i => !jaLa.has(chaveDeNome(i.nome)))
+    if (novas.length === 0) return
+    const linhas = novas.map(i => {
+      const sabido = artigos.find(a => a.chave === chaveDeNome(i.nome))
+      return {
+        id: novoId(), casa_id: casaId, semana, nome: i.nome,
+        quantidade: i.quantidade ?? sabido?.quantidade ?? null,
+        preco: sabido?.preco ?? null,
+      }
+    })
+    definirCompras(cs => [...cs, ...linhas.map(l => ({ ...l, comprado: false, origem_entrada_id: null, prato_id: null, editado: false }))])
+    const { error } = await supabase.from('compras').insert(linhas)
+    if (error) definirFalhou(true); else buscar()
+    return novas.length
+  }, [artigos, buscar, casaId, compras, semana])
 
   const apagarCompra = useCallback(async (id: string) => {
     definirCompras(cs => cs.filter(c => c.id !== id))
@@ -190,8 +241,14 @@ export function useEmenta(casaId: string | null, semana: string) {
 
   const porComprar = useMemo(() => compras.filter(c => !c.comprado).length, [compras])
 
+  const total = useMemo(
+    () => compras.filter(c => !c.comprado && c.preco != null).reduce((s, c) => s + Number(c.preco), 0),
+    [compras],
+  )
+
   return {
-    jantares, pratos, compras, estado, falhou, porComprar,
+    jantares, pratos, compras, artigos, conjuntos, estado, falhou, porComprar, total,
+    aplicarConjunto,
     jantarDe, marcarJantar, criarPrato,
     acrescentarIngrediente, alterarIngrediente, apagarIngrediente,
     alternarComprado, alterarCompra, acrescentarCompra, apagarCompra,

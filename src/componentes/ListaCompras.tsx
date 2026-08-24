@@ -1,42 +1,73 @@
-import { useState } from 'react'
-import type { Compra } from '../dominio/tipos'
+import type { Compra, Artigo, Conjunto } from '../dominio/tipos'
 import { CampoDeCarimbo } from './Carimbo'
 import { Escrita } from './Escrita'
 import { Reticencias } from './Icones'
+import { LinhaNova } from './LinhaNova'
+import { CampoPreco } from './CampoPreco'
+
+const EUROS = new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' })
 
 /** A lista da semana. O que não se comprou não desaparece: passa à frente. */
-export function ListaCompras({ compras, semana, porComprar, aoAlternar, aoAlterar, aoAcrescentar, aoApagar }: {
+export function ListaCompras({
+  compras, semana, porComprar, total, artigos, conjuntos, mostrarPrecos,
+  aoAlternar, aoAlterar, aoAcrescentar, aoApagar, aoAplicarConjunto, aoMostrarPrecos,
+}: {
   compras: Compra[]
   semana: string
   porComprar: number
+  total: number
+  artigos: Artigo[]
+  conjuntos: Conjunto[]
+  mostrarPrecos: boolean
   aoAlternar: (c: Compra) => void
   aoAlterar: (c: Compra, mudanca: Partial<Compra>) => void
-  aoAcrescentar: (nome: string, quantidade: string | null) => void
+  aoAcrescentar: (nome: string, quantidade: string | null, preco: number | null) => void
   aoApagar: (id: string) => void
+  aoAplicarConjunto: (c: Conjunto) => void
+  aoMostrarPrecos: (v: boolean) => void
 }) {
-  const [nome, definirNome] = useState('')
-  const [qtd, definirQtd] = useState('')
-
-  const guardar = () => {
-    if (!nome.trim()) return
-    aoAcrescentar(nome.trim(), qtd.trim() || null)
-    definirNome(''); definirQtd('')
-  }
-
   return (
     <section className="lista-compras" aria-labelledby="compras-titulo">
       <header className="dia-cabecalho">
         <h2 id="compras-titulo" className="dia-nome">A lista</h2>
-        <span className="dia-data impresso">
-          {porComprar === 0 ? 'está tudo comprado' : `${porComprar} por comprar`}
+        <span className="dia-data impresso lista-conta">
+          <span>{porComprar === 0 ? 'está tudo comprado' : `${porComprar} por comprar`}</span>
+          <button type="button" className="aviso-repor impresso" onClick={() => aoMostrarPrecos(!mostrarPrecos)}>
+            {mostrarPrecos ? 'esconder preços' : 'pôr preços'}
+          </button>
         </span>
       </header>
 
+      {conjuntos.length > 0 && (
+        <p className="conjuntos-atalho">
+          <span className="impresso">Conjuntos</span>
+          {conjuntos.map(c => (
+            <button key={c.id} type="button" className="conjunto-chip" onClick={() => aoAplicarConjunto(c)}>
+              {c.nome}
+              <span className="impresso conjunto-conta">
+                {c.itens.length === 1 ? '1 coisa' : `${c.itens.length} coisas`}
+              </span>
+            </button>
+          ))}
+        </p>
+      )}
+
       <div className="dia-corpo pauta margem">
+        {mostrarPrecos && (
+          <div className="linha linha--compra linha--legenda" data-com-preco aria-hidden="true">
+            <span className="linha-goteira" />
+            <span className="linha-corpo" />
+            <span className="linha-hora impresso">qt.</span>
+            <span className="linha-preco impresso">€</span>
+            <span className="linha-carimbo" />
+            <span className="linha-accoes" />
+          </div>
+        )}
         {compras.map(c => {
           const doutraSemana = !c.comprado && c.semana !== semana
           return (
-            <div className="linha linha--compra" key={c.id} data-feita={c.comprado || undefined}>
+            <div className="linha linha--compra" key={c.id}
+              data-feita={c.comprado || undefined} data-com-preco={mostrarPrecos || undefined}>
               <span className="linha-goteira" />
               <span className="linha-corpo">
                 <Escrita
@@ -53,10 +84,20 @@ export function ListaCompras({ compras, semana, porComprar, aoAlternar, aoAltera
                   className="escrita escrita--hora"
                   value={c.quantidade ?? ''}
                   placeholder="qt."
+                  maxLength={24}
                   aria-label={`Quantidade de ${c.nome}`}
                   onChange={e => aoAlterar(c, { quantidade: e.target.value })}
                 />
               </span>
+              {mostrarPrecos && (
+                <span className="linha-preco">
+                  <CampoPreco
+                    valor={c.preco}
+                    rotulo={`Preço de ${c.nome}`}
+                    aoMudar={preco => aoAlterar(c, { preco })}
+                  />
+                </span>
+              )}
               <span className="linha-carimbo">
                 <CampoDeCarimbo
                   feita={c.comprado}
@@ -74,31 +115,16 @@ export function ListaCompras({ compras, semana, porComprar, aoAlternar, aoAltera
           )
         })}
 
-        <div className="linha linha--compra linha--branco">
-          <span className="linha-goteira" />
-          <span className="linha-corpo">
-            <Escrita
-              valor={nome}
-              rotulo="Escrever uma coisa para comprar"
-              aoMudar={definirNome}
-              aoTerminar={guardar}
-              aoConfirmar={guardar}
-            />
-          </span>
-          <span className="linha-hora">
-            <input
-              className="escrita escrita--hora"
-              value={qtd}
-              placeholder="qt."
-              aria-label="Quantidade"
-              onChange={e => definirQtd(e.target.value)}
-              onBlur={guardar}
-            />
-          </span>
-          <span className="linha-carimbo" />
-          <span className="linha-accoes" />
-        </div>
+        <LinhaNova artigos={artigos} mostrarPreco={mostrarPrecos} aoAcrescentar={aoAcrescentar} />
       </div>
+
+      {mostrarPrecos && total > 0 && (
+        <p className="lista-total">
+          <span className="impresso">Por comprar</span>
+          <strong>{EUROS.format(total)}</strong>
+          <span className="impresso lista-total-nota">só conta o que tem preço escrito</span>
+        </p>
+      )}
     </section>
   )
 }

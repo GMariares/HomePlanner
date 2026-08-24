@@ -6,7 +6,7 @@ import { Menu } from './Menu'
 import { useLivro } from '../dominio/livro'
 import { chaveDeNome } from '../dominio/adiar'
 import { inicioDaSemana } from '../dominio/semana'
-import type { Casa, Prato } from '../dominio/tipos'
+import type { Casa, Conjunto, ItemDeConjunto, Prato } from '../dominio/tipos'
 
 function Ingredientes({ prato, aoAcrescentar, aoAlterar, aoApagar }: {
   prato: Prato
@@ -91,8 +91,76 @@ function Ingredientes({ prato, aoAcrescentar, aoAlterar, aoApagar }: {
   )
 }
 
+function ItensDoConjunto({ conjunto, aoAcrescentar, aoAlterar, aoApagar }: {
+  conjunto: Conjunto
+  aoAcrescentar: (conjuntoId: string, nome: string, quantidade: string | null) => void
+  aoAlterar: (id: string, mudanca: Partial<ItemDeConjunto>) => void
+  aoApagar: (id: string) => void
+}) {
+  const [nome, definirNome] = useState('')
+  const [qtd, definirQtd] = useState('')
+  const guardar = () => {
+    if (!nome.trim()) return
+    aoAcrescentar(conjunto.id, nome.trim(), qtd.trim() || null)
+    definirNome(''); definirQtd('')
+  }
+  return (
+    <>
+      <div className="linha linha--legenda">
+        <span className="linha-goteira" />
+        <span className="linha-corpo impresso">
+          {conjunto.itens.length === 0
+            ? 'Sem nada — assim, este conjunto não põe nada na lista.'
+            : 'O que este conjunto leva'}
+        </span>
+        <span className="linha-hora" />
+        <span className="linha-accoes" />
+      </div>
+      {conjunto.itens.map(i => (
+        <div className="linha linha--ingrediente linha--dentro" key={i.id}>
+          <span className="linha-goteira" />
+          <span className="linha-corpo">
+            <Escrita valor={i.nome} rotulo={`Coisa de ${conjunto.nome}`}
+              aoMudar={n => aoAlterar(i.id, { nome: n })} />
+          </span>
+          <span className="linha-hora">
+            <input className="escrita escrita--hora" value={i.quantidade ?? ''} placeholder="qt."
+              maxLength={24} aria-label={`Quantidade de ${i.nome}`}
+              onChange={e => aoAlterar(i.id, { quantidade: e.target.value })} />
+          </span>
+          <span className="linha-accoes">
+            <button type="button" className="botao-nu" onClick={() => aoApagar(i.id)}>
+              <span className="sr-only">Tirar {i.nome} de {conjunto.nome}</span>
+              <Reticencias />
+            </button>
+          </span>
+        </div>
+      ))}
+      <div className="linha linha--ingrediente linha--dentro linha--branco">
+        <span className="linha-goteira" />
+        <span className="linha-corpo">
+          <Escrita valor={nome} rotulo={`Escrever uma coisa em ${conjunto.nome}`}
+            aoMudar={definirNome} aoTerminar={guardar} aoConfirmar={guardar} />
+        </span>
+        <span className="linha-hora">
+          <input className="escrita escrita--hora" value={qtd} placeholder="qt." maxLength={24}
+            aria-label="Quantidade" onChange={e => definirQtd(e.target.value)} onBlur={guardar} />
+        </span>
+        <span className="linha-accoes" />
+      </div>
+    </>
+  )
+}
+
 export interface AccoesDoLivro {
   pratos: Prato[]
+  conjuntos: Conjunto[]
+  criarConjunto: (nome: string) => Promise<Conjunto | null>
+  renomearConjunto: (id: string, nome: string) => void
+  apagarConjunto: (id: string) => void
+  acrescentarItem: (conjuntoId: string, nome: string, quantidade: string | null) => void
+  alterarItem: (id: string, mudanca: Partial<ItemDeConjunto>) => void
+  apagarItem: (id: string) => void
   estado: 'a-carregar' | 'pronto' | 'sem-rede' | 'sem-migracao'
   recado: string | null
   limparRecado: () => void
@@ -111,6 +179,18 @@ export function PaginaDoLivro({ l }: { l: AccoesDoLivro }) {
   const [aConfirmar, definirAConfirmar] = useState<string | null>(null)
   const [novo, definirNovo] = useState('')
   const [aEscrever, definirAEscrever] = useState(false)
+  const [abertoConjunto, definirAbertoConjunto] = useState<string | null>(null)
+  const [conjuntoAConfirmar, definirConjuntoAConfirmar] = useState<string | null>(null)
+  const [novoConjunto, definirNovoConjunto] = useState('')
+  const [aEscreverConjunto, definirAEscreverConjunto] = useState(false)
+
+  const escreverConjunto = async () => {
+    if (!novoConjunto.trim() || aEscreverConjunto) return
+    definirAEscreverConjunto(true)
+    const c = await l.criarConjunto(novoConjunto)
+    definirAEscreverConjunto(false)
+    if (c) { definirNovoConjunto(''); definirAbertoConjunto(c.id) }
+  }
 
   const encontrados = useMemo(() => {
     const chave = chaveDeNome(procura)
@@ -279,6 +359,91 @@ export function PaginaDoLivro({ l }: { l: AccoesDoLivro }) {
                       aoTerminar={escreverPrato}
                       aoConfirmar={escreverPrato}
                     />
+                  </span>
+                  <span className="linha-hora" />
+                  <span className="linha-accoes" />
+                </div>
+              </div>
+            </section>
+
+            <section className="seccao-conjuntos" aria-labelledby="conjuntos-titulo">
+              <header className="dia-cabecalho">
+                <h2 id="conjuntos-titulo" className="dia-nome">Os conjuntos</h2>
+                <span className="dia-data impresso">
+                  {l.conjuntos.length === 0 ? 'ainda nenhum'
+                    : l.conjuntos.length === 1 ? '1 conjunto' : `${l.conjuntos.length} conjuntos`}
+                </span>
+              </header>
+
+              {l.estado === 'pronto' && l.conjuntos.length === 0 && (
+                <p className="livro-vazio">
+                  Coisas que se compram sempre juntas — “Pequeno-almoço”, “Limpeza”. Depois
+                  entram na lista de uma vez, sem se escrever item a item.
+                </p>
+              )}
+
+              <div className="dia-corpo pauta margem" data-vazio={l.conjuntos.length === 0 || undefined}>
+                {l.conjuntos.map(c => (
+                  <div key={c.id}>
+                    <div className="linha linha--prato" data-aberto={abertoConjunto === c.id || undefined}>
+                      <span className="linha-goteira" />
+                      <span className="linha-corpo">
+                        <Escrita valor={c.nome} rotulo="Nome do conjunto"
+                          aoMudar={nome => l.renomearConjunto(c.id, nome)} />
+                      </span>
+                      <span className="linha-hora">
+                        <button type="button" className="prato-conta impresso"
+                          aria-expanded={abertoConjunto === c.id}
+                          onClick={() => definirAbertoConjunto(abertoConjunto === c.id ? null : c.id)}>
+                          {c.itens.length === 0 ? 'sem nada' : c.itens.length === 1 ? '1 coisa' : `${c.itens.length} coisas`}
+                        </button>
+                      </span>
+                      <span className="linha-accoes">
+                        <Menu
+                          titulo={c.nome}
+                          alinhar="direita"
+                          opcoes={[
+                            { id: 'ver', rotulo: abertoConjunto === c.id ? 'Fechar' : 'Ver o que leva',
+                              aoEscolher: () => definirAbertoConjunto(abertoConjunto === c.id ? null : c.id) },
+                            { id: 'apagar', rotulo: 'Apagar o conjunto', tinta: 'var(--margem)',
+                              aoEscolher: () => definirConjuntoAConfirmar(c.id) },
+                          ]}
+                          gatilho={({ abrir, refs, controla, aberto: m }) => (
+                            <button type="button" ref={refs} onClick={abrir} aria-haspopup="menu"
+                              aria-expanded={m} aria-controls={controla} className="botao-nu">
+                              <span className="sr-only">O que fazer a {c.nome}</span>
+                              <Reticencias />
+                            </button>
+                          )}
+                        />
+                      </span>
+                    </div>
+
+                    {conjuntoAConfirmar === c.id && (
+                      <p className="confirmar" role="alert">
+                        <span>Apagar <strong>{c.nome}</strong>? O que já está na lista fica.</span>
+                        <button type="button" className="confirmar-sim impresso"
+                          onClick={() => { l.apagarConjunto(c.id); definirConjuntoAConfirmar(null) }}>
+                          Apagar
+                        </button>
+                        <button type="button" className="botao-linha impresso"
+                          onClick={() => definirConjuntoAConfirmar(null)}>Deixar ficar</button>
+                      </p>
+                    )}
+
+                    {abertoConjunto === c.id && (
+                      <ItensDoConjunto conjunto={c} aoAcrescentar={l.acrescentarItem}
+                        aoAlterar={l.alterarItem} aoApagar={l.apagarItem} />
+                    )}
+                  </div>
+                ))}
+
+                <div className="linha linha--prato linha--branco">
+                  <span className="linha-goteira" />
+                  <span className="linha-corpo">
+                    <Escrita valor={novoConjunto} rotulo="Escrever um conjunto novo"
+                      aoMudar={definirNovoConjunto}
+                      aoTerminar={escreverConjunto} aoConfirmar={escreverConjunto} />
                   </span>
                   <span className="linha-hora" />
                   <span className="linha-accoes" />

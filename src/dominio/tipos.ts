@@ -42,6 +42,8 @@ export interface Casa {
   id: string
   nome: string
   codigo: string
+  /** A lista mostra preços? É uma decisão da casa, não do aparelho. */
+  mostrar_precos: boolean
 }
 
 export interface Membro {
@@ -66,6 +68,31 @@ export interface Ingrediente {
   ordem: number
 }
 
+/** O que esta casa costuma comprar. Aprendido, não escrito. */
+export interface Artigo {
+  id: string
+  chave: string
+  nome: string
+  quantidade: string | null
+  preco: number | null
+  vezes: number
+}
+
+/** Coisas que se compram sempre juntas. */
+export interface Conjunto {
+  id: string
+  nome: string
+  itens: ItemDeConjunto[]
+}
+
+export interface ItemDeConjunto {
+  id: string
+  conjunto_id: string
+  nome: string
+  quantidade: string | null
+  ordem: number
+}
+
 /** Uma linha da lista de compras. */
 export interface Compra {
   id: string
@@ -73,6 +100,8 @@ export interface Compra {
   nome: string
   quantidade: string | null
   comprado: boolean
+  /** Opcional, em euros. */
+  preco: number | null
   /** De que jantar veio. Null = escrito à mão. */
   origem_entrada_id: string | null
   prato_id: string | null
