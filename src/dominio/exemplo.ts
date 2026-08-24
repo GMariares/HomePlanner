@@ -17,6 +17,11 @@ export const EXEMPLO: Entrada[] = [
   { id: 'e5', dia: 2, genero: 'evento', autor: 'pai', texto: 'Viagem de trabalho — Lisboa', hora: null, extensao: 'meio' },
   { id: 'e6', dia: 2, genero: 'evento', autor: 'filha', texto: 'Natação', hora: '17:00' },
 
+  // A reunião estava marcada para quarta e passou para quinta. A linha antiga
+  // fica riscada onde estava: a agenda guarda o que aconteceu.
+  { id: 'e13', dia: 2, genero: 'evento', autor: 'mae', texto: 'Reunião de pais', hora: '18:30', riscada: true, movidaPara: 3 },
+  { id: 'e14', dia: 3, genero: 'evento', autor: 'mae', texto: 'Reunião de pais', hora: '18:30' },
+
   { id: 'e7', dia: 3, genero: 'evento', autor: 'pai', texto: 'Regresso de Lisboa', hora: '19:40', extensao: 'fim' },
   { id: 'e8', dia: 3, genero: 'refeicao', autor: null, texto: 'Arroz de pato', hora: null, refeicao: 'jantar' },
 

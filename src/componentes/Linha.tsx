@@ -1,16 +1,18 @@
 import { AUTORES, tintaDe, type Autor, type Entrada } from '../dominio/tipos'
 import { DIAS } from '../dominio/semana'
 import { Menu, type Opcao } from './Menu'
-import { Carimbo, CasaDeCarimbo } from './Carimbo'
+import { CampoDeCarimbo } from './Carimbo'
 import { Chaveta, Reticencias, SetaMudanca } from './Icones'
 import { Escrita } from './Escrita'
 
 const AUTOR_IDS: Autor[] = ['pai', 'mae', 'filha', 'casa']
 
-export function Linha({ entrada, contexto, aoAlterar, aoApagar, aoMover }: {
+export function Linha({ entrada, contexto, destaque, aoAlterar, aoApagar, aoMover }: {
   entrada: Entrada
   /** Onde esta linha vive, para quem ouve a página em vez de a ver. */
   contexto: string
+  /** A primeira linha do dia: é a que se lê primeiro, e é a que sobe de escala. */
+  destaque?: boolean
   aoAlterar: (mudanca: Partial<Entrada>) => void
   aoApagar: () => void
   aoMover: (destino: number | null) => void
@@ -70,15 +72,9 @@ export function Linha({ entrada, contexto, aoAlterar, aoApagar, aoMover }: {
   }
 
   return (
-    <div className="linha" data-genero={entrada.genero} data-feita={feita || undefined}>
+    <div className={`linha ${destaque ? 'linha--destaque' : ''}`} data-genero={entrada.genero} data-feita={feita || undefined}>
       <span className="linha-goteira" style={{ color: tinta }}>
-        {entrada.genero === 'tarefa' ? (
-          <CasaDeCarimbo
-            feita={!!entrada.feita}
-            onToggle={() => aoAlterar({ feita: !entrada.feita })}
-            rotulo={`${contexto}: dar o visto a “${entrada.texto || 'linha em branco'}”`}
-          />
-        ) : entrada.extensao ? (
+        {entrada.extensao ? (
           <span className="chaveta"><Chaveta parte={entrada.extensao} /></span>
         ) : null}
       </span>
@@ -119,8 +115,12 @@ export function Linha({ entrada, contexto, aoAlterar, aoApagar, aoMover }: {
       </span>
 
       <span className="linha-hora">
-        {feita ? (
-          <span className="carimbo-lugar"><Carimbo /></span>
+        {entrada.genero === 'tarefa' ? (
+          <CampoDeCarimbo
+            feita={!!entrada.feita}
+            aoAlternar={() => aoAlterar({ feita: !entrada.feita })}
+            rotulo={`${contexto}: dar o visto a “${entrada.texto || 'linha em branco'}”`}
+          />
         ) : entrada.genero !== 'refeicao' ? (
           <input
             className="escrita escrita--hora"

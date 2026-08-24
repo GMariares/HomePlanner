@@ -8,6 +8,7 @@ import { Escrita } from './Escrita'
 /** Uma pauta em branco também é uma pauta: escreve-se nela e passa a existir. */
 function LinhaEmBranco({ rotulo, aoEscrever }: { rotulo: string; aoEscrever: (texto: string) => void }) {
   const [texto, definir] = useState('')
+  const guardar = () => { if (texto.trim()) { aoEscrever(texto.trim()); definir('') } }
   return (
     <div className="linha linha--branco">
       <span className="linha-goteira" />
@@ -16,7 +17,8 @@ function LinhaEmBranco({ rotulo, aoEscrever }: { rotulo: string; aoEscrever: (te
           valor={texto}
           rotulo={rotulo}
           aoMudar={definir}
-          aoTerminar={() => { if (texto.trim()) { aoEscrever(texto.trim()); definir('') } }}
+          aoTerminar={guardar}
+          aoConfirmar={guardar}
         />
       </span>
       <span className="linha-hora" />
@@ -56,11 +58,12 @@ export function Dia({ indice, data, entradas, hoje, pautasMinimas = 3, aoAcresce
       </header>
 
       <div className="dia-corpo pauta margem">
-        {entradas.map(e => (
+        {entradas.map((e, ordem) => (
           <Linha
             key={e.id}
             entrada={e}
             contexto={`${nome}, ${curto(data)}`}
+            destaque={ordem === 0 && !e.riscada}
             aoAlterar={m => aoAlterar(e.id, m)}
             aoApagar={() => aoApagar(e.id)}
             aoMover={d => aoMover(e.id, d)}

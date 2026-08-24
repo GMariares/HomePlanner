@@ -44,6 +44,7 @@ export function ListaSemana({ entradas, aoAcrescentar, aoAlterar, aoApagar, aoMo
               rotulo="Escrever uma tarefa sem dia marcado"
               aoMudar={definir}
               aoTerminar={guardar}
+              aoConfirmar={guardar}
             />
           </span>
           <span className="linha-hora" />

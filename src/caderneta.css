@@ -5,13 +5,13 @@
 :root {
   --t-impresso: 0.6875rem;   /* o que vem impresso no caderno */
   --t-escrita: 1.0625rem;    /* o que a família escreve */
-  --largura-accoes: 2rem;
-  --t-capa: 1.375rem;        /* a capa */
+  --t-destaque: 1.5rem;      /* a primeira linha do dia, e o nome na capa */
   --t-dia: 2.5rem;           /* o nome do dia */
+  --largura-accoes: 2rem;
 }
 
 @media (max-width: 47.99rem) {
-  :root { --t-dia: 1.875rem; --t-escrita: 1rem; }
+  :root { --t-dia: 1.875rem; --t-destaque: 1.375rem; --t-escrita: 1rem; --largura-accoes: 1.5rem; }
 }
 
 .caderneta { min-height: 100dvh; padding-bottom: 4rem; }
@@ -42,8 +42,8 @@
   border-bottom: 1px dashed color-mix(in srgb, var(--folha) 32%, transparent);
   padding: 0 0 0.125rem;
   font-family: var(--font-mao);
-  font-size: 1.875rem;
-  line-height: 1.15;
+  font-size: var(--t-destaque);
+  line-height: 1.2;
   color: var(--folha);
   width: min(20ch, 60vw);
   border-radius: 1px;
@@ -82,7 +82,7 @@
   align-items: center;
   gap: 0.625rem;
   flex-wrap: wrap;
-  font-size: 0.8125rem;
+  font-size: var(--t-escrita);
   color: var(--impresso-tinta);
 }
 .aviso-selo {
@@ -111,7 +111,7 @@
   display: flex;
   align-items: baseline;
   gap: 0.625rem;
-  font-size: 0.8125rem;
+  font-size: var(--t-escrita);
   color: var(--margem);
 }
 .falha-marca {
@@ -202,7 +202,7 @@
   line-height: 0.95;
   font-weight: 700;
   font-stretch: 118%;
-  letter-spacing: -0.012em;
+  letter-spacing: 0.015em;
   text-transform: uppercase;
   color: var(--capa);
   display: flex;
@@ -237,6 +237,9 @@
 .dia-corpo { position: relative; }
 
 /* ---------------- uma linha ---------------- */
+.linha--destaque { font-size: var(--t-destaque); }
+.linha--destaque .escrita { letter-spacing: -0.01em; }
+
 .linha {
   position: relative;
   display: grid;
@@ -258,7 +261,7 @@
 .escrita--hora {
   text-align: right;
   font-variant-numeric: tabular-nums;
-  font-size: 0.9375rem;
+  font-size: var(--t-escrita);
   color: var(--impresso-tinta);
   letter-spacing: 0.01em;
 }
@@ -286,7 +289,7 @@
 .etiqueta--impressa { color: var(--impresso-tinta); border: 1px solid color-mix(in srgb, var(--impresso-tinta) 32%, transparent); }
 
 /* riscada: a agenda guarda o que aconteceu */
-.linha--riscada { color: color-mix(in srgb, var(--impresso-tinta) 88%, transparent); }
+.linha--riscada { color: var(--impresso-tinta); }
 .linha--riscada s { text-decoration-color: var(--margem); text-decoration-thickness: 1.5px; }
 .linha-mudanca {
   display: inline-flex;
@@ -301,32 +304,31 @@
 }
 
 /* tarefa carimbada */
-.linha[data-feita] .escrita { color: color-mix(in srgb, var(--impresso-tinta) 90%, transparent); text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--carimbo) 60%, transparent); }
-.casa-carimbo {
+.linha[data-feita] .escrita { color: var(--impresso-tinta); text-decoration: line-through; text-decoration-color: var(--carimbo); }
+.campo-carimbo {
   appearance: none;
   background: none;
   border: 0;
   padding: 0;
-  color: color-mix(in srgb, var(--impresso-tinta) 78%, transparent);
+  margin: 0;
+  color: color-mix(in srgb, var(--carimbo) 46%, var(--folha));
   cursor: pointer;
-  display: inline-flex;
+  display: block;
   position: relative;
+  width: var(--hora-x);
+  height: var(--pauta-passo);
   border-radius: 2px;
+  transition: color 160ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.casa-carimbo::before { content: ""; position: absolute; inset: -0.75rem -0.875rem; }
-.casa-carimbo:hover { color: var(--carimbo); }
-.linha[data-feita] .casa-carimbo { color: var(--carimbo); }
+.campo-carimbo::before { content: ""; position: absolute; inset: -0.25rem -0.5rem; }
+.campo-carimbo:hover { color: color-mix(in srgb, var(--carimbo) 78%, var(--folha)); }
+.campo-carimbo svg { display: block; width: 100%; height: auto; }
+.linha[data-feita] .campo-carimbo { color: var(--carimbo); }
 
-.carimbo-lugar {
-  position: absolute;
-  inset-inline-end: 0;
-  top: 50%;
-  translate: 0 -50%;
-  pointer-events: none;
-  line-height: 0;
-}
-.carimbo { display: block; color: var(--carimbo); }
-.carimbo svg { display: block; width: var(--hora-x); height: auto; transform: rotate(-6deg); animation: carimbar 420ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.carimbo { display: block; }
+.carimbo svg { transform: rotate(-6deg); }
+/* o momento é o acto de carimbar, não o abrir da página */
+.carimbo[data-acabado-de-carimbar] svg { animation: carimbar 420ms cubic-bezier(0.16, 1, 0.3, 1) both; }
 @keyframes carimbar {
   0%   { transform: rotate(-11deg) scale(1.5); opacity: 0; }
   55%  { opacity: 1; }
@@ -352,6 +354,26 @@
   .linha-accoes .botao-nu { opacity: 0; transition: opacity 140ms ease-out; }
   .linha:hover .botao-nu, .linha:focus-within .botao-nu, .botao-nu:focus-visible { opacity: 1; }
 }
+
+/* Num ecrã de toque não há hover: o menu sai da grelha e só aparece
+   quando se entra na linha, devolvendo a largura ao que está escrito. */
+@media (hover: none) {
+  :root { --largura-accoes: 0rem; }
+  .linha-accoes {
+    position: absolute;
+    inset-inline-end: 0;
+    top: 0;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--folha);
+    box-shadow: -0.875rem 0 0.75rem var(--folha);
+  }
+  .linha:focus-within .linha-accoes { opacity: 1; pointer-events: auto; }
+}
+
+/* uma refeição nunca tem hora: a coluna fecha e a medida cresce */
+.linha[data-genero="refeicao"] { grid-template-columns: var(--margem-x) minmax(0, 1fr) 0 var(--largura-accoes); }
+.linha[data-genero="refeicao"] .linha-hora { padding-inline-end: 0; }
 
 /* ---------------- o menu ---------------- */
 .menu-raiz { position: relative; display: inline-flex; }
@@ -379,7 +401,7 @@
   width: 100%;
   text-align: start;
   padding: 0.4375rem 0.5rem;
-  font-size: 0.9375rem;
+  font-size: var(--t-escrita);
   color: var(--casa);
   border-radius: 2px;
   cursor: pointer;

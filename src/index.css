@@ -40,7 +40,6 @@
     --pauta-passo: 2.375rem;
     --margem-x: 2.5rem;
     --hora-x: 3.25rem;
-    --largura-accoes: 1.5rem;
   }
 }
 
@@ -132,10 +131,11 @@ body {
   overflow: hidden;
   overflow-wrap: break-word;
 }
-.escrita[data-esbatido] { opacity: 0.62; }
+/* a continuação de um compromisso longo é secundária, mas continua a ler-se */
+.escrita[data-esbatido] { color: var(--impresso-tinta); }
 .escrita::placeholder { color: transparent; }
-.escrita:hover::placeholder { color: color-mix(in srgb, var(--impresso-tinta) 45%, transparent); }
-.escrita:focus::placeholder { color: color-mix(in srgb, var(--impresso-tinta) 60%, transparent); }
+.escrita:hover::placeholder,
+.escrita:focus::placeholder { color: var(--impresso-tinta); }
 .escrita:focus { outline: none; }
 .linha:focus-within {
   background: color-mix(in srgb, var(--fita) 9%, transparent);
