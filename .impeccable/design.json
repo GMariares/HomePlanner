@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-24T11:37:34Z",
+  "generatedAt": "2026-08-24T13:46:57Z",
   "title": "Design System: HomePlanner",
   "extensions": {
     "colorMeta": {
@@ -22,7 +22,7 @@
       "folha": {
         "role": "neutral",
         "displayName": "Folha",
-        "purpose": "The sheet itself, one step brighter than the stock; the opening, the menu surface, the label card on the cover screens, and text on the cover.",
+        "purpose": "The sheet, one step brighter than the stock: the opening, the menu, the label card, the open thumb tab, the cover's text colour, and the mask behind the touch action menu.",
         "tonalRamp": [
           "oklch(15% 0.002 247.9)",
           "oklch(26% 0.002 247.9)",
@@ -37,7 +37,7 @@
       "pauta": {
         "role": "neutral",
         "displayName": "Pauta",
-        "purpose": "The printed rules, drawn as a repeating gradient rather than as borders.",
+        "purpose": "The printed rules, drawn as a repeating gradient rather than as borders. Also the strip's frame and cell dividers, the dish picker's separators, and every light hover wash (28-45%).",
         "tonalRamp": [
           "oklch(15% 0.014 254.4)",
           "oklch(26% 0.015 254.4)",
@@ -67,7 +67,7 @@
       "impresso-tinta": {
         "role": "neutral",
         "displayName": "Tinta do Impresso",
-        "purpose": "The grey-blue the book is printed in; every printed label and date, the field labels and always-visible placeholders on a label card, and the recessive state.",
+        "purpose": "The grey-blue the book is printed in: every printed label, date and role tag; the time and quantity columns; a printed caption on a ruled page; a dish's ingredient count; the dish a shopping item came from; and the recessive state for a continuation, a completed task and a bought item.",
         "tonalRamp": [
           "oklch(15% 0.037 258.8)",
           "oklch(26% 0.039 258.8)",
@@ -82,7 +82,7 @@
       "margem": {
         "role": "tertiary",
         "displayName": "Vermelho da Margem",
-        "purpose": "Correction and identification: the margin rule on the page and down the left of the label card, the strike on a moved entry, destructive actions, failure strips, a form's error rule, and the focus ring everywhere but the navy.",
+        "purpose": "Correction, and the mark of the book: the margin rule at 55% on every ruled page and down the label card; the strike and arrow on a moved entry; the 'de trás' mark on a shopping item carried over; the destructive menu item; every failure strip; the inline confirmation's 7% wash, 2px inset edge and outlined button; and the focus ring everywhere except the navy cover.",
         "tonalRamp": [
           "oklch(15% 0.136 29.7)",
           "oklch(26% 0.147 29.7)",
@@ -127,7 +127,7 @@
       "fita": {
         "role": "secondary",
         "displayName": "Ocre da Fita",
-        "purpose": "The marker colour, one job per ground: today and the focused rule on the sheet; focus and the household's join code on the navy cover.",
+        "purpose": "The marker colour. It answers one question — where are you? — and nothing else: today's ribbon on the day block and on today's strip cell, the HOJE chip, the rule under the cursor, the opened strip cell and the opened dish row. On the navy cover it is the focus ring, and it marks the household's join code — the one mark that answers a different question, and the only exception.",
         "tonalRamp": [
           "oklch(15% 0.091 78.2)",
           "oklch(26% 0.099 78.2)",
@@ -142,7 +142,7 @@
       "carimbo": {
         "role": "secondary",
         "displayName": "Violeta do Carimbo",
-        "purpose": "Acknowledgement: the VISTO stamp, the strike on a stamped task, the pending stamp field.",
+        "purpose": "Acknowledgement: the VISTO stamp, the strike on a stamped task and on a bought shopping item, and at 70% over the sheet the dashed field waiting for a stamp.",
         "tonalRamp": [
           "oklch(15% 0.133 299.5)",
           "oklch(26% 0.143 299.5)",
@@ -202,7 +202,7 @@
       "casa": {
         "role": "tertiary",
         "displayName": "Esferográfica Preta",
-        "purpose": "The household pen, for what belongs to everyone; also base text and every meal.",
+        "purpose": "The household pen, for what belongs to everyone: the document's base text colour, every meal, and everything in the ementa and the dish book — a dinner, a shopping item, a dish and an ingredient belong to the table rather than to a person.",
         "tonalRamp": [
           "oklch(15% 0.028 269.9)",
           "oklch(26% 0.029 269.9)",
@@ -218,19 +218,19 @@
     "typographyMeta": {
       "display": {
         "displayName": "O Dia (--t-dia)",
-        "purpose": "The day name, at poster scale. The week is navigated by these before anything else is read."
+        "purpose": "The day name and the name of a section — OS JANTARES, A LISTA, O LIVRO — at poster scale. The book is navigated by these before anything else is read."
       },
       "headline": {
         "displayName": "Destaque (--t-destaque)",
-        "purpose": "The raised step: each day's lead entry, and the household name on the cover."
+        "purpose": "The raised step: each day's lead entry, the chosen dish at the head of an open day's panel, and the household name on the cover."
       },
       "body": {
         "displayName": "A Escrita (--t-escrita)",
-        "purpose": "Everything the household writes, plus menu items, cover-screen fields, explanatory copy and every failure sentence. Line-height locks to the rule pitch in the week."
+        "purpose": "Everything the household writes, plus menu items, dish-picker lines, cover-screen fields, explanatory copy, the inline confirmation sentence and every failure sentence. Line-height locks to the rule pitch on a ruled page."
       },
       "label": {
         "displayName": "O Impresso (--t-impresso)",
-        "purpose": "Everything the book arrives with: dates, the week interval, role and meal tags, the HOJE chip, menu headings, the brand line and field labels on a label card, every text-underline control, and the mark opening a failure strip."
+        "purpose": "Everything the book arrives with: dates, the week interval, role and meal tags, the HOJE chip, the thumb tabs, the strip's day abbreviations, a dish's ingredient count, a shopping item's provenance, the 'de trás' mark, a printed caption occupying one rule, every text-underline control, the inline confirm button, and the mark that opens a failure strip."
       },
       "hand": {
         "displayName": "A Mão (Caveat)",
@@ -309,17 +309,17 @@
       {
         "name": "movel",
         "value": "47.99rem",
-        "purpose": "Type steps down, and the rule pitch, margin and time column widen for touch: --pauta-passo 2.375rem, --margem-x 2.5rem, --hora-x 3.25rem."
+        "purpose": "Type steps down, and the rule pitch, margin and column widths widen for touch: --pauta-passo 2.375rem, --margem-x 2.5rem, --hora-x 3.25rem, --qtd-x 5.25rem."
       },
       {
         "name": "abertura",
         "value": "64rem",
-        "purpose": "At and above, the opening is a true two-page grid with a 2.25rem gutter; below, one column with the gutter as a horizontal break."
+        "purpose": "At and above, the week is a true two-page grid with a 2.25rem gutter and the strip is seven columns; below, the week is one column with the gutter as a horizontal break, the strip stacks into seven single rules, and a shopping item's provenance is hidden — in the aisle the measure is worth more."
       },
       {
         "name": "toque",
         "value": "(hover: none)",
-        "purpose": "The actions column collapses to 0 and the row menu lifts out of the grid, giving the width back to what is written."
+        "purpose": "The actions column collapses to 0 and the row menu lifts out of the grid; the focused row takes padding-inline-end: 1.75rem so it shrinks to let the menu in rather than the menu covering the quantity and the ingredient count."
       }
     ],
     "measurements": [
@@ -362,6 +362,26 @@
         "name": "medida-movel-tarefa",
         "value": "128px",
         "purpose": "Mobile text column for a task with a set time, which opens a fifth column for the stamp."
+      },
+      {
+        "name": "medida-movel-compra-jantar",
+        "value": "199px",
+        "purpose": "Mobile text column for a dinner row on the shopping list."
+      },
+      {
+        "name": "medida-movel-compra-refeicao",
+        "value": "223px",
+        "purpose": "Mobile text column for a meal row on the shopping list."
+      },
+      {
+        "name": "toque-conta-fim",
+        "value": "x=334",
+        "purpose": "Right edge of the ingredient-count button on touch with the row focused."
+      },
+      {
+        "name": "toque-carril-inicio",
+        "value": "x=343",
+        "purpose": "Left edge of the revealed menu rail on touch. 9px clear of the count button — no overlap."
       }
     ]
   },
@@ -509,19 +529,61 @@
       "description": "The join code on the navy cover, in ribbon ochre — the cover's one accent, marking the one thing on it that is unique to this household.",
       "html": "<p class=\"ds-capa-conta\"><span>Código <strong class=\"ds-capa-codigo\">ABC234</strong></span><span class=\"ds-capa-email\">alguem@exemplo.pt</span><button class=\"ds-capa-sair\">Sair</button></p>",
       "css": ".ds-capa-conta{margin:0;padding:1rem;background:var(--capa,#16224a);display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;justify-content:flex-end;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;font-size:.6875rem;font-weight:600;font-stretch:112%;letter-spacing:.14em;text-transform:uppercase;color:var(--impresso-tinta,#5a6b85)}.ds-capa-codigo{color:var(--fita,#c8912b);letter-spacing:.16em;font-weight:700}.ds-capa-email{max-width:14ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ds-capa-sair{appearance:none;background:none;border:0;padding:0;font:inherit;color:inherit;border-bottom:1px solid currentColor;cursor:pointer}.ds-capa-sair:hover{color:var(--folha,#f8fafc)}"
+    },
+    {
+      "name": "Abas (Thumb Tabs)",
+      "kind": "nav",
+      "refersTo": "aba",
+      "description": "The sections of the notebook, cut as thumb tabs into the navy cover band. The open tab fills with the sheet: it has become the page.",
+      "html": "<div class=\"ds-capa-band\"><nav class=\"ds-abas\" aria-label=\"Secções da caderneta\"><button type=\"button\" class=\"ds-aba\">A semana</button><button type=\"button\" class=\"ds-aba\" aria-current=\"true\">Ementa e compras</button><button type=\"button\" class=\"ds-aba\">O livro</button></nav></div>",
+      "css": ".ds-capa-band { background-image: linear-gradient(180deg, color-mix(in srgb, var(--capa, #16224a) 88%, white) 0%, var(--capa, #16224a) 62%, var(--capa-funda, #0e1730) 100%); padding: 1.25rem 1.5rem 0; } .ds-abas { display: flex; gap: 0.25rem; } .ds-aba { appearance: none; font-family: Archivo, ui-sans-serif, system-ui, sans-serif; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; background: color-mix(in srgb, var(--capa-funda, #0e1730) 55%, transparent); border: 1px solid color-mix(in srgb, var(--folha, #f8fafc) 18%, transparent); border-bottom: 0; border-radius: 3px 3px 0 0; color: color-mix(in srgb, var(--folha, #f8fafc) 68%, var(--capa, #16224a)); padding: 0.4375rem 0.75rem 0.5rem; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), color 160ms; } .ds-aba:hover { color: var(--folha, #f8fafc); } .ds-aba:focus-visible { outline: 2px solid var(--fita, #c8912b); outline-offset: 2px; } .ds-aba[aria-current] { background: var(--folha, #f8fafc); color: var(--capa, #16224a); border-color: var(--folha, #f8fafc); }"
+    },
+    {
+      "name": "Tira (Strip)",
+      "kind": "custom",
+      "refersTo": "tira-celula",
+      "description": "Seven dinners in one glance. Today carries a ribbon; the opened cell takes an ochre wash and a 2px inset edge along its bottom, where it meets what it opened.",
+      "html": "<ol class=\"ds-tira\"><li class=\"ds-tira-item\"><button type=\"button\" class=\"ds-tira-celula\" data-hoje><span class=\"ds-fita-tira\" aria-hidden=\"true\"></span><span class=\"ds-tira-dia\">Seg <span class=\"ds-tira-data\">24/08</span></span><span class=\"ds-tira-prato\">Massa com atum</span></button></li><li class=\"ds-tira-item\"><button type=\"button\" class=\"ds-tira-celula\" data-aberta aria-expanded=\"true\"><span class=\"ds-tira-dia\">Ter <span class=\"ds-tira-data\">25/08</span></span><span class=\"ds-tira-prato\">Bacalhau à Brás</span></button></li><li class=\"ds-tira-item\"><button type=\"button\" class=\"ds-tira-celula\"><span class=\"ds-tira-dia\">Qua <span class=\"ds-tira-data\">26/08</span></span><span class=\"ds-tira-prato ds-vazio\">por decidir</span></button></li></ol>",
+      "css": ".ds-tira { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-block: 1px solid var(--pauta, #c7d2e0); background: var(--folha, #f8fafc); font-family: Archivo, ui-sans-serif, system-ui, sans-serif; } .ds-tira-item { min-width: 0; } .ds-tira-celula { position: relative; appearance: none; background: none; border: 0; border-inline-start: 1px solid var(--pauta, #c7d2e0); width: 100%; min-height: calc(var(--pauta-passo, 2.125rem) * 2); padding: 0.4375rem 0.5rem 0.5rem; display: flex; flex-direction: column; gap: 0.1875rem; text-align: start; cursor: pointer; font: inherit; transition: background-color 140ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-tira-item:first-child .ds-tira-celula { border-inline-start: 0; } .ds-tira-celula:hover { background: color-mix(in srgb, var(--pauta, #c7d2e0) 28%, transparent); } .ds-tira-celula:focus-visible { outline: 2px solid var(--margem, #c0392b); outline-offset: -2px; } .ds-tira-celula[data-aberta] { background: color-mix(in srgb, var(--fita, #c8912b) 12%, transparent); box-shadow: inset 0 -2px 0 var(--fita, #c8912b); } .ds-tira-celula[data-hoje] { padding-inline-start: 1.25rem; } .ds-tira-dia { display: block; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; color: var(--impresso-tinta, #5a6b85); } .ds-tira-data { letter-spacing: 0.06em; } .ds-tira-prato { font-size: var(--t-escrita, 1.0625rem); line-height: 1.25; color: var(--casa, #1a1f2e); overflow-wrap: break-word; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; } .ds-tira-prato.ds-vazio { color: var(--impresso-tinta, #5a6b85); } .ds-fita-tira { position: absolute; inset-inline-start: 0.4375rem; top: -0.5rem; width: 0.4375rem; height: 1.75rem; background: linear-gradient(180deg, color-mix(in srgb, var(--fita, #c8912b) 88%, white), var(--fita, #c8912b)); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 0.4375rem), 0 100%); box-shadow: 0 1px 3px rgb(14 23 48 / 0.28); }"
+    },
+    {
+      "name": "Linha de Prato (Dish Row)",
+      "kind": "custom",
+      "refersTo": "prato-conta",
+      "description": "A dish in the book: renamed by typing over it, opened by pressing its printed ingredient count, with its ingredients following as indented rows of the same ruled page.",
+      "html": "<div class=\"ds-pagina ds-pauta\"><div class=\"ds-linha ds-linha--prato\" data-aberto><span class=\"ds-goteira\"></span><span class=\"ds-corpo\"><textarea class=\"ds-escrita\" rows=\"1\">Bacalhau à Brás</textarea></span><span class=\"ds-col\"><button type=\"button\" class=\"ds-prato-conta\" aria-expanded=\"true\">3 coisas</button></span><span class=\"ds-col\"></span></div><div class=\"ds-linha ds-linha--legenda\"><span class=\"ds-goteira\"></span><span class=\"ds-corpo ds-impresso\">O que este prato leva</span><span class=\"ds-col\"></span><span class=\"ds-col\"></span></div><div class=\"ds-linha ds-linha--dentro\"><span class=\"ds-goteira\"></span><span class=\"ds-corpo\"><textarea class=\"ds-escrita\" rows=\"1\">Bacalhau desfiado</textarea></span><span class=\"ds-col\"><input class=\"ds-escrita ds-escrita--col\" value=\"400 g\" placeholder=\"qt.\"></span><span class=\"ds-col\"></span></div><div class=\"ds-linha ds-linha--dentro\"><span class=\"ds-goteira\"></span><span class=\"ds-corpo\"><textarea class=\"ds-escrita\" rows=\"1\">Batata palha</textarea></span><span class=\"ds-col\"><input class=\"ds-escrita ds-escrita--col\" value=\"1 pacote\" placeholder=\"qt.\"></span><span class=\"ds-col\"></span></div></div>",
+      "css": ".ds-pagina { position: relative; background-color: var(--folha, #f8fafc); background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--pauta-passo, 2.125rem) - 1px), var(--pauta, #c7d2e0) calc(var(--pauta-passo, 2.125rem) - 1px), var(--pauta, #c7d2e0) var(--pauta-passo, 2.125rem)); font-family: Archivo, ui-sans-serif, system-ui, sans-serif; } .ds-pagina::before { content: \"\"; position: absolute; inset-block: 0; inset-inline-start: var(--margem-x, 3.25rem); width: 1px; background: color-mix(in srgb, var(--margem, #c0392b) 55%, transparent); pointer-events: none; } .ds-linha { position: relative; display: grid; align-items: start; min-height: var(--pauta-passo, 2.125rem); line-height: var(--pauta-passo, 2.125rem); font-size: var(--t-escrita, 1.0625rem); color: var(--casa, #1a1f2e); } .ds-linha--prato { grid-template-columns: var(--margem-x, 3.25rem) minmax(0, 1fr) var(--qtd-x, 5.5rem) 2rem; } .ds-linha--legenda { grid-template-columns: var(--margem-x, 3.25rem) minmax(0, 1fr) var(--qtd-x, 5.5rem) 2rem; } .ds-linha--dentro { grid-template-columns: calc(var(--margem-x, 3.25rem) + 1.5rem) minmax(0, 1fr) var(--qtd-x, 5.5rem) 2rem; } .ds-linha--prato[data-aberto] { box-shadow: inset 2px 0 0 var(--fita, #c8912b); } .ds-linha:focus-within { background: color-mix(in srgb, var(--fita, #c8912b) 9%, transparent); box-shadow: inset 2px 0 0 var(--fita, #c8912b); } .ds-goteira, .ds-col { height: var(--pauta-passo, 2.125rem); } .ds-corpo { display: flex; align-items: center; gap: 0.5rem; min-width: 0; padding-inline-start: 0.625rem; } .ds-impresso { font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; color: var(--impresso-tinta, #5a6b85); line-height: var(--pauta-passo, 2.125rem); } .ds-escrita { appearance: none; background: transparent; border: 0; padding: 0; margin: 0; font: inherit; line-height: var(--pauta-passo, 2.125rem); color: inherit; width: 100%; display: block; box-sizing: border-box; border-radius: 1px; resize: none; overflow: hidden; } .ds-escrita:focus { outline: none; } .ds-escrita::placeholder { color: transparent; } .ds-escrita:hover::placeholder, .ds-escrita:focus::placeholder { color: var(--impresso-tinta, #5a6b85); } .ds-escrita--col { text-align: right; font-variant-numeric: tabular-nums; font-size: var(--t-escrita, 1.0625rem); color: var(--impresso-tinta, #5a6b85); letter-spacing: 0.01em; padding-inline-end: 0.375rem; } .ds-escrita--col::placeholder { color: var(--impresso-tinta, #5a6b85); opacity: 0; } .ds-escrita--col:hover::placeholder, .ds-escrita--col:focus::placeholder { opacity: 1; } .ds-prato-conta { appearance: none; background: none; border: 0; padding: 0 0.25rem; height: var(--pauta-passo, 2.125rem); line-height: var(--pauta-passo, 2.125rem); font-family: inherit; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; color: var(--impresso-tinta, #5a6b85); cursor: pointer; border-radius: 2px; white-space: nowrap; float: right; } .ds-prato-conta:hover { color: var(--capa, #16224a); background: color-mix(in srgb, var(--pauta, #c7d2e0) 40%, transparent); } .ds-prato-conta:focus-visible { outline: 2px solid var(--margem, #c0392b); outline-offset: 2px; }"
+    },
+    {
+      "name": "Linha de Compra (Shopping Row)",
+      "kind": "custom",
+      "refersTo": "compra-origem",
+      "description": "The one row that carries a stamp without a time: gutter, name, quantity, stamp, rail. A printed provenance says which dish put the item on the list, and is hidden below 64rem.",
+      "html": "<div class=\"ds-pagina ds-pauta\"><div class=\"ds-linha ds-linha--compra\" data-feita><span class=\"ds-goteira\"></span><span class=\"ds-corpo\"><textarea class=\"ds-escrita ds-feito\" rows=\"1\">Bacalhau desfiado</textarea><span class=\"ds-origem\">Bacalhau à Brás</span></span><span class=\"ds-col\"><input class=\"ds-escrita ds-escrita--col ds-feito\" value=\"400 g\"></span><span class=\"ds-col\"><span class=\"ds-carimbo\"><svg viewBox=\"0 0 74 30\" width=\"68\" aria-hidden=\"true\"><rect x=\"1.2\" y=\"1.2\" width=\"71.6\" height=\"27.6\" rx=\"4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\"/><text x=\"37\" y=\"20\" text-anchor=\"middle\" font-family=\"Archivo, sans-serif\" font-size=\"12\" font-weight=\"700\" letter-spacing=\"2\" fill=\"currentColor\">VISTO</text></svg></span></span><span class=\"ds-col\"></span></div><div class=\"ds-linha ds-linha--compra\"><span class=\"ds-goteira\"></span><span class=\"ds-corpo\"><textarea class=\"ds-escrita\" rows=\"1\">Pilhas AA</textarea><span class=\"ds-atrasada\">de trás</span></span><span class=\"ds-col\"><input class=\"ds-escrita ds-escrita--col\" value=\"4\"></span><span class=\"ds-col\"><button type=\"button\" class=\"ds-campo-carimbo\" role=\"checkbox\" aria-checked=\"false\"><svg viewBox=\"0 0 74 30\" width=\"68\" aria-hidden=\"true\"><rect x=\"1\" y=\"1\" width=\"72\" height=\"28\" rx=\"4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-dasharray=\"5 4\"/></svg></button></span><span class=\"ds-col\"></span></div></div>",
+      "css": ".ds-pagina { position: relative; background-color: var(--folha, #f8fafc); background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--pauta-passo, 2.125rem) - 1px), var(--pauta, #c7d2e0) calc(var(--pauta-passo, 2.125rem) - 1px), var(--pauta, #c7d2e0) var(--pauta-passo, 2.125rem)); font-family: Archivo, ui-sans-serif, system-ui, sans-serif; } .ds-pagina::before { content: \"\"; position: absolute; inset-block: 0; inset-inline-start: var(--margem-x, 3.25rem); width: 1px; background: color-mix(in srgb, var(--margem, #c0392b) 55%, transparent); pointer-events: none; } .ds-linha { position: relative; display: grid; align-items: start; min-height: var(--pauta-passo, 2.125rem); line-height: var(--pauta-passo, 2.125rem); font-size: var(--t-escrita, 1.0625rem); color: var(--casa, #1a1f2e); } .ds-linha--compra { grid-template-columns: var(--margem-x, 3.25rem) minmax(0, 1fr) var(--qtd-x, 5.5rem) var(--hora-x, 4.25rem) 2rem; } .ds-linha:focus-within { background: color-mix(in srgb, var(--fita, #c8912b) 9%, transparent); box-shadow: inset 2px 0 0 var(--fita, #c8912b); } .ds-goteira, .ds-col { height: var(--pauta-passo, 2.125rem); } .ds-corpo { display: flex; align-items: flex-start; gap: 0; min-width: 0; padding-inline-start: 0.625rem; } .ds-escrita { appearance: none; background: transparent; border: 0; padding: 0; margin: 0; font: inherit; line-height: var(--pauta-passo, 2.125rem); color: inherit; width: 100%; display: block; box-sizing: border-box; border-radius: 1px; resize: none; overflow: hidden; } .ds-escrita:focus { outline: none; } .ds-escrita--col { text-align: right; font-variant-numeric: tabular-nums; color: var(--impresso-tinta, #5a6b85); letter-spacing: 0.01em; padding-inline-end: 0.375rem; } .ds-feito { text-decoration: line-through; text-decoration-color: var(--carimbo, #6b3fa8); color: var(--impresso-tinta, #5a6b85); } .ds-origem, .ds-atrasada { flex: none; align-self: center; line-height: var(--pauta-passo, 2.125rem); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-inline-start: 0.5rem; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; } .ds-origem { color: var(--impresso-tinta, #5a6b85); max-width: 11rem; } .ds-atrasada { color: var(--margem, #c0392b); } @media (max-width: 63.99rem) { .ds-origem { display: none; } } .ds-campo-carimbo { appearance: none; background: none; border: 0; padding: 0; margin: 0; color: color-mix(in srgb, var(--carimbo, #6b3fa8) 70%, var(--folha, #f8fafc)); cursor: pointer; display: block; position: relative; width: var(--hora-x, 4.25rem); height: var(--pauta-passo, 2.125rem); border-radius: 2px; transition: color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-campo-carimbo::before { content: \"\"; position: absolute; inset: -0.25rem -0.5rem; } .ds-campo-carimbo:hover { color: var(--carimbo, #6b3fa8); } .ds-campo-carimbo:focus-visible { outline: 2px solid var(--margem, #c0392b); outline-offset: 2px; } .ds-campo-carimbo svg { display: block; } .ds-carimbo { display: block; color: var(--carimbo, #6b3fa8); } .ds-carimbo svg { transform: rotate(-6deg); }"
+    },
+    {
+      "name": "Confirmação na Linha (Inline Confirmation)",
+      "kind": "custom",
+      "refersTo": "confirmar",
+      "description": "A destructive act asks on the rule below the thing it would destroy, in the red register, naming what survives. No modal, no overlay, no dimming — the page under the question stays readable.",
+      "html": "<p class=\"ds-confirmar\" role=\"alert\"><span>Tirar <strong>Arroz de pato</strong> do livro? Os jantares já marcados ficam escritos como estão — só o prato sai.</span><button type=\"button\" class=\"ds-confirmar-sim\">Tirar do livro</button><button type=\"button\" class=\"ds-botao-linha\">Deixar ficar</button></p>",
+      "css": ".ds-confirmar { margin: 0; padding: 0.625rem 0 0.625rem var(--margem-x, 3.25rem); display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; font-family: Archivo, ui-sans-serif, system-ui, sans-serif; font-size: var(--t-escrita, 1.0625rem); line-height: 1.45; color: var(--casa, #1a1f2e); background: color-mix(in srgb, var(--margem, #c0392b) 7%, transparent); box-shadow: inset 2px 0 0 var(--margem, #c0392b); } .ds-confirmar-sim { appearance: none; border: 1px solid var(--margem, #c0392b); background: none; color: var(--margem, #c0392b); border-radius: 2px; padding: 0.3125rem 0.625rem; cursor: pointer; white-space: nowrap; font-family: inherit; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; } .ds-confirmar-sim:hover { background: var(--margem, #c0392b); color: var(--folha, #f8fafc); } .ds-confirmar-sim:focus-visible { outline: 2px solid var(--margem, #c0392b); outline-offset: 2px; } .ds-botao-linha { appearance: none; background: none; border: 0; padding: 0; color: var(--impresso-tinta, #5a6b85); border-bottom: 1px solid currentColor; cursor: pointer; font-family: inherit; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; } .ds-botao-linha:hover { color: var(--capa, #16224a); }"
     }
   ],
   "narrative": {
     "northStar": "A Caderneta",
-    "overview": "The Portuguese school agenda, opened flat to this week. Everything the application provides is *printed* — day names, rules, dates, the red margin, the role tags, the field labels. Everything the household provides is *written* — each member's own pen, sitting on the rule. Those two registers carry the whole identity, and they never mix. Nothing else in this system is load-bearing: no texture, no skeuomorphic paper photograph, no drop-shadowed cards pretending to be sheets. The book is conveyed by the rule pitch, the margin, the gutter and the ribbon, and by nothing else.\n\nThe world has exactly two grounds, and they are the two faces of one object. The **cover** is saturated navy: the header band on the week, and the full-bleed field behind every screen that comes before the week. The **sheet** is a cool blue-grey `papel` stock with a slightly brighter `folha` sheet laid on it. Warm parchment, lamplight and sepia are outside this world — the surface is read at 7:40am in a kitchen with sun on the screen, and the primary register has to survive that. Density is deliberately light: a household week is about ten entries, so the design refuses the seven-column hour grid that would render those ten entries as ninety percent empty scaffolding, and instead rules every day whether or not anything is on it. An empty day is not a void or an illustration; it is clear ruling, waiting.\n\nEverything that happens before the week — signing in, creating an account, confirming an email, opening a household, joining one with its six-letter code, and the two configuration messages the application can print about itself — happens on one recurring object: a single white name label, glued slightly crooked to the navy cover, carrying the same red margin rule as the pages inside. There is no second layout for authentication and no marketing front door. The book identifies itself the way a school notebook does, by the label on its cover.\n\nType is set at four sizes with wide jumps and nothing between them — a specimen ramp, not a smooth scale. Day names run at poster scale. Each day's lead entry is raised one step, because it is what gets read before the day name. The one handwriting face in the entire application is the household's own name on the cover, the way a name label is written on a school book; every other written thing is carried by ink colour and by the baseline sitting on the rule, never by a script font.",
+    "overview": "The Portuguese school agenda, opened flat. Everything the application provides is printed — day names, rules, dates, the red margin, the role tags, the field labels, the ingredient count beside a dish, the dish a shopping item came from. Everything the household provides is written — each member's own pen, sitting on the rule. Those two registers carry the whole identity, and they never mix. The book is conveyed by the rule pitch, the margin, the gutter and the ribbon, and by nothing else.\n\nThe world has exactly two grounds, and they are the two faces of one object: the saturated navy cover, and the cool blue-grey sheet. Warm parchment, lamplight and sepia are outside this world — the surface is read at 7:40am in a kitchen with sun on the screen. Density is deliberately light: the design refuses the seven-column hour grid and instead rules every day whether or not anything is on it. An empty day is not a void or an illustration; it is clear ruling, waiting — and so is an empty dish book, which reserves four rule pitches of blank page rather than printing an empty-state graphic.\n\nThe book now has three sections behind one cover, reached by thumb tabs on the navy band: the week, the week's dinners with the shopping list under them, and the household's book of dishes. They are sections of one notebook, not three applications: the same ruled page, the same rule pitch, the same row, the same stamp. The book of dishes belongs to no week, so on its tab the week interval and the week navigation come off the cover and the rest stays exactly where it was. Everything that happens before the week happens on one recurring object: a single white name label, glued slightly crooked to the navy cover, carrying the same red margin rule as the pages inside.",
     "keyCharacteristics": [
       "Two registers that never mix: printed structure versus written content.",
       "Two grounds, one object: the navy cover and the ruled sheet.",
-      "The rule pitch is the layout unit — one entry is exactly one rule.",
+      "The rule pitch is the layout unit — one entry is exactly one rule, across all five surfaces.",
       "No edit mode: every entry and every blank rule is a live field.",
       "Four type sizes, wide jumps, nothing between.",
       "Attribution is the ink *and* a printed role tag — never colour alone.",
       "Completion is a stamp where the ink lands, not a checkbox in a gutter.",
+      "Sections are thumb tabs on the cover, never a sidebar or a bottom bar.",
+      "A destructive act is confirmed in the row itself, on the page, never in a modal.",
       "Every failure has a named, printed state that says what happened in plain Portuguese.",
       "One authored motion moment: the stamp press.",
       "Interface language is Portuguese (pt-PT), and so is the code — class names, custom properties and comments."
@@ -529,88 +591,106 @@
     "rules": [
       {
         "name": "The Two Registers Rule",
-        "section": "colors",
-        "body": "Printed and written never mix. A colour from the printed group (`impresso-tinta`, `pauta`, `pauta-forte`, `capa`) never carries a household entry, and a pen (`pai`, `mae`, `filha`, `casa`) never draws structure. This holds on the cover screens exactly as it holds on the page: the label above a field is printed, the value typed into it is written in `pai`. The only sanctioned crossing is recession: a continuation of a multi-day block, or a completed task, drops from its pen to `impresso-tinta` — it stays readable but stops competing with what has not happened yet."
+        "body": "Printed and written never mix. A colour from the printed group (`impresso-tinta`, `pauta`, `pauta-forte`, `capa`) never carries a household entry, and a pen (`pai`, `mae`, `filha`, `casa`) never draws structure. This holds on the cover screens exactly as it holds on the page, and it held through both new surfaces without amendment: a dish name and an ingredient are written in `casa`; the count beside them, the caption above them and the dish a shopping item came from are printed in `impresso-tinta`. The only sanctioned crossing is recession: a continuation of a multi-day block, a completed task, or a bought shopping item drops from its pen to `impresso-tinta` — it stays readable but stops competing with what has not happened yet.",
+        "section": "colors"
       },
       {
         "name": "The Ink-Plus-Tag Rule",
-        "section": "colors",
-        "body": "Inside the week, a member is never identified by colour alone. Every entry carries its author's ink *and* a printed role tag in that same ink (`PAI`, `MÃE`, `FILHA`, `TODOS`, or an em dash when unassigned). Remove the tag and the attribution is gone, not merely weakened."
+        "body": "Inside the week, a member is never identified by colour alone. Every entry carries its author's ink and a printed role tag in that same ink (`PAI`, `MÃE`, `FILHA`, `TODOS`, or an em dash when unassigned). Remove the tag and the attribution is gone, not merely weakened. The rule is confined to the week by construction, not by exception: nothing in the ementa or the dish book has an author, so nothing there is attributed and no tag appears.",
+        "section": "colors"
       },
       {
         "name": "The One Ribbon Rule",
-        "section": "colors",
-        "body": "`fita` is the marker colour, and it marks one thing per ground. On the sheet: today, and the line under the cursor. On the navy cover: focus, and the join code. It is never a general accent, a button fill, or a highlight for importance, and it never appears twice on the same ground for two different reasons."
+        "body": "`fita` answers exactly one question — where are you? — and it is spent on nothing else. On the sheet it now marks six things, and all six are that one question: today's ribbon down the left of the day block (`.fita`) and of today's strip cell (`.fita--tira`), the `HOJE` chip beside today's name, the rule your cursor is in (`.linha:focus-within`), the strip cell you have opened (`.tira-celula[data-aberta]`), and the dish row you have opened (`.linha--prato[data-aberto]`). On the navy cover it is the focus ring, because red does not read on navy, and it marks the household's join code — the one mark in the system that answers a different question, and the only sanctioned exception. It is never a general accent, never a button fill, never a highlight for importance, and never a category colour. This rule was restated, and the restatement gives ground. It was recorded last pass as \"it marks one thing per ground … and it never appears twice on the same ground for two different reasons.\" The build does not obey that clause and cannot: the dish book shows an opened dish row and a focused dish row carrying ochre at the same instant, and the ementa shows today's ribbon beside an opened cell. What survived the two new surfaces is the meaning, not the count. The clause is withdrawn; the meaning is the rule. Ochre arrives in three weights, and the build does not apply them uniformly: a drawn, shadowed ribbon object for today; a 9–12% wash plus a 2px inset edge for a focused rule and for an opened strip cell; and a bare 2px inset edge for an opened dish row. \"Held open\" is therefore drawn two different ways across the two new surfaces. That is what the build does, recorded as fact rather than as a pattern to copy.",
+        "section": "colors"
       },
       {
         "name": "The Four Steps Rule",
-        "section": "typography",
-        "body": "There are four sizes — 0.6875 / 1.0625 / 1.5 / 2.5rem, with mobile substitutions — and nothing lives between one step and the next. A new element takes an existing step or it does not ship. Weight, width, tracking and case may differ freely within a step (Headline and Title are the same 1.5rem, set differently); the size may not. No intermediate size, no smooth ramp, no `clamp()` on type."
+        "body": "There are four sizes — 0.6875 / 1.0625 / 1.5 / 2.5rem, with mobile substitutions — and nothing lives between one step and the next. A new element takes an existing step or it does not ship. Weight, width, tracking and case may differ freely within a step (Headline and Title are the same 1.5rem, set differently); the size may not. No intermediate size, no smooth ramp, no `clamp()` on type. Everything the two new surfaces added — tabs, strip cells, ingredient counts, provenance, captions, confirmations — took an existing step.",
+        "section": "typography"
       },
       {
-        "name": "The Fixed Time Column Rule",
-        "section": "typography",
-        "body": "The time is bound to `--t-escrita` at doubled specificity (`.escrita.escrita--hora`) precisely so it does *not* rise with a raised lead row. Its column has a fixed width; letting the time scale overflows it. Any value that lives in a fixed-width column must be pinned the same way."
+        "name": "The Fixed Column Rule",
+        "body": "(Recorded last pass as The Fixed Time Column Rule. It generalised, exactly as its own closing sentence anticipated, and is renamed to what it governs.) A value that lives in a fixed-width column is pinned to `--t-escrita` at doubled specificity (`.escrita.escrita--hora`) so it cannot rise with a raised row and overflow its column. Two such columns now exist and both are served by that one pin: the time at `--hora-x` (4.25rem / 3.25rem mobile) and the quantity at `--qtd-x` (5.5rem / 5.25rem mobile). The quantity got its own width because it is free text — \"1 pacote\" and \"3 grandes\" do not fit a column cut for \"08:30\". Any third column-bound value takes the same pin and its own width token. The class name is now narrower than what it holds. `.escrita--hora` sets the time in the week and the quantity in the shopping list, in the ementa's ingredient rows and in the dish book. What the class actually means is column-bound value, right-aligned, tabular, printed ink, pinned to the body step — three of those four columns hold no time at all. Recorded as the build's fact, not as a naming convention to copy forward.",
+        "section": "typography"
       },
       {
         "name": "The One Hand Rule",
-        "section": "typography",
-        "body": "Caveat appears on the cover name and nowhere else — not on the label card, whose title is Archivo. Written content is carried by ink, weight and the baseline on the rule; a script face across the entries is costume, and it costs legibility on the device that matters most."
+        "body": "Caveat appears on the cover name and nowhere else — not on the label card, whose title is Archivo; not on a dish name, which is Archivo in the household pen. Written content is carried by ink, weight and the baseline on the rule; a script face across the entries is costume, and it costs legibility on the device that matters most.",
+        "section": "typography"
       },
       {
         "name": "The One Rule, One Entry Rule",
-        "section": "layout",
-        "body": "An entry occupies exactly one rule pitch, or a whole number of them. Nothing sits between rules, nothing straddles a rule, and no element introduces a height that is not a multiple of `--pauta-passo`."
+        "body": "An entry occupies exactly one rule pitch, or a whole number of them. Nothing sits between rules, nothing straddles a rule, and no element introduces a height that is not a multiple of `--pauta-passo`. This now covers a caption, an ingredient count, a quantity and an indented ingredient as well as an entry: anything that lands on a ruled page costs a whole rule.",
+        "section": "layout"
       },
       {
         "name": "The One Label Rule",
-        "section": "layout",
-        "body": "Every screen that is not the week is the same navy ground with the same white label card on it — sign in, create account, confirm your email, open a household, join a household, missing configuration, missing migration. A new pre-week screen is new copy inside that card, never a new layout. The single exception is the loading phase, which prints one tracked line straight onto the navy and shows no card at all, because a card that appears and is then replaced is a flash, not a state."
+        "body": "Every screen that is not a signed-in section is the same navy ground with the same white label card on it — sign in, create account, confirm your email, open a household, join a household, missing configuration, missing migration. A new pre-week screen is new copy inside that card, never a new layout. The single exception is the loading phase, which prints one tracked line straight onto the navy and shows no card at all, because a card that appears and is then replaced is a flash, not a state.",
+        "section": "layout"
+      },
+      {
+        "name": "The Same Page Rule",
+        "body": "A new section is a tab on the existing cover over the existing opening, and it is built from rows on a ruled page. The ementa and the dish book added no new page object, no card, no panel, no second grid and no second rhythm: what they added were column cuts of `linha` and one new list object, the strip. If a new thing cannot be made of the row grid and the rule pitch, the question is what it is, not what to draw.",
+        "section": "layout"
       },
       {
         "name": "The Override-Last Rule",
-        "section": "layout",
-        "body": "In these stylesheets a declaration only counts if nothing at equal specificity overrides it later — and an inline `style` prop in a component beats every one of them. This build shipped four dead rules before they were caught: a token declared above the media query that redefined it, a raised-row rule written before the base row rule that beat it, and two colour rules that could never win against an inline `style`. Three consequences are load-bearing and are commented in place: `.linha`'s base declarations come *before* `.linha--destaque`; `.escrita.escrita--hora` doubles its specificity on purpose; and text ink is passed as an inline `style` from the component rather than declared in CSS (the row's ink, the row tag, the writing field, and a coloured menu option all take their colour that way). Two orderings in the current build follow from the same rule and are worth knowing before editing: `.impresso` is defined after every component sheet, so any element carrying that class takes printed ink no matter what colour its own class declares; and any element that needs a different colour while printed must win on specificity or state (`:hover`, `:disabled`), not on being written later in its own file. Before adding a rule, check what follows it — and prefer to delete a rule that cannot win over leaving it as decoration."
+        "body": "In these stylesheets a declaration only counts if nothing at equal specificity overrides it later — and an inline `style` prop in a component beats every one of them. This build shipped four dead rules before they were caught: a token declared above the media query that redefined it, a raised-row rule written before the base row rule that beat it, and two colour rules that could never win against an inline `style`. Three consequences are load-bearing and are commented in place: `.linha`'s base declarations come before `.linha--destaque`; `.escrita.escrita--hora` doubles its specificity on purpose; and text ink is passed as an inline `style` from the component rather than declared in CSS (the row's ink, the row tag, the writing field, and a coloured menu option all take their colour that way). Two orderings in the current build follow from the same rule and are worth knowing before editing: `.impresso` is defined after every component sheet, so any element carrying that class takes printed ink no matter what colour its own class declares; and any element that needs a different colour while printed must win on specificity or state (`:hover`, `:disabled`), not on being written later in its own file. The rule also governs where a new token goes: `--qtd-x` is declared mid-file with its own mobile override immediately after it, because a token separated from the media query that redefines it is how the first dead rule happened. Before adding a rule, check what follows it — and prefer to delete a rule that cannot win over leaving it as decoration.",
+        "section": "layout"
       },
       {
         "name": "The Flat Page Rule",
-        "section": "elevation",
-        "body": "Nothing in the opening is elevated. A row, a tag, a stamp and a blank rule all sit in the paper. If a new element wants a shadow, it needs a physical justification in the book — an edge, a crease, a glued label, or a thing genuinely lying on top."
+        "body": "Nothing in the opening is elevated. A row, a tag, a stamp, a strip cell, a dish, an inline confirmation and a blank rule all sit in the paper. If a new element wants a shadow, it needs a physical justification in the book — an edge, a crease, a glued label, or a thing genuinely lying on top. A 2px `inset` edge is a printed line and is not covered by this prohibition; a drop shadow is.",
+        "section": "elevation"
       },
       {
         "name": "The Named State Rule",
-        "section": "components",
-        "body": "Every way this application can fail has a designed state with a Portuguese name printed on it, and that state says what happened and what to do next. There is no spinner standing in for a failure, no raw provider error on screen, and no silent retry: missing configuration prints the two variables to set, a missing migration prints the file to run, a lost connection says which copy you are reading, and a failed save says where what you wrote still lives. Adding a way to fail means adding its strip and its Portuguese sentence."
+        "body": "Every way this application can fail has a designed state with a Portuguese name printed on it, and that state says what happened and what to do next. There is no spinner standing in for a failure, no raw provider error on screen, and no silent retry: missing configuration prints the two variables to set, a missing migration prints the file to run, a lost connection says which copy you are reading, and a failed save says where what you wrote still lives. Adding a way to fail means adding its strip and its Portuguese sentence.",
+        "section": "components"
+      },
+      {
+        "name": "The Ask-On-The-Page Rule",
+        "body": "A destructive act is confirmed on the rule below the thing it would destroy, in the red register, in a sentence that names the thing and states what survives. It is never a modal, never a dialog, never an overlay, and it never dims the page: the question is about something visible, and covering it to ask is the wrong shape. An act that cannot be undone gets this treatment; an act that can be undone gets none.",
+        "section": "components"
       }
     ],
     "dos": [
-      "Do keep the two registers separate, on the label as on the page. Structure is printed (`impresso-tinta`, tracked Archivo caps at `--t-impresso`); household content is written, in its author's pen.",
-      "Do give every entry both its ink and its printed role tag. Colour alone is not attribution.",
+      "Do keep the two registers separate, on the label as on the page. Structure is printed (`impresso-tinta`, tracked Archivo caps at `--t-impresso`); household content is written, in its author's pen — or in the household pen where the thing has no author.",
+      "Do give every entry in the week both its ink and its printed role tag. Colour alone is not attribution.",
       "Do size everything in whole rule pitches (`--pauta-passo`), and let a long entry wrap onto the next rule rather than stretch its own.",
-      "Do render a day's rules whether or not anything is on it, and keep at least one blank, writable rule below the last entry.",
-      "Do make every entry editable exactly where it sits, and write it to the page before writing it to the network.",
-      "Do restyle a row in place when its state changes — struck and rewritten when moved, stamped when done — and keep the old line visible.",
+      "Do build a new thing out of the row grid and the rule pitch — a new column cut of `linha`, not a new page object — per The Same Page Rule.",
+      "Do render a page's rules whether or not anything is on it, and keep at least one blank, writable rule below the last entry. A page with nothing at all reserves four pitches.",
+      "Do make every entry editable exactly where it sits, and write it to the page before writing it to the network. Batch the write and flush it when the hand stops, and again on unmount.",
+      "Do restyle a row in place when its state changes — struck and rewritten when moved, stamped when done or bought — and keep the old line visible.",
+      "Do put a new section behind a thumb tab on the existing cover, and drop from the cover whatever that section does not have (the week interval and week navigation on the book).",
+      "Do ask before a destructive act on the rule below it, per The Ask-On-The-Page Rule.",
       "Do put any new pre-week screen inside the label card, in its existing order: printed line, title, fields, error, solid button, text-underline alternatives.",
       "Do give every failure a printed mark and a Portuguese sentence that names the recovery, per The Named State Rule.",
       "Do take one of the four type steps, or do not ship the element.",
-      "Do pin any value in a fixed-width column to its own size at doubled specificity, so a raised row cannot overflow it.",
-      "Do check what follows a new rule in the stylesheet — and whether a component passes an inline `style` — before trusting it, per The Override-Last Rule.",
-      "Do write new code in the same Portuguese vocabulary the build uses — `linha`, `pauta`, `escrita`, `impresso`, `carimbo`, `fita`, `portada`, `etiqueta`, `recado`. It is the project's language, not an accident."
+      "Do give a new column-bound value its own width token and pin it at doubled specificity, per The Fixed Column Rule.",
+      "Do let the row shrink to make room for the touch action menu (`padding-inline-end`), rather than letting the menu sit over what is written.",
+      "Do check what follows a new rule in the stylesheet — and whether a component passes an inline `style` — before trusting it, per The Override-Last Rule. Keep a new token and its mobile override adjacent.",
+      "Do write new code in the same Portuguese vocabulary the build uses — `linha`, `pauta`, `escrita`, `impresso`, `carimbo`, `fita`, `portada`, `etiqueta`, `recado`, `tira`, `livro`, `prato`, `confirmar`. It is the project's language, not an accident."
     ],
     "donts": [
-      "Don't introduce an edit mode, a save button, or a modal for editing an entry.",
+      "Don't introduce an edit mode, a save button, a saving indicator, or a modal for editing an entry.",
       "Don't build an hour grid. The week is ruled lines, not a seven-column timetable.",
-      "Don't put a checkbox in the margin gutter or a checkmark glyph anywhere. Completion is the `VISTO` stamp, in the column where the ink lands.",
-      "Don't use a pen colour (`pai`, `mae`, `filha`, `casa`) for structure, or printed ink for a live entry — the one sanctioned crossing is recession for continuations and completed tasks.",
-      "Don't spend `fita` on more than one thing per ground: today and the focused rule on the sheet, focus and the join code on the navy.",
+      "Don't put a checkbox in the margin gutter or a checkmark glyph anywhere. Completion and purchase are the `VISTO` stamp, in the column where the ink lands.",
+      "Don't use a pen colour (`pai`, `mae`, `filha`, `casa`) for structure, or printed ink for a live entry — the one sanctioned crossing is recession for continuations, completed tasks and bought items.",
+      "Don't spend `fita` on anything but *where you are* — today, the rule under the cursor, the thing you have opened — plus the join code on the navy, which is the one recorded exception. Never a button fill, an importance highlight or a category colour.",
+      "Don't nest a ruled page inside a ruled page. Ingredients under a dish are indented rows of the same page; two margins and two rhythms on one screen is two books.",
+      "Don't confirm a destructive act in a modal, a dialog, or anything that covers the page.",
+      "Don't scroll the strip sideways on a phone. Seven days stack into seven rules; a strip that scrolls hides days, and the strip exists so all seven are in one glance.",
       "Don't set household content in Caveat. The hand face belongs to the cover name only.",
       "Don't give a cover screen its own layout, split panel, illustration or marketing header. It is the label card on the navy ground.",
-      "Don't add a second solid button to a screen. One `botao-capa`; every other action is a text-underline.",
+      "Don't add a second solid button to a screen. One `botao-capa`; every other action is a text-underline or, for a destructive confirmation, the one outlined red button.",
       "Don't add a paper photo-texture, a cream or parchment ground, or a warm lamplight cast. This paper is cool and slightly blue.",
-      "Don't add elevation tiers or hover lifts. Nothing in the opening floats except the menu.",
+      "Don't add elevation tiers or hover lifts. Nothing in the opening floats except the menu; an `inset` edge is a printed line, a drop shadow is not.",
       "Don't rotate anything structural. Rotation means a person put it there — the stamp and the glued label, and nothing else.",
       "Don't add a second motion moment. The stamp press is the one authored animation, and it fires on the act of stamping, not on render.",
       "Don't introduce a type size between the four steps, or a fluid `clamp()` on type.",
+      "Don't draw an empty-state illustration, a dashed drop zone or a call-to-action panel. An empty page is ruled and waiting, with printed prose on it at most.",
       "Don't ship English in the interface — including a provider's error text; map it through the error dictionary first.",
       "Don't write invented household data into a real database. The example week exists, and it is only ever written when someone asks for it."
     ]
