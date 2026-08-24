@@ -9,9 +9,12 @@ import { Anterior, Seguinte } from './Icones'
  * uma letra de mão — como a etiqueta escrita à mão num caderno da escola.
  * Agora é o nome da casa a sério, partilhado por quem lá vive.
  */
-export function Cabecalho({ casa, email, inicio, aoRecuar, aoAvancar, aoHoje, naSemanaCorrente, aoSair }: {
+export function Cabecalho({ casa, email, inicio, aoRecuar, aoAvancar, aoHoje, naSemanaCorrente, aoSair, vista, aoTrocarDeVista }: {
   casa: Casa
   email: string
+  /** Que aba está aberta. As abas são as do polegar, no impresso. */
+  vista: 'semana' | 'ementa'
+  aoTrocarDeVista: (v: 'semana' | 'ementa') => void
   inicio: Date
   aoRecuar: () => void
   aoAvancar: () => void
@@ -47,6 +50,25 @@ export function Cabecalho({ casa, email, inicio, aoRecuar, aoAvancar, aoHoje, na
           />
           <p className="capa-intervalo impresso">{intervalo(inicio)}</p>
         </div>
+
+        <nav className="abas" aria-label="Secções da caderneta">
+          <button
+            type="button"
+            className="aba impresso"
+            aria-current={vista === 'semana' || undefined}
+            onClick={() => aoTrocarDeVista('semana')}
+          >
+            A semana
+          </button>
+          <button
+            type="button"
+            className="aba impresso"
+            aria-current={vista === 'ementa' || undefined}
+            onClick={() => aoTrocarDeVista('ementa')}
+          >
+            Ementa e compras
+          </button>
+        </nav>
 
         <div className="capa-lado">
           <nav className="capa-navegacao" aria-label="Semanas">

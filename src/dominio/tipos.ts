@@ -24,6 +24,8 @@ export interface Entrada {
   /** Riscada porque foi movida — a agenda guarda o que aconteceu. */
   riscada?: boolean
   movidaPara?: number | null
+  /** Se este jantar veio do livro dos pratos. */
+  pratoId?: string | null
 }
 
 export const AUTORES: Record<Autor, { etiqueta: string; nome: string; tinta: string }> = {
@@ -49,6 +51,37 @@ export interface Membro {
   papel: Autor
 }
 
+/** Um prato do livro da casa. */
+export interface Prato {
+  id: string
+  nome: string
+  ingredientes: Ingrediente[]
+}
+
+export interface Ingrediente {
+  id: string
+  prato_id: string
+  nome: string
+  quantidade: string | null
+  ordem: number
+}
+
+/** Uma linha da lista de compras. */
+export interface Compra {
+  id: string
+  semana: string
+  nome: string
+  quantidade: string | null
+  comprado: boolean
+  /** De que jantar veio. Null = escrito à mão. */
+  origem_entrada_id: string | null
+  prato_id: string | null
+  /** Mexido à mão depois de ter vindo de um prato: deixa de sair sozinho. */
+  editado: boolean
+  /** Nome do prato que o pôs cá, para o mostrar impresso ao lado. */
+  prato_nome?: string | null
+}
+
 /** Como uma entrada vive na base de dados. */
 export interface EntradaDb {
   id: string
@@ -64,6 +97,7 @@ export interface EntradaDb {
   extensao: 'inicio' | 'meio' | 'fim' | null
   riscada: boolean
   movida_para: number | null
+  prato_id?: string | null
 }
 
 export const daBaseDeDados = (l: EntradaDb): Entrada => ({
@@ -78,6 +112,7 @@ export const daBaseDeDados = (l: EntradaDb): Entrada => ({
   extensao: l.extensao ?? undefined,
   riscada: l.riscada || undefined,
   movidaPara: l.movida_para,
+  pratoId: l.prato_id ?? null,
 })
 
 export const paraBaseDeDados = (e: Partial<Entrada>): Record<string, unknown> => {
@@ -92,5 +127,6 @@ export const paraBaseDeDados = (e: Partial<Entrada>): Record<string, unknown> =>
   if ('extensao' in e) l.extensao = e.extensao ?? null
   if ('riscada' in e) l.riscada = e.riscada ?? false
   if ('movidaPara' in e) l.movida_para = e.movidaPara ?? null
+  if ('pratoId' in e) l.prato_id = e.pratoId ?? null
   return l
 }

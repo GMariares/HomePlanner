@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "capturar": "node scripts/capturar.mjs"
+    "capturar": "node scripts/capturar.mjs",
+    "typecheck": "tsc -b --force"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.4",

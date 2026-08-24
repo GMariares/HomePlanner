@@ -584,3 +584,170 @@
   .capa-lado { align-items: flex-start; }
   .capa-conta { justify-content: flex-start; }
 }
+
+/* ---------------- as abas do polegar ---------------- */
+.abas { display: flex; gap: 0.25rem; align-self: flex-end; }
+.aba {
+  appearance: none;
+  background: color-mix(in srgb, var(--capa-funda) 55%, transparent);
+  border: 1px solid color-mix(in srgb, var(--folha) 18%, transparent);
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  color: color-mix(in srgb, var(--folha) 68%, var(--capa));
+  padding: 0.4375rem 0.75rem 0.5rem;
+  cursor: pointer;
+  transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), color 160ms;
+}
+.aba:hover { color: var(--folha); }
+.aba[aria-current] {
+  background: var(--folha);
+  color: var(--capa);
+  border-color: var(--folha);
+}
+
+/* ---------------- a tira: os sete jantares ---------------- */
+.tira-bloco { position: relative; }
+.tira {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  border-block: 1px solid var(--pauta);
+}
+.tira-item { min-width: 0; }
+.tira-celula {
+  position: relative;
+  appearance: none;
+  background: none;
+  border: 0;
+  border-inline-start: 1px solid var(--pauta);
+  width: 100%;
+  min-height: calc(var(--pauta-passo) * 2);
+  padding: 0.4375rem 0.5rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1875rem;
+  text-align: start;
+  cursor: pointer;
+  transition: background-color 140ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tira-item:first-child .tira-celula { border-inline-start: 0; }
+.tira-celula:hover { background: color-mix(in srgb, var(--pauta) 28%, transparent); }
+.tira-celula[data-aberta] {
+  background: color-mix(in srgb, var(--fita) 12%, transparent);
+  box-shadow: inset 0 -2px 0 var(--fita);
+}
+.tira-dia { display: block; color: var(--impresso-tinta); }
+.tira-data { letter-spacing: 0.06em; }
+.tira-prato {
+  font-size: var(--t-escrita);
+  line-height: 1.25;
+  color: var(--casa);
+  overflow-wrap: break-word;
+}
+.tira-prato[data-vazio] { color: var(--impresso-tinta); }
+/* A fita marca o dia pela frente, não pela divisória: encostada à direita
+   ficava em cima do risco e lia-se como sendo do dia seguinte. */
+.fita--tira {
+  inset-inline-start: 0.4375rem;
+  top: -0.5rem;
+  height: 1.75rem;
+  width: 0.4375rem;
+}
+.tira-celula[data-hoje] { padding-inline-start: 1.25rem; }
+
+@media (max-width: 63.99rem) {
+  .tira { grid-template-columns: 1fr; }
+  .tira-celula {
+    border-inline-start: 0;
+    border-bottom: 1px solid var(--pauta);
+    min-height: var(--pauta-passo);
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.625rem;
+  }
+  .tira-dia { flex: none; width: 5.5rem; }
+  .fita--tira { inset-inline-start: -0.375rem; top: 0; height: 100%; }
+  .tira-celula[data-hoje] { padding-inline-start: 0.5rem; }
+}
+
+/* ---------------- o prato do dia ---------------- */
+.prato-do-dia {
+  margin-top: 1.25rem;
+  padding: 1rem 0 0;
+  border-top: 1.5px solid var(--pauta-forte);
+}
+.prato-escolhido {
+  margin: 0 0 0.75rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.875rem;
+  flex-wrap: wrap;
+}
+.prato-nome { font-size: var(--t-destaque); color: var(--casa); letter-spacing: -0.01em; }
+.prato-procura { max-width: 28rem; }
+
+.livro { list-style: none; margin: 0.5rem 0 0; padding: 0; }
+.livro-linha {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--pauta);
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.375rem 0.25rem;
+  font: inherit;
+  font-size: var(--t-escrita);
+  color: var(--casa);
+  text-align: start;
+  cursor: pointer;
+}
+.livro-linha:hover { background: color-mix(in srgb, var(--pauta) 32%, transparent); }
+.livro-linha--novo { color: var(--pai); }
+
+.ingredientes { margin-top: 1rem; }
+.ingredientes-titulo { margin: 0 0 0.375rem; }
+
+/* ---------------- a lista de compras ---------------- */
+.lista-compras { margin-top: 2rem; }
+
+/* A quantidade precisa de mais do que uma hora: "1 pacote" não é "08:30". */
+:root { --qtd-x: 5.5rem; }
+@media (max-width: 47.99rem) { :root { --qtd-x: 5.25rem; } }
+
+.linha--compra {
+  grid-template-columns: var(--margem-x) minmax(0, 1fr) var(--qtd-x) var(--hora-x) var(--largura-accoes);
+}
+.linha--ingrediente {
+  grid-template-columns: var(--margem-x) minmax(0, 1fr) var(--qtd-x) var(--largura-accoes);
+}
+.linha--compra .escrita,
+.linha--ingrediente .escrita { min-width: 0; }
+.linha--compra[data-feita] .escrita { text-decoration: line-through; text-decoration-color: var(--carimbo); }
+.compra-origem,
+.compra-atrasada {
+  flex: none;
+  align-self: center;
+  line-height: var(--pauta-passo);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-inline-start: 0.5rem;
+}
+.compra-origem { color: var(--impresso-tinta); max-width: 11rem; }
+.compra-atrasada { color: var(--margem); }
+
+/* No supermercado ninguém precisa de saber de que prato veio a cebola:
+   precisa de saber que é cebola. A proveniência é da mesa, não do corredor. */
+@media (max-width: 63.99rem) {
+  .compra-origem { display: none; }
+}
+
+.abertura--ementa { grid-template-columns: 1fr; }
+@media (min-width: 64rem) {
+  .abertura--ementa { grid-template-columns: 1fr; }
+}

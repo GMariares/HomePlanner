@@ -8,7 +8,12 @@ import type { Casa, Entrada } from '../dominio/tipos'
 
 const ORDEM = { evento: 0, tarefa: 1, refeicao: 2 } as const
 
-export function Semana({ casa, email, aoSair }: { casa: Casa; email: string; aoSair: () => void }) {
+export function Semana({ casa, email, aoSair, aoTrocarDeVista }: {
+  casa: Casa
+  email: string
+  aoSair: () => void
+  aoTrocarDeVista: (v: 'semana' | 'ementa') => void
+}) {
   const [inicio, definirInicio] = useState(() => inicioDaSemana())
   const chave = chaveDaSemana(inicio)
   const {
@@ -72,6 +77,8 @@ export function Semana({ casa, email, aoSair }: { casa: Casa; email: string; aoS
         aoHoje={() => definirInicio(inicioDaSemana())}
         naSemanaCorrente={hoje >= 0}
         aoSair={aoSair}
+        vista="semana"
+        aoTrocarDeVista={aoTrocarDeVista}
       />
 
       {estado === 'sem-migracao' && (
