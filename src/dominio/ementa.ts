@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { supabase, semTabelas } from './supabase'
+import { supabase, esquemaAtrasado } from './supabase'
 import { novoId } from './estado'
 import { chaveDeNome, useAdiar } from './adiar'
 import type { Artigo, Compra, Conjunto, Entrada, EntradaDb, Ingrediente, ItemDeConjunto, Prato } from './tipos'
@@ -21,6 +21,9 @@ export function useEmenta(casaId: string | null, semana: string) {
   const [compras, definirCompras] = useState<Compra[]>([])
   const [artigos, definirArtigos] = useState<Artigo[]>([])
   const [conjuntos, definirConjuntos] = useState<Conjunto[]>([])
+  /* A despensa, os conjuntos e o preço vêm da terceira migração. Sem ela, a
+     lista continua a funcionar — perde a memória, não o serviço. */
+  const [semDespensa, definirSemDespensa] = useState(false)
   const [estado, definirEstado] = useState<EstadoDaEmenta>('a-carregar')
   const [falhou, definirFalhou] = useState(false)
 
@@ -38,8 +41,12 @@ export function useEmenta(casaId: string | null, semana: string) {
       supabase.from('conjunto_itens').select('*').eq('casa_id', casaId).order('ordem'),
     ])
 
-    const erro = ent.error ?? prt.error ?? ing.error ?? cmp.error ?? art.error ?? cj.error ?? cji.error
-    if (erro) { definirEstado(semTabelas(erro) ? 'sem-migracao' : 'sem-rede'); return }
+    const faltaDespensa = [art.error, cj.error, cji.error].some(e => e && esquemaAtrasado(e))
+    definirSemDespensa(faltaDespensa)
+
+    const erro = ent.error ?? prt.error ?? ing.error ?? cmp.error
+      ?? (faltaDespensa ? null : (art.error ?? cj.error ?? cji.error))
+    if (erro) { definirEstado(esquemaAtrasado(erro) ? 'sem-migracao' : 'sem-rede'); return }
 
     definirJantares((ent.data as EntradaDb[]).map(daBaseDeDados).filter(e => e.refeicao === 'jantar'))
 
@@ -187,10 +194,11 @@ export function useEmenta(casaId: string | null, semana: string) {
 
   /** Mexer à mão numa linha vinda de um prato faz dela uma linha da casa. */
   const alterarCompra = useCallback((c: Compra, mudanca: Partial<Compra>) => {
+    if (semDespensa && 'preco' in mudanca) return
     const passaASerDaCasa = Boolean(c.origem_entrada_id) && !c.editado
     definirCompras(cs => cs.map(x => (x.id === c.id ? { ...x, ...mudanca, editado: x.editado || passaASerDaCasa } : x)))
     adiarCompra(c.id, { ...mudanca, ...(passaASerDaCasa ? { editado: true } : {}) })
-  }, [adiarCompra])
+  }, [adiarCompra, semDespensa])
 
   /**
    * Escrever "Maçãs" sem mais nada não devia obrigar a escrever "1 kg" outra vez.
@@ -204,15 +212,16 @@ export function useEmenta(casaId: string | null, semana: string) {
     if (!casaId || !nome.trim()) return
     const limpo = nome.trim()
     const sabido = artigos.find(a => a.chave === chaveDeNome(limpo))
-    const linha = {
+    const linha: Record<string, unknown> = {
       id: novoId(), casa_id: casaId, semana, nome: limpo,
       quantidade: quantidade ?? sabido?.quantidade ?? null,
-      preco: preco ?? sabido?.preco ?? null,
     }
-    definirCompras(cs => [...cs, { ...linha, comprado: false, origem_entrada_id: null, prato_id: null, editado: false }])
+    // sem a coluna, mandá-la faz falhar a linha toda
+    if (!semDespensa) linha.preco = preco ?? sabido?.preco ?? null
+    definirCompras(cs => [...cs, { ...(linha as unknown as Compra), preco: (linha.preco as number ?? null), comprado: false, origem_entrada_id: null, prato_id: null, editado: false }])
     const { error } = await supabase.from('compras').insert(linha)
     if (error) definirFalhou(true); else buscar()
-  }, [artigos, buscar, casaId, semana])
+  }, [artigos, buscar, casaId, semana, semDespensa])
 
   /** Um conjunto entra de uma vez, sem repetir o que já lá está. */
   const aplicarConjunto = useCallback(async (conjunto: Conjunto) => {
@@ -247,7 +256,7 @@ export function useEmenta(casaId: string | null, semana: string) {
   )
 
   return {
-    jantares, pratos, compras, artigos, conjuntos, estado, falhou, porComprar, total,
+    jantares, pratos, compras, artigos, conjuntos, estado, falhou, porComprar, total, semDespensa,
     aplicarConjunto,
     jantarDe, marcarJantar, criarPrato,
     acrescentarIngrediente, alterarIngrediente, apagarIngrediente,

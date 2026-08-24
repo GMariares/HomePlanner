@@ -937,3 +937,5 @@
 /* a legenda das colunas alinha-se com elas, e é impressa */
 .linha--compra.linha--legenda .linha-hora,
 .linha--compra.linha--legenda .linha-preco { text-align: right; line-height: var(--pauta-passo); }
+
+.capa-sair--aviso { color: var(--fita); border-bottom-color: var(--fita); }

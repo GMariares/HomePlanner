@@ -9,7 +9,7 @@ const EUROS = new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR
 
 /** A lista da semana. O que não se comprou não desaparece: passa à frente. */
 export function ListaCompras({
-  compras, semana, porComprar, total, artigos, conjuntos, mostrarPrecos,
+  compras, semana, porComprar, total, artigos, conjuntos, mostrarPrecos, podePrecos = true,
   aoAlternar, aoAlterar, aoAcrescentar, aoApagar, aoAplicarConjunto, aoMostrarPrecos,
 }: {
   compras: Compra[]
@@ -19,6 +19,7 @@ export function ListaCompras({
   artigos: Artigo[]
   conjuntos: Conjunto[]
   mostrarPrecos: boolean
+  podePrecos?: boolean
   aoAlternar: (c: Compra) => void
   aoAlterar: (c: Compra, mudanca: Partial<Compra>) => void
   aoAcrescentar: (nome: string, quantidade: string | null, preco: number | null) => void
@@ -32,9 +33,11 @@ export function ListaCompras({
         <h2 id="compras-titulo" className="dia-nome">A lista</h2>
         <span className="dia-data impresso lista-conta">
           <span>{porComprar === 0 ? 'está tudo comprado' : `${porComprar} por comprar`}</span>
-          <button type="button" className="aviso-repor impresso" onClick={() => aoMostrarPrecos(!mostrarPrecos)}>
-            {mostrarPrecos ? 'esconder preços' : 'pôr preços'}
-          </button>
+          {podePrecos && (
+            <button type="button" className="aviso-repor impresso" onClick={() => aoMostrarPrecos(!mostrarPrecos)}>
+              {mostrarPrecos ? 'esconder preços' : 'pôr preços'}
+            </button>
+          )}
         </span>
       </header>
 

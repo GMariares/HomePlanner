@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { Session } from '@supabase/supabase-js'
-import { configurado, semTabelas, supabase } from './supabase'
+import { configurado, esquemaAtrasado, supabase } from './supabase'
 import type { Casa, Membro } from './tipos'
 
 export type Sessao =
@@ -9,6 +9,7 @@ export type Sessao =
   | { fase: 'sem-migracao' }
   | { fase: 'sem-sessao' }
   | { fase: 'sem-casa'; email: string }
+  | { fase: 'erro'; email: string; recado: string }
   | { fase: 'pronto'; casa: Casa; membro: Membro; email: string }
 
 export function useSessao() {
@@ -26,17 +27,41 @@ export function useSessao() {
       .eq('utilizador_id', s.user.id)
       .maybeSingle()
 
-    if (error) { definir(semTabelas(error) ? { fase: 'sem-migracao' } : { fase: 'sem-casa', email }); return }
+    /* Não conseguir ler não é o mesmo que não haver. Dizer "não tem casa" a
+       quem tem manda a pessoa entrar noutra — e a base de dados, que sabe a
+       verdade, recusa. Um erro é um erro e diz-se como tal. */
+    if (error) {
+      definir(esquemaAtrasado(error)
+        ? { fase: 'sem-migracao' }
+        : { fase: 'erro', email, recado: 'Não foi possível ler a que casa pertence.' })
+      return
+    }
     if (!membro) { definir({ fase: 'sem-casa', email }); return }
 
+    // colunas estáveis primeiro: uma coluna nova não pode esconder a casa
     const { data: casa, error: erroCasa } = await supabase
       .from('casas')
-      .select('id, nome, codigo, mostrar_precos')
+      .select('*')
       .eq('id', membro.casa_id)
       .maybeSingle()
 
-    if (erroCasa || !casa) { definir({ fase: 'sem-casa', email }); return }
-    definir({ fase: 'pronto', casa: casa as Casa, membro: membro as Membro, email })
+    if (erroCasa) {
+      definir(esquemaAtrasado(erroCasa)
+        ? { fase: 'sem-migracao' }
+        : { fase: 'erro', email, recado: 'Não foi possível ler a casa.' })
+      return
+    }
+    if (!casa) {
+      definir({ fase: 'erro', email, recado: 'Pertence a uma casa que já não existe. Saia da casa para poder entrar noutra.' })
+      return
+    }
+
+    definir({
+      fase: 'pronto',
+      casa: { ...(casa as Casa), mostrar_precos: Boolean((casa as { mostrar_precos?: boolean }).mostrar_precos) },
+      membro: membro as Membro,
+      email,
+    })
   }, [])
 
   useEffect(() => {
@@ -57,5 +82,14 @@ export function useSessao() {
     try { localStorage.removeItem('homeplanner:casa') } catch { /* sem persistência */ }
   }, [])
 
-  return { sessao, recarregar, sair }
+  /** Sair da casa, não da conta: para se poder entrar noutra. */
+  const sairDaCasa = useCallback(async () => {
+    const { data } = await supabase.auth.getSession()
+    const id = data.session?.user.id
+    if (!id) return
+    await supabase.from('membros').delete().eq('utilizador_id', id)
+    await resolver(data.session)
+  }, [resolver])
+
+  return { sessao, recarregar, sair, sairDaCasa }
 }

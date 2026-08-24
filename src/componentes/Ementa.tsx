@@ -7,10 +7,11 @@ import { supabase } from '../dominio/supabase'
 import { chaveDaSemana, indiceDeHoje, inicioDaSemana } from '../dominio/semana'
 import type { Casa } from '../dominio/tipos'
 
-export function Ementa({ casa, email, aoSair, aoTrocarDeVista }: {
+export function Ementa({ casa, email, aoSair, aoSairDaCasa, aoTrocarDeVista }: {
   casa: Casa
   email: string
   aoSair: () => void
+  aoSairDaCasa: () => void | Promise<void>
   aoTrocarDeVista: (v: 'semana' | 'ementa' | 'livro') => void
 }) {
   const [inicio, definirInicio] = useState(() => inicioDaSemana())
@@ -39,6 +40,7 @@ export function Ementa({ casa, email, aoSair, aoTrocarDeVista }: {
         aoHoje={() => definirInicio(inicioDaSemana())}
         naSemanaCorrente={hoje >= 0}
         aoSair={aoSair}
+        aoSairDaCasa={aoSairDaCasa}
         vista="ementa"
         aoTrocarDeVista={aoTrocarDeVista}
       />
@@ -53,6 +55,16 @@ export function Ementa({ casa, email, aoSair, aoTrocarDeVista }: {
           </span>
         </p>
       )}
+      {e.semDespensa && (
+        <p className="falha" role="status">
+          <span className="falha-marca impresso">Falta a terceira migração</span>
+          <span>
+            A lista funciona, mas sem memória: não há sugestões, conjuntos nem preços.
+            Corra <code>supabase/migrations/20260824140000_despensa.sql</code> no SQL Editor.
+          </span>
+        </p>
+      )}
+
       {e.estado === 'sem-rede' && (
         <p className="falha" role="status">
           <span className="falha-marca impresso">Sem ligação</span>
@@ -90,13 +102,14 @@ export function Ementa({ casa, email, aoSair, aoTrocarDeVista }: {
               total={e.total}
               artigos={e.artigos}
               conjuntos={e.conjuntos}
-              mostrarPrecos={mostrarPrecos}
+              mostrarPrecos={mostrarPrecos && !e.semDespensa}
+              podePrecos={!e.semDespensa}
               aoAlternar={e.alternarComprado}
               aoAlterar={e.alterarCompra}
               aoAcrescentar={e.acrescentarCompra}
               aoApagar={e.apagarCompra}
               aoAplicarConjunto={e.aplicarConjunto}
-              aoMostrarPrecos={guardarMostrarPrecos}
+              aoMostrarPrecos={e.semDespensa ? () => {} : guardarMostrarPrecos}
             />
           </div>
         </div>

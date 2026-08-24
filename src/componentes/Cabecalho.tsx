@@ -9,7 +9,7 @@ import { Anterior, Seguinte } from './Icones'
  * uma letra de mão — como a etiqueta escrita à mão num caderno da escola.
  * Agora é o nome da casa a sério, partilhado por quem lá vive.
  */
-export function Cabecalho({ casa, email, inicio, aoRecuar, aoAvancar, aoHoje, naSemanaCorrente, aoSair, vista, aoTrocarDeVista, semSemana }: {
+export function Cabecalho({ casa, email, inicio, aoRecuar, aoAvancar, aoHoje, naSemanaCorrente, aoSair, aoSairDaCasa, vista, aoTrocarDeVista, semSemana }: {
   casa: Casa
   email: string
   /** Que aba está aberta. As abas são as do polegar, no impresso. */
@@ -23,8 +23,10 @@ export function Cabecalho({ casa, email, inicio, aoRecuar, aoAvancar, aoHoje, na
   aoHoje: () => void
   naSemanaCorrente: boolean
   aoSair: () => void
+  aoSairDaCasa: () => void | Promise<void>
 }) {
   const [nome, definirNome] = useState(casa.nome)
+  const [aConfirmarSaida, definirAConfirmarSaida] = useState(false)
   const temporizador = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => { definirNome(casa.nome) }, [casa.nome])
@@ -107,7 +109,21 @@ export function Cabecalho({ casa, email, inicio, aoRecuar, aoAvancar, aoHoje, na
               Código <strong className="capa-codigo">{casa.codigo}</strong>
             </span>
             <span className="capa-email" title={email}>{email}</span>
-            <button type="button" className="capa-sair" onClick={aoSair}>Sair</button>
+            {aConfirmarSaida ? (
+              <>
+                <button type="button" className="capa-sair capa-sair--aviso" onClick={() => aoSairDaCasa()}>
+                  Sair desta casa
+                </button>
+                <button type="button" className="capa-sair" onClick={() => definirAConfirmarSaida(false)}>
+                  Ficar
+                </button>
+              </>
+            ) : (
+              <button type="button" className="capa-sair" onClick={() => definirAConfirmarSaida(true)}>
+                Trocar de casa
+              </button>
+            )}
+            <button type="button" className="capa-sair" onClick={aoSair}>Sair da conta</button>
           </p>
         </div>
       </div>

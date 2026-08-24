@@ -3,10 +3,11 @@ import { supabase } from '../dominio/supabase'
 import { recado } from '../dominio/recados'
 
 /** Uma caderneta é de uma casa. Ou se abre uma, ou se entra na que já existe. */
-export function Casa({ email, aoEntrar, aoSair }: {
+export function Casa({ email, aoEntrar, aoSair, aoSairDaCasa }: {
   email: string
   aoEntrar: () => void | Promise<void>
   aoSair: () => void
+  aoSairDaCasa: () => void | Promise<void>
 }) {
   const [modo, definirModo] = useState<'criar' | 'juntar'>('criar')
   const [nome, definirNome] = useState('')
@@ -26,6 +27,10 @@ export function Casa({ email, aoEntrar, aoSair }: {
       if (error) throw error
       await aoEntrar()
     } catch (falha) {
+      /* "Já pertence a uma casa" quer dizer que a caderneta existe e é desta
+         conta — o sítio certo é lá dentro, não este ecrã. */
+      const texto = String((falha as { message?: string })?.message ?? falha)
+      if (/já pertence/i.test(texto)) { await aoEntrar(); return }
       definirErro(recado(falha))
     } finally {
       definirATratar(false)
@@ -84,6 +89,9 @@ export function Casa({ email, aoEntrar, aoSair }: {
           {modo === 'criar' ? 'Já existe uma caderneta cá em casa' : 'Quero abrir uma caderneta nova'}
         </button>
 
+        <button type="button" className="botao-linha impresso" onClick={() => aoSairDaCasa()}>
+          Estou preso a uma casa antiga — sair dela
+        </button>
         <button type="button" className="botao-linha impresso" onClick={aoSair}>Sair desta conta</button>
       </form>
     </main>

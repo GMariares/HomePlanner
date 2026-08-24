@@ -458,10 +458,11 @@ export function PaginaDoLivro({ l }: { l: AccoesDoLivro }) {
 }
 
 /** O contentor: liga a página ao livro que está no servidor. */
-export function Livro({ casa, email, aoSair, aoTrocarDeVista }: {
+export function Livro({ casa, email, aoSair, aoSairDaCasa, aoTrocarDeVista }: {
   casa: Casa
   email: string
   aoSair: () => void
+  aoSairDaCasa: () => void | Promise<void>
   aoTrocarDeVista: (v: 'semana' | 'ementa' | 'livro') => void
 }) {
   const l = useLivro(casa.id)
@@ -476,6 +477,7 @@ export function Livro({ casa, email, aoSair, aoTrocarDeVista }: {
         aoHoje={() => {}}
         naSemanaCorrente
         aoSair={aoSair}
+        aoSairDaCasa={aoSairDaCasa}
         vista="livro"
         aoTrocarDeVista={aoTrocarDeVista}
         semSemana

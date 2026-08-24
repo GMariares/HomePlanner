@@ -7,7 +7,7 @@ import { Semana } from './componentes/Semana'
 import { useSessao } from './dominio/sessao'
 
 export default function App() {
-  const { sessao, recarregar, sair } = useSessao()
+  const { sessao, recarregar, sair, sairDaCasa } = useSessao()
   const [vista, definirVista] = useState<'semana' | 'ementa' | 'livro'>('semana')
 
   switch (sessao.fase) {
@@ -44,15 +44,31 @@ export default function App() {
         </main>
       )
 
+    case 'erro':
+      return (
+        <main className="portada">
+          <div className="etiqueta-capa">
+            <p className="etiqueta-marca impresso">{sessao.email}</p>
+            <h1 className="etiqueta-titulo">Não foi possível abrir a caderneta</h1>
+            <p className="etiqueta-texto">{sessao.recado}</p>
+            <button type="button" className="botao-capa" onClick={recarregar}>Tentar outra vez</button>
+            <button type="button" className="botao-linha impresso" onClick={sairDaCasa}>
+              Sair desta casa
+            </button>
+            <button type="button" className="botao-linha impresso" onClick={sair}>Sair desta conta</button>
+          </div>
+        </main>
+      )
+
     case 'sem-sessao':
       return <Entrar />
 
     case 'sem-casa':
-      return <Casa email={sessao.email} aoEntrar={recarregar} aoSair={sair} />
+      return <Casa email={sessao.email} aoEntrar={recarregar} aoSair={sair} aoSairDaCasa={sairDaCasa} />
 
     case 'pronto':
-      if (vista === 'semana') return <Semana casa={sessao.casa} email={sessao.email} aoSair={sair} aoTrocarDeVista={definirVista} />
-      if (vista === 'ementa') return <Ementa casa={sessao.casa} email={sessao.email} aoSair={sair} aoTrocarDeVista={definirVista} />
-      return <Livro casa={sessao.casa} email={sessao.email} aoSair={sair} aoTrocarDeVista={definirVista} />
+      if (vista === 'semana') return <Semana casa={sessao.casa} email={sessao.email} aoSair={sair} aoSairDaCasa={sairDaCasa} aoTrocarDeVista={definirVista} />
+      if (vista === 'ementa') return <Ementa casa={sessao.casa} email={sessao.email} aoSair={sair} aoSairDaCasa={sairDaCasa} aoTrocarDeVista={definirVista} />
+      return <Livro casa={sessao.casa} email={sessao.email} aoSair={sair} aoSairDaCasa={sairDaCasa} aoTrocarDeVista={definirVista} />
   }
 }

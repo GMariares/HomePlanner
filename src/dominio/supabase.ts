@@ -10,6 +10,17 @@ export const supabase = createClient(url ?? 'http://localhost', chave ?? 'sem-ch
   auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
 })
 
-/** A tabela ainda não existe: a migração não foi corrida. */
-export const semTabelas = (erro: { code?: string } | null) =>
-  erro?.code === '42P01' || erro?.code === 'PGRST205'
+/**
+ * A base de dados está atrás do código: falta uma tabela ou uma coluna que
+ * uma migração cria. Acontece entre publicar e correr o SQL, e não pode ser
+ * confundido com "esta conta não tem casa" — são coisas opostas.
+ */
+export const esquemaAtrasado = (erro: { code?: string; message?: string } | null) => {
+  const c = erro?.code
+  if (c === '42P01' || c === 'PGRST205') return true   // tabela em falta
+  if (c === '42703' || c === 'PGRST204') return true   // coluna em falta
+  return /could not find the (table|column)/i.test(erro?.message ?? '')
+}
+
+/** @deprecated usar esquemaAtrasado */
+export const semTabelas = esquemaAtrasado
