@@ -14,6 +14,22 @@
   :root { --t-dia: 1.875rem; --t-destaque: 1.375rem; --t-escrita: 1rem; --largura-accoes: 1.5rem; }
 }
 
+/* ---------------------------------------------------------------------
+   O registo impresso.
+   Vive aqui em cima, antes de tudo o resto, de propósito: qualquer regra
+   de componente que precise de outra cor tem de a poder sobrepor. Quando
+   isto estava escrito depois, ganhava sempre — e a cor declarada de meia
+   dúzia de sítios nunca chegou a aplicar-se. É a Override-Last Rule.
+   --------------------------------------------------------------------- */
+.impresso {
+  font-size: var(--t-impresso);
+  font-weight: 600;
+  font-stretch: 112%;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--impresso-tinta);
+}
+
 .caderneta { min-height: 100dvh; padding-bottom: 4rem; }
 
 /* ---------------- a capa ---------------- */
@@ -107,7 +123,10 @@
   font-size: var(--t-escrita);
   color: var(--margem);
 }
+/* Agora que .impresso vem primeiro, esta cor chega mesmo a aplicar-se:
+   uma falha lê-se no registo da correcção, a vermelho, e não a cinzento. */
 .falha-marca {
+  color: var(--margem);
   border-bottom: 1.5px solid currentColor;
   flex: none;
 }

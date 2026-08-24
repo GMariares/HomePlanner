@@ -69,15 +69,6 @@ body {
   caret-color: var(--pai);
 }
 
-/* ---- o impresso: printed register. Never used for household content. ---- */
-.impresso {
-  font-size: var(--t-impresso);
-  font-weight: 600;
-  font-stretch: 112%;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--impresso-tinta);
-}
 
 /* ---- a pauta: every day renders its rules, full or empty ---- */
 .pauta {
