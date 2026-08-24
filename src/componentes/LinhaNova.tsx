@@ -102,6 +102,7 @@ export function LinhaNova({ artigos, mostrarPreco, aoAcrescentar }: {
             aria-autocomplete="list"
             aria-expanded={sugestoes.length > 0}
             aria-controls="sugestoes-compra"
+            aria-activedescendant={activa >= 0 ? `sugestao-${activa}` : undefined}
             role="combobox"
             maxLength={80}
             autoComplete="off"
@@ -143,6 +144,7 @@ export function LinhaNova({ artigos, mostrarPreco, aoAcrescentar }: {
               <button
                 type="button"
                 role="option"
+                id={`sugestao-${i}`}
                 aria-selected={i === activa}
                 className="sugestao"
                 data-activa={i === activa || undefined}

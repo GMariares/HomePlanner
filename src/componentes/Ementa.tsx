@@ -45,6 +45,12 @@ export function Ementa({ casa, email, aoSair, aoSairDaCasa, aoTrocarDeVista }: {
         aoTrocarDeVista={aoTrocarDeVista}
       />
 
+      {e.estado === 'a-carregar' && (
+        <p className="aviso" role="status">
+          <span>A abrir a ementa…</span>
+        </p>
+      )}
+
       {e.estado === 'sem-migracao' && (
         <p className="falha" role="status">
           <span className="falha-marca impresso">Sem tabelas</span>
@@ -68,19 +74,26 @@ export function Ementa({ casa, email, aoSair, aoSairDaCasa, aoTrocarDeVista }: {
       {e.estado === 'sem-rede' && (
         <p className="falha" role="status">
           <span className="falha-marca impresso">Sem ligação</span>
-          <span>Não foi possível ler a ementa. Verifique a rede.</span>
+          <span>Não foi possível ler a ementa.</span>
+          <button type="button" className="aviso-repor impresso" onClick={() => e.recarregar()}>
+            Tentar outra vez
+          </button>
         </p>
       )}
       {e.falhou && (
         <p className="falha" role="status">
           <span className="falha-marca impresso">Não guardado</span>
-          <span>Alguma coisa não chegou ao servidor.</span>
+          <span>Alguma coisa não chegou ao servidor. O que está escrito continua aqui.</span>
+          <button type="button" className="aviso-repor impresso"
+            onClick={() => { e.limparFalha(); e.recarregar() }}>
+            Tentar outra vez
+          </button>
         </p>
       )}
 
       <main className="abertura-envelope">
         <div className="abertura abertura--ementa">
-          <div className="pagina">
+          <div className="pagina pagina--esquerda">
             <Tira
               inicio={inicio}
               hoje={hoje}
@@ -94,7 +107,11 @@ export function Ementa({ casa, email, aoSair, aoSairDaCasa, aoTrocarDeVista }: {
               aoAlterarIngrediente={e.alterarIngrediente}
               aoApagarIngrediente={e.apagarIngrediente}
             />
+          </div>
 
+          <div className="lombada" aria-hidden="true" />
+
+          <div className="pagina pagina--direita">
             <ListaCompras
               compras={e.compras}
               semana={chave}

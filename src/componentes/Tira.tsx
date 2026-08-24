@@ -34,12 +34,18 @@ function PratoDoDia({ dia, data, jantar, pratos, aoMarcar, aoCriarPrato, aoAcres
   const chave = chaveDeNome(procura)
   const todos = chave ? pratos.filter(p => chaveDeNome(p.nome).includes(chave)) : pratos
   // O livro inteiro não cabe aqui, nem precisa: escreve-se para ir buscar o resto.
-  const TETO = 8
+  const TETO = 6
   const encontrados = todos.slice(0, TETO)
   const escondidos = todos.length - encontrados.length
   const podeCriar = chave.length > 0 && !pratos.some(p => chaveDeNome(p.nome) === chave)
+  /* Com o jantar já marcado, o livro aberto por baixo empurrava os
+     ingredientes um ecrã inteiro para baixo — e quem já escolheu não quer
+     escolher outra vez. Nesse caso o livro só abre a quem escrever. */
+  const mostrarLivro = !!chave || (!jantar?.texto && pratos.length > 0)
 
   const escolher = (p: Prato) => { aoMarcar(p); definirProcura('') }
+  /* Uma pizza à sexta não é um prato da casa: marca-se e não fica no livro. */
+  const avulso = () => { aoMarcar(null, procura.trim()); definirProcura('') }
   const criar = async () => {
     if (aEscrever) return
     definirAEscrever(true)
@@ -82,7 +88,7 @@ function PratoDoDia({ dia, data, jantar, pratos, aoMarcar, aoCriarPrato, aoAcres
           </p>
         )}
 
-        {(pratos.length > 0 || procura.trim()) && (
+        {mostrarLivro && (
           <ul className="livro">
             {encontrados.map(p => (
               <li key={p.id}>
@@ -98,12 +104,20 @@ function PratoDoDia({ dia, data, jantar, pratos, aoMarcar, aoCriarPrato, aoAcres
               </li>
             )}
             {podeCriar && (
-              <li>
-                <button type="button" className="livro-linha livro-linha--novo" onClick={criar} disabled={aEscrever}>
-                  <span>{aEscrever ? 'Um momento…' : `Escrever “${procura.trim()}” no livro`}</span>
-                  <span className="impresso">prato novo</span>
-                </button>
-              </li>
+              <>
+                <li>
+                  <button type="button" className="livro-linha" onClick={avulso}>
+                    <span>“{procura.trim()}” só nesta semana</span>
+                    <span className="impresso">sem entrar no livro</span>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" className="livro-linha livro-linha--novo" onClick={criar} disabled={aEscrever}>
+                    <span>{aEscrever ? 'Um momento…' : `Escrever “${procura.trim()}” no livro`}</span>
+                    <span className="impresso">prato novo, com ingredientes</span>
+                  </button>
+                </li>
+              </>
             )}
           </ul>
         )}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { supabase, esquemaAtrasado } from './supabase'
 import { novoId } from './estado'
 import { chaveDeNome, useAdiar } from './adiar'
@@ -79,15 +79,25 @@ export function useEmenta(casaId: string | null, semana: string) {
 
   useEffect(() => { if (casaId) { definirEstado('a-carregar'); buscar() } }, [casaId, buscar])
 
+  /* Duas pessoas no supermercado a carimbar coisas davam uma releitura
+     completa por cada tique — sete consultas de cada vez. Junta-se o que
+     chega perto e lê-se uma vez. */
+  const relogio = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const buscarEmBreve = useCallback(() => {
+    if (relogio.current) clearTimeout(relogio.current)
+    relogio.current = setTimeout(() => buscar(), 400)
+  }, [buscar])
+  useEffect(() => () => { if (relogio.current) clearTimeout(relogio.current) }, [])
+
   useEffect(() => {
     if (!casaId) return
     const canal = supabase
       .channel(`ementa:${casaId}:${semana}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'compras', filter: `casa_id=eq.${casaId}` }, () => buscar())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'entradas', filter: `casa_id=eq.${casaId}` }, () => buscar())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'compras', filter: `casa_id=eq.${casaId}` }, buscarEmBreve)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'entradas', filter: `casa_id=eq.${casaId}` }, buscarEmBreve)
       .subscribe()
     return () => { supabase.removeChannel(canal) }
-  }, [casaId, semana, buscar])
+  }, [buscarEmBreve, casaId, semana])
 
   const jantarDe = useCallback((dia: number) => jantares.find(j => j.dia === dia) ?? null, [jantares])
 
@@ -124,8 +134,11 @@ export function useEmenta(casaId: string | null, semana: string) {
       .eq('origem_entrada_id', entradaId).eq('comprado', false).eq('editado', false)
   }, [])
 
+  const aMarcar = useRef(false)
   const marcarJantar = useCallback(async (dia: number, prato: Prato | null, texto?: string) => {
-    if (!casaId) return
+    if (!casaId || aMarcar.current) return
+    aMarcar.current = true
+    try {
     const existente = jantarDe(dia)
     const nome = prato?.nome ?? texto ?? ''
 
@@ -146,7 +159,10 @@ export function useEmenta(casaId: string | null, semana: string) {
       if (error) { definirFalhou(true); return }
       if (prato) await derivar(id, prato)
     }
-    buscar()
+      buscar()
+    } finally {
+      aMarcar.current = false
+    }
   }, [buscar, casaId, derivar, jantarDe, retirar, semana])
 
   const criarPrato = useCallback(async (nome: string): Promise<Prato | null> => {
@@ -238,11 +254,11 @@ export function useEmenta(casaId: string | null, semana: string) {
   }, [artigos, buscar, casaId, semana, semDespensa])
 
   /** Um conjunto entra de uma vez, sem repetir o que já lá está. */
-  const aplicarConjunto = useCallback(async (conjunto: Conjunto) => {
-    if (!casaId || conjunto.itens.length === 0) return
+  const aplicarConjunto = useCallback(async (conjunto: Conjunto): Promise<number> => {
+    if (!casaId || conjunto.itens.length === 0) return 0
     const jaLa = new Set(compras.filter(c => !c.comprado).map(c => chaveDeNome(c.nome)))
     const novas = conjunto.itens.filter(i => !jaLa.has(chaveDeNome(i.nome)))
-    if (novas.length === 0) return
+    if (novas.length === 0) return 0
     const linhas = novas.map(i => {
       const sabido = artigos.find(a => a.chave === chaveDeNome(i.nome))
       return {
@@ -271,7 +287,7 @@ export function useEmenta(casaId: string | null, semana: string) {
 
   return {
     jantares, pratos, compras, artigos, conjuntos, estado, falhou, porComprar, total, semDespensa,
-    aplicarConjunto,
+    aplicarConjunto, recarregar: buscar, limparFalha: () => definirFalhou(false),
     jantarDe, marcarJantar, criarPrato,
     acrescentarIngrediente, alterarIngrediente, apagarIngrediente,
     alternarComprado, alterarCompra, acrescentarCompra, apagarCompra,

@@ -151,6 +151,11 @@
   flex-direction: column;
   gap: 1.75rem;
   min-width: 0;
+  /* Uma página é uma página, tenha o ecrã a largura que tiver: o que está
+     dentro dela mede-se contra ela, não contra a janela. Sem isto, a tira de
+     sete dias mantinha sete colunas numa página de meia janela e cada dia
+     ficava com trinta pixels — três letras e reticências. */
+  container: pagina / inline-size;
 }
 
 /* a lombada: em ecrã largo é o vinco entre as duas páginas,
@@ -203,7 +208,8 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
   padding-bottom: 0.375rem;
   border-bottom: 1.5px solid var(--pauta-forte);
   margin-bottom: 0.25rem;
@@ -338,7 +344,7 @@
   cursor: pointer;
   display: block;
   position: relative;
-  width: var(--hora-x);
+  width: var(--carimbo-x);
   height: var(--pauta-passo);
   border-radius: 2px;
   transition: color 160ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -658,7 +664,7 @@
 }
 .tira-celula[data-hoje] { padding-inline-start: 1.25rem; }
 
-@media (max-width: 63.99rem) {
+@container pagina (max-width: 34rem) {
   .tira { grid-template-columns: 1fr; }
   .tira-celula {
     border-inline-start: 0;
@@ -720,8 +726,20 @@
 :root { --qtd-x: 5.5rem; }
 @media (max-width: 47.99rem) { :root { --qtd-x: 5.25rem; } }
 
+/* A coluna da quantidade tem um chão e cresce com o que lhe escrevem: o chão
+   é o que se vê numa lista normal, o crescimento é para quando uma quantidade
+   composta — "500 g + 2 un", de dois pratos com unidades que não se somam —
+   não cabe. Cortar um número é comprar a coisa errada; é o nome que cede.
+   `--qtd-conteudo` vem da lista, medido nos dados que lá estão.
+   Declarado aqui e não em :root de propósito: uma propriedade personalizada
+   calcula-se onde é declarada, e em :root o `var(--qtd-conteudo)` da lista
+   ainda não existe. */
 .linha--compra {
-  grid-template-columns: var(--margem-x) minmax(0, 1fr) var(--qtd-x) var(--hora-x) var(--largura-accoes);
+  --qtd-x: max(5.5rem, var(--qtd-conteudo, 0px));
+  grid-template-columns: var(--margem-x) minmax(0, 1fr) var(--qtd-x) var(--carimbo-x) var(--largura-accoes);
+}
+@media (max-width: 47.99rem) {
+  .linha--compra { --qtd-x: max(5.25rem, var(--qtd-conteudo, 0px)); }
 }
 .linha--ingrediente {
   grid-template-columns: var(--margem-x) minmax(0, 1fr) var(--qtd-x) var(--largura-accoes);
@@ -729,10 +747,15 @@
 .linha--compra .escrita,
 .linha--ingrediente .escrita { min-width: 0; }
 .linha--compra[data-feita] .escrita { text-decoration: line-through; text-decoration-color: var(--carimbo); }
+/* O risco é sobre o que está escrito. Sobre um campo vazio desenhava um traço
+   que se lia como um preço a zero. */
+.linha[data-feita] .escrita:placeholder-shown { text-decoration: none; }
 .compra-origem,
 .compra-atrasada {
   flex: none;
-  align-self: center;
+  /* Um nome que se parte em oito linhas punha a proveniência a meio delas,
+     longe do nome a que pertence. Pertence à primeira linha. */
+  align-self: flex-start;
   line-height: var(--pauta-passo);
   white-space: nowrap;
   overflow: hidden;
@@ -750,9 +773,17 @@
   .compra-atrasada { display: none; }
 }
 
-.abertura--ementa { grid-template-columns: 1fr; }
+/* A ementa é uma abertura como a semana: os jantares na página esquerda, a
+   lista na direita. Empilhadas, uma lista de cinquenta coisas empurrava a
+   página para lá dos quatro mil pixels e o que se vai comprar ficava a um
+   scroll de distância do que se vai cozinhar. Lado a lado lêem-se juntas.
+   Num telemóvel não há duas páginas: a folha dobra, e a ordem é a do trabalho
+   — primeiro decide-se o jantar, depois escreve-se a lista.
+   As duas páginas não são iguais: à esquerda decide-se, à direita escreve-se
+   uma coluna de linhas curtas que precisa de medida. Meio a meio, cada nome
+   partia-se em duas linhas e a página duplicava de altura — medido. */
 @media (min-width: 64rem) {
-  .abertura--ementa { grid-template-columns: 1fr; }
+  .abertura--ementa { grid-template-columns: 1fr 2.25rem 1.75fr; }
 }
 
 /* ---------------- o livro dos pratos, com casa própria ---------------- */
@@ -829,7 +860,7 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-@media (max-width: 63.99rem) {
+@container pagina (max-width: 34rem) {
   .tira-prato { -webkit-line-clamp: 2; }
 }
 
@@ -841,15 +872,21 @@
 
 /* com preço a lista passa a seis colunas; sem ele fica como estava */
 .linha--compra[data-com-preco] {
-  grid-template-columns: var(--margem-x) minmax(0, 1fr) var(--qtd-x) var(--preco-x) var(--hora-x) var(--largura-accoes);
+  grid-template-columns: var(--margem-x) minmax(0, 1fr) var(--qtd-x) var(--preco-x) var(--carimbo-x) var(--largura-accoes);
 }
-:root { --preco-x: 4.5rem; }
+:root { --preco-x: 4.5rem; --carimbo-x: var(--hora-x); }
 /* Com preço a linha passa a seis colunas. Num telemóvel isso rouba a medida
-   ao que interessa — o nome — por isso as duas colunas de números encolhem
-   ao que os números precisam, e não mais. */
+   ao que interessa — o nome — por isso as duas colunas de números e o carimbo
+   encolhem ao que precisam, e não mais. Medido a 390px: sem isto o nome ficava
+   com 130px e "Detergente da loiça" partia-se em três linhas. */
 @media (max-width: 47.99rem) {
-  :root { --preco-x: 3rem; }
-  .linha--compra[data-com-preco] { --qtd-x: 3.25rem; }
+  :root { --preco-x: 3.25rem; }
+  /* Medido a 390px: a quantidade tem de aguentar "500 g + 2 u" e o preço
+     "10,73" sem cortar — cortar um número é pior do que partir um nome.
+     A margem é que dá o resto: num caderno de bolso o risco vermelho vem
+     mais perto da borda, e a lista é o único sítio onde isso se nota. */
+  .linha--compra[data-com-preco] { --qtd-x: max(4rem, var(--qtd-conteudo, 0px)); --carimbo-x: 2.5rem; }
+  .lista-compras .dia-corpo:has(.linha--compra[data-com-preco]) { --margem-x: 1.75rem; }
 }
 .linha-preco { position: relative; height: var(--pauta-passo); padding-inline-end: 0.375rem; }
 
@@ -916,7 +953,18 @@
 .conjunto-chip:hover { border-color: var(--pai); background: color-mix(in srgb, var(--pai) 7%, transparent); }
 .conjunto-conta { color: var(--impresso-tinta); }
 
-.lista-conta { display: inline-flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
+/* A conta da lista ganhou um terceiro controlo e deixou de caber: numa linha
+   de telemóvel a linha inteira passa a poder dobrar, em vez de sair da folha. */
+.lista-conta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  flex-wrap: wrap;
+  min-width: 0;
+  /* `.dia-data` não encolhe — uma data nunca precisou. Esta conta precisa:
+     sem isto os três controlos saíam pela direita da folha fora. */
+  flex: 1 1 auto;
+}
 .lista-compras .dia-cabecalho { flex-wrap: wrap; row-gap: 0.375rem; }
 
 .lista-total {
@@ -930,7 +978,20 @@
   color: var(--casa);
 }
 .lista-total strong { font-size: var(--t-destaque); letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+/* O que já está no cesto conta, mas não é o número que se lê primeiro:
+   fica na tinta do carimbo, um degrau abaixo do que ainda falta comprar. */
+.lista-total strong.lista-total--cesto { font-size: var(--t-escrita); color: var(--carimbo); }
 .lista-total-nota { color: var(--impresso-tinta); }
+/* A lista em branco diz de onde vêm as linhas — senão parece avariada. */
+.lista-vazia {
+  margin: 0;
+  padding: 0 0.625rem calc(var(--pauta-passo) / 2) calc(var(--margem-x) + 0.625rem);
+  color: var(--impresso-tinta);
+  line-height: var(--pauta-passo);
+  /* Medida no registo impresso, que é caixa alta e tracejada: 34ch dava seis
+     linhas de maiúsculas a gritar numa página vazia. */
+  max-width: 52ch;
+}
 
 .seccao-conjuntos { margin-top: 2.5rem; }
 
@@ -939,3 +1000,5 @@
 .linha--compra.linha--legenda .linha-preco { text-align: right; line-height: var(--pauta-passo); }
 
 .capa-sair--aviso { color: var(--fita); border-bottom-color: var(--fita); }
+
+.conjunto-recado { margin: 0 0 0.75rem; color: var(--impresso-tinta); }
