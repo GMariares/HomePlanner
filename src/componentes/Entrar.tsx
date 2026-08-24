@@ -13,6 +13,20 @@ export function Entrar() {
   const [aTratar, definirATratar] = useState(false)
   const [erro, definirErro] = useState<string | null>(null)
   const [porConfirmar, definirPorConfirmar] = useState(false)
+  const [reenviado, definirReenviado] = useState<'nao' | 'a-enviar' | 'enviado'>('nao')
+
+  const reenviar = async () => {
+    definirErro(null)
+    definirReenviado('a-enviar')
+    try {
+      const { error } = await supabase.auth.resend({ type: 'signup', email })
+      if (error) throw error
+      definirReenviado('enviado')
+    } catch (falha) {
+      definirReenviado('nao')
+      definirErro(recado(falha))
+    }
+  }
 
   const submeter = async (e: FormEvent) => {
     e.preventDefault()
@@ -43,7 +57,27 @@ export function Entrar() {
             Foi enviada uma mensagem para <strong>{email}</strong>. Abra o link que vem lá
             e volte aqui para entrar.
           </p>
-          <button type="button" className="botao-linha impresso" onClick={() => { definirPorConfirmar(false); definirModo('entrar') }}>
+          <p className="etiqueta-texto">
+            Se não chegou em poucos minutos, veja o spam. O serviço de email que vem de
+            origem com o Supabase é limitado e nem sempre entrega — quem gere o projecto
+            pode desligar a confirmação, ou ligar um SMTP próprio.
+          </p>
+
+          {erro && <p className="recado-erro" role="alert">{erro}</p>}
+          {reenviado === 'enviado' && (
+            <p className="etiqueta-texto" role="status">Mensagem reenviada.</p>
+          )}
+
+          <button
+            type="button"
+            className="botao-capa"
+            onClick={reenviar}
+            disabled={reenviado === 'a-enviar'}
+          >
+            {reenviado === 'a-enviar' ? 'A reenviar…' : 'Enviar outra vez'}
+          </button>
+
+          <button type="button" className="botao-linha impresso" onClick={() => { definirPorConfirmar(false); definirModo('entrar'); definirErro(null) }}>
             Voltar
           </button>
         </div>
