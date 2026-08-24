@@ -91,21 +91,35 @@ export function useEmenta(casaId: string | null, semana: string) {
 
   const jantarDe = useCallback((dia: number) => jantares.find(j => j.dia === dia) ?? null, [jantares])
 
-  /** Põe na lista os ingredientes de um prato, atribuídos a este jantar. */
+  /**
+   * Põe na lista o que este jantar leva. Se a lista já tiver a mesma coisa,
+   * as quantidades somam-se numa linha só — 1 kg mais 500 g são 1,5 kg — e a
+   * base de dados guarda de que jantar veio cada parcela, para as saber
+   * devolver quando o jantar sair.
+   */
   const derivar = useCallback(async (entradaId: string, prato: Prato) => {
     if (!casaId || prato.ingredientes.length === 0) return
-    const { error } = await supabase.from('compras').insert(
+    const { error } = await supabase.rpc('juntar_prato_na_lista', {
+      p_entrada: entradaId, p_prato: prato.id, p_semana: semana,
+    })
+    if (!error) return
+
+    // sem a quarta migração não há parcelas: cada ingrediente vai na sua linha
+    if (!esquemaAtrasado(error) && error.code !== 'PGRST202') { definirFalhou(true); return }
+    const { error: erroAntigo } = await supabase.from('compras').insert(
       prato.ingredientes.map(i => ({
         id: novoId(), casa_id: casaId, semana,
         nome: i.nome, quantidade: i.quantidade,
         origem_entrada_id: entradaId, prato_id: prato.id,
       })),
     )
-    if (error) definirFalhou(true)
+    if (erroAntigo) definirFalhou(true)
   }, [casaId, semana])
 
-  /** Retira da lista o que este jantar lá pôs e ninguém comprou nem mexeu. */
+  /** Tira as parcelas deste jantar. O que foi comprado ou mexido à mão fica. */
   const retirar = useCallback(async (entradaId: string) => {
+    const { error } = await supabase.rpc('tirar_prato_da_lista', { p_entrada: entradaId })
+    if (!error) return
     await supabase.from('compras').delete()
       .eq('origem_entrada_id', entradaId).eq('comprado', false).eq('editado', false)
   }, [])

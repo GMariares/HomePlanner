@@ -4,12 +4,11 @@ import { useEffect, useLayoutEffect, useRef } from 'react'
  * Escrever na linha. Um texto comprido não estica o dia nem se corta:
  * passa para a pauta seguinte, como num caderno.
  */
-export function Escrita({ valor, rotulo, cor, aoMudar, aoTerminar, aoConfirmar }: {
+export function Escrita({ valor, rotulo, cor, aoMudar, aoConfirmar }: {
   valor: string
   rotulo: string
   cor?: string
   aoMudar: (v: string) => void
-  aoTerminar?: () => void
   /** Enter confirma e deixa o cursor onde está, para se escrever linha atrás de linha. */
   aoConfirmar?: () => void
 }) {
@@ -48,7 +47,6 @@ export function Escrita({ valor, rotulo, cor, aoMudar, aoTerminar, aoConfirmar }
       aria-label={rotulo}
       spellCheck={false}
       onChange={e => { aoMudar(e.target.value); ajustar() }}
-      onBlur={aoTerminar}
       onKeyDown={e => {
         if (e.key !== 'Enter') return
         e.preventDefault()

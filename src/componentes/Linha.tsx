@@ -141,7 +141,7 @@ export function Linha({ entrada, contexto, destaque, aoAlterar, aoApagar, aoMove
           <CampoDeCarimbo
             feita={!!entrada.feita}
             aoAlternar={() => aoAlterar({ feita: !entrada.feita })}
-            rotulo={`${contexto}: dar o visto a “${entrada.texto || 'linha em branco'}”`}
+            rotulo={`${contexto}: marcar “${entrada.texto || 'linha em branco'}” como feita`}
           />
         ) : entrada.genero !== 'refeicao' ? (
           <input
@@ -161,7 +161,7 @@ export function Linha({ entrada, contexto, destaque, aoAlterar, aoApagar, aoMove
           <CampoDeCarimbo
             feita={!!entrada.feita}
             aoAlternar={() => aoAlterar({ feita: !entrada.feita })}
-            rotulo={`${contexto}: dar o visto a “${entrada.texto || 'linha em branco'}”`}
+            rotulo={`${contexto}: marcar “${entrada.texto || 'linha em branco'}” como feita`}
           />
         </span>
       )}

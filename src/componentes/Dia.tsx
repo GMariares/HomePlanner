@@ -4,20 +4,21 @@ import { DIAS, curto } from '../dominio/semana'
 import { novoId } from '../dominio/estado'
 import { Linha } from './Linha'
 import { Escrita } from './Escrita'
+import { useRascunho } from '../dominio/rascunho'
 
 /** Uma pauta em branco também é uma pauta: escreve-se nela e passa a existir. */
 function LinhaEmBranco({ rotulo, aoEscrever }: { rotulo: string; aoEscrever: (texto: string) => void }) {
   const [texto, definir] = useState('')
   const guardar = () => { if (texto.trim()) { aoEscrever(texto.trim()); definir('') } }
+  const { linha, aoPerderFoco } = useRascunho(guardar)
   return (
-    <div className="linha linha--branco">
+    <div className="linha linha--branco" ref={linha} onBlur={aoPerderFoco}>
       <span className="linha-goteira" />
       <span className="linha-corpo">
         <Escrita
           valor={texto}
           rotulo={rotulo}
           aoMudar={definir}
-          aoTerminar={guardar}
           aoConfirmar={guardar}
         />
       </span>

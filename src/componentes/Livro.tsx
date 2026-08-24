@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Cabecalho } from './Cabecalho'
 import { Escrita } from './Escrita'
+import { useRascunho } from '../dominio/rascunho'
 import { Reticencias } from './Icones'
 import { Menu } from './Menu'
 import { useLivro } from '../dominio/livro'
@@ -21,6 +22,7 @@ function Ingredientes({ prato, aoAcrescentar, aoAlterar, aoApagar }: {
     aoAcrescentar(prato.id, nome.trim(), qtd.trim() || null)
     definirNome(''); definirQtd('')
   }
+  const { linha, aoPerderFoco } = useRascunho(guardar)
 
   return (
     <>
@@ -63,14 +65,13 @@ function Ingredientes({ prato, aoAcrescentar, aoAlterar, aoApagar }: {
           </div>
         ))}
 
-      <div className="linha linha--ingrediente linha--dentro linha--branco">
+      <div className="linha linha--ingrediente linha--dentro linha--branco" ref={linha} onBlur={aoPerderFoco}>
           <span className="linha-goteira" />
           <span className="linha-corpo">
             <Escrita
               valor={nome}
               rotulo={`Escrever um ingrediente de ${prato.nome}`}
               aoMudar={definirNome}
-              aoTerminar={guardar}
               aoConfirmar={guardar}
             />
           </span>
@@ -82,7 +83,7 @@ function Ingredientes({ prato, aoAcrescentar, aoAlterar, aoApagar }: {
               maxLength={24}
               aria-label="Quantidade do ingrediente novo"
               onChange={e => definirQtd(e.target.value)}
-              onBlur={guardar}
+              onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); guardar() } }}
             />
           </span>
           <span className="linha-accoes" />
@@ -104,6 +105,7 @@ function ItensDoConjunto({ conjunto, aoAcrescentar, aoAlterar, aoApagar }: {
     aoAcrescentar(conjunto.id, nome.trim(), qtd.trim() || null)
     definirNome(''); definirQtd('')
   }
+  const { linha, aoPerderFoco } = useRascunho(guardar)
   return (
     <>
       <div className="linha linha--legenda">
@@ -136,15 +138,16 @@ function ItensDoConjunto({ conjunto, aoAcrescentar, aoAlterar, aoApagar }: {
           </span>
         </div>
       ))}
-      <div className="linha linha--ingrediente linha--dentro linha--branco">
+      <div className="linha linha--ingrediente linha--dentro linha--branco" ref={linha} onBlur={aoPerderFoco}>
         <span className="linha-goteira" />
         <span className="linha-corpo">
           <Escrita valor={nome} rotulo={`Escrever uma coisa em ${conjunto.nome}`}
-            aoMudar={definirNome} aoTerminar={guardar} aoConfirmar={guardar} />
+            aoMudar={definirNome} aoConfirmar={guardar} />
         </span>
         <span className="linha-hora">
           <input className="escrita escrita--hora" value={qtd} placeholder="qt." maxLength={24}
-            aria-label="Quantidade" onChange={e => definirQtd(e.target.value)} onBlur={guardar} />
+            aria-label="Quantidade" onChange={e => definirQtd(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); guardar() } }} />
         </span>
         <span className="linha-accoes" />
       </div>
@@ -184,6 +187,8 @@ export function PaginaDoLivro({ l }: { l: AccoesDoLivro }) {
   const [novoConjunto, definirNovoConjunto] = useState('')
   const [aEscreverConjunto, definirAEscreverConjunto] = useState(false)
 
+  const { linha: linhaPrato, aoPerderFoco: aoPerderFocoPrato } = useRascunho(() => { void escreverPrato() })
+
   const escreverConjunto = async () => {
     if (!novoConjunto.trim() || aEscreverConjunto) return
     definirAEscreverConjunto(true)
@@ -191,6 +196,8 @@ export function PaginaDoLivro({ l }: { l: AccoesDoLivro }) {
     definirAEscreverConjunto(false)
     if (c) { definirNovoConjunto(''); definirAbertoConjunto(c.id) }
   }
+
+  const { linha: linhaConjunto, aoPerderFoco: aoPerderFocoConjunto } = useRascunho(() => { void escreverConjunto() })
 
   const encontrados = useMemo(() => {
     const chave = chaveDeNome(procura)
@@ -349,14 +356,13 @@ export function PaginaDoLivro({ l }: { l: AccoesDoLivro }) {
                   </div>
                 )}
 
-                <div className="linha linha--prato linha--branco">
+                <div className="linha linha--prato linha--branco" ref={linhaPrato} onBlur={aoPerderFocoPrato}>
                   <span className="linha-goteira" />
                   <span className="linha-corpo">
                     <Escrita
                       valor={novo}
                       rotulo="Escrever um prato novo no livro"
                       aoMudar={definirNovo}
-                      aoTerminar={escreverPrato}
                       aoConfirmar={escreverPrato}
                     />
                   </span>
@@ -438,12 +444,11 @@ export function PaginaDoLivro({ l }: { l: AccoesDoLivro }) {
                   </div>
                 ))}
 
-                <div className="linha linha--prato linha--branco">
+                <div className="linha linha--prato linha--branco" ref={linhaConjunto} onBlur={aoPerderFocoConjunto}>
                   <span className="linha-goteira" />
                   <span className="linha-corpo">
                     <Escrita valor={novoConjunto} rotulo="Escrever um conjunto novo"
-                      aoMudar={definirNovoConjunto}
-                      aoTerminar={escreverConjunto} aoConfirmar={escreverConjunto} />
+                      aoMudar={definirNovoConjunto} aoConfirmar={escreverConjunto} />
                   </span>
                   <span className="linha-hora" />
                   <span className="linha-accoes" />

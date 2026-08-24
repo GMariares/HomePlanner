@@ -106,6 +106,7 @@ export function ListaCompras({
                   feita={c.comprado}
                   aoAlternar={() => aoAlternar(c)}
                   rotulo={`Marcar ${c.nome} como comprado`}
+                  palavra="COMPRADO"
                 />
               </span>
               <span className="linha-accoes">

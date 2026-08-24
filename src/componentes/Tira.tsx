@@ -3,6 +3,7 @@ import { DIAS, curto, diaDaSemana } from '../dominio/semana'
 import type { Entrada, Prato } from '../dominio/tipos'
 import { chaveDeNome } from '../dominio/adiar'
 import { Escrita } from './Escrita'
+import { useRascunho } from '../dominio/rascunho'
 import { Reticencias } from './Icones'
 
 /** Os ingredientes do prato escolhido, escritos na pauta, aqui mesmo. */
@@ -21,6 +22,13 @@ function PratoDoDia({ dia, data, jantar, pratos, aoMarcar, aoCriarPrato, aoAcres
   const [novoNome, definirNovoNome] = useState('')
   const [novaQtd, definirNovaQtd] = useState('')
   const [aEscrever, definirAEscrever] = useState(false)
+
+  const guardarIngrediente = () => {
+    if (!prato || !novoNome.trim()) return
+    aoAcrescentarIngrediente(prato.id, novoNome.trim(), novaQtd.trim() || null)
+    definirNovoNome(''); definirNovaQtd('')
+  }
+  const { linha: linhaNova, aoPerderFoco } = useRascunho(guardarIngrediente)
 
   const prato = jantar?.pratoId ? pratos.find(p => p.id === jantar.pratoId) ?? null : null
   const chave = chaveDeNome(procura)
@@ -135,18 +143,14 @@ function PratoDoDia({ dia, data, jantar, pratos, aoMarcar, aoCriarPrato, aoAcres
               </div>
             ))}
 
-            <div className="linha linha--branco linha--ingrediente">
+            <div className="linha linha--branco linha--ingrediente" ref={linhaNova} onBlur={aoPerderFoco}>
               <span className="linha-goteira" />
               <span className="linha-corpo">
                 <Escrita
                   valor={novoNome}
                   rotulo={`Escrever um ingrediente de ${prato.nome}`}
                   aoMudar={definirNovoNome}
-                  aoTerminar={() => {
-                    if (!novoNome.trim()) return
-                    aoAcrescentarIngrediente(prato.id, novoNome.trim(), novaQtd.trim() || null)
-                    definirNovoNome(''); definirNovaQtd('')
-                  }}
+                  aoConfirmar={guardarIngrediente}
                 />
               </span>
               <span className="linha-hora">
@@ -156,6 +160,7 @@ function PratoDoDia({ dia, data, jantar, pratos, aoMarcar, aoCriarPrato, aoAcres
                   placeholder="qt."
                   aria-label="Quantidade do ingrediente novo"
                   onChange={e => definirNovaQtd(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); guardarIngrediente() } }}
                 />
               </span>
               <span className="linha-accoes" />

@@ -5,10 +5,12 @@ import { useEffect, useRef, useState } from 'react'
  * tinta vai cair. Por fazer, é uma casa impressa a tracejado à espera;
  * feita, é o "Visto", como o professor carimba a caderneta.
  */
-export function CampoDeCarimbo({ feita, aoAlternar, rotulo }: {
+export function CampoDeCarimbo({ feita, aoAlternar, rotulo, palavra = 'FEITO' }: {
   feita: boolean
   aoAlternar: () => void
   rotulo: string
+  /** O que o carimbo diz. Uma compra é "comprado"; uma tarefa é "feito". */
+  palavra?: string
 }) {
   const [acabadoDeCarimbar, definirAcabado] = useState(false)
   const anterior = useRef(feita)
@@ -30,7 +32,7 @@ export function CampoDeCarimbo({ feita, aoAlternar, rotulo }: {
       aria-checked={feita}
       onClick={aoAlternar}
       className="campo-carimbo"
-      title={feita ? 'Tirar o visto' : 'Dar o visto'}
+      title={feita ? `Desmarcar (${palavra.toLocaleLowerCase('pt')})` : palavra.toLocaleLowerCase('pt')}
     >
       <span className="sr-only">{rotulo}</span>
       {feita ? (
@@ -38,9 +40,10 @@ export function CampoDeCarimbo({ feita, aoAlternar, rotulo }: {
           <svg viewBox="0 0 74 30" fill="none" aria-hidden="true">
             <rect x="1.6" y="1.6" width="70.8" height="26.8" rx="4"
               stroke="currentColor" strokeWidth="2.4" />
+            {/* textLength obriga a palavra a caber, seja ela de cinco ou de oito letras */}
             <text x="37" y="20.5" textAnchor="middle" fill="currentColor"
               fontFamily="Archivo, sans-serif" fontSize="13.5" fontWeight="700"
-              letterSpacing="2.4">VISTO</text>
+              textLength="58" lengthAdjust="spacingAndGlyphs">{palavra}</text>
           </svg>
         </span>
       ) : (

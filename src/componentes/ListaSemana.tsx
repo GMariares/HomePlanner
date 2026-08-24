@@ -3,6 +3,7 @@ import type { Entrada } from '../dominio/tipos'
 import { novoId } from '../dominio/estado'
 import { Linha } from './Linha'
 import { Escrita } from './Escrita'
+import { useRascunho } from '../dominio/rascunho'
 
 /** O que é desta semana mas não é de nenhum dia. */
 export function ListaSemana({ entradas, aoAcrescentar, aoAlterar, aoApagar, aoMover }: {
@@ -18,6 +19,8 @@ export function ListaSemana({ entradas, aoAcrescentar, aoAlterar, aoApagar, aoMo
     aoAcrescentar({ id: novoId(), dia: null, genero: 'tarefa', autor: null, texto: texto.trim(), hora: null, feita: false })
     definir('')
   }
+
+  const { linha, aoPerderFoco } = useRascunho(guardar)
 
   return (
     <section className="lista" aria-labelledby="lista-titulo">
@@ -36,14 +39,13 @@ export function ListaSemana({ entradas, aoAcrescentar, aoAlterar, aoApagar, aoMo
             aoMover={d => aoMover(e.id, d)}
           />
         ))}
-        <div className="linha linha--branco">
+        <div className="linha linha--branco" ref={linha} onBlur={aoPerderFoco}>
           <span className="linha-goteira" />
           <span className="linha-corpo">
             <Escrita
               valor={texto}
               rotulo="Escrever uma tarefa sem dia marcado"
               aoMudar={definir}
-              aoTerminar={guardar}
               aoConfirmar={guardar}
             />
           </span>
