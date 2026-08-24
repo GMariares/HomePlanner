@@ -237,9 +237,6 @@
 .dia-corpo { position: relative; }
 
 /* ---------------- uma linha ---------------- */
-.linha--destaque { font-size: var(--t-destaque); }
-.linha--destaque .escrita { letter-spacing: -0.01em; }
-
 .linha {
   position: relative;
   display: grid;
@@ -258,7 +255,22 @@
 .linha-hora { text-align: right; position: relative; height: var(--pauta-passo); padding-inline-end: 0.375rem; }
 .linha-accoes { display: flex; justify-content: flex-end; height: var(--pauta-passo); align-items: center; }
 
-.escrita--hora {
+/* A primeira linha do dia sobe de escala: é o que está a acontecer, e é o que
+   se lê antes do nome do dia. Depois de .linha, senão perde na cascata. */
+.linha--destaque { font-size: var(--t-destaque); }
+.linha--destaque .escrita { letter-spacing: -0.01em; }
+.linha--destaque .etiqueta { align-self: center; }
+
+/* uma tarefa com hora marcada abre coluna para a hora, ao lado do carimbo */
+.linha[data-genero="tarefa"][data-com-hora] {
+  grid-template-columns: var(--margem-x) minmax(0, 1fr) var(--hora-x) var(--hora-x) var(--largura-accoes);
+}
+.linha-carimbo { position: relative; height: var(--pauta-passo); }
+
+/* A hora vive numa coluna de largura fixa: não acompanha a escala da linha
+   em destaque, senão transborda. Especificidade dobrada de propósito — a regra
+   base de .escrita usa `inherit` e é escrita depois desta. */
+.escrita.escrita--hora {
   text-align: right;
   font-variant-numeric: tabular-nums;
   font-size: var(--t-escrita);
@@ -304,14 +316,14 @@
 }
 
 /* tarefa carimbada */
-.linha[data-feita] .escrita { color: var(--impresso-tinta); text-decoration: line-through; text-decoration-color: var(--carimbo); }
+.linha[data-feita] .escrita { text-decoration: line-through; text-decoration-color: var(--carimbo); }
 .campo-carimbo {
   appearance: none;
   background: none;
   border: 0;
   padding: 0;
   margin: 0;
-  color: color-mix(in srgb, var(--carimbo) 46%, var(--folha));
+  color: color-mix(in srgb, var(--carimbo) 70%, var(--folha));
   cursor: pointer;
   display: block;
   position: relative;
@@ -321,7 +333,7 @@
   transition: color 160ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .campo-carimbo::before { content: ""; position: absolute; inset: -0.25rem -0.5rem; }
-.campo-carimbo:hover { color: color-mix(in srgb, var(--carimbo) 78%, var(--folha)); }
+.campo-carimbo:hover { color: var(--carimbo); }
 .campo-carimbo svg { display: block; width: 100%; height: auto; }
 .linha[data-feita] .campo-carimbo { color: var(--carimbo); }
 

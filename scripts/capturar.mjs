@@ -9,7 +9,7 @@
  */
 import { chromium } from 'playwright'
 
-const ENDERECO = 'http://localhost:4178/'
+const ENDERECO = 'http://localhost:4179/'
 const ALVOS = [
   { nome: 'desktop', width: 1440, height: 900 },
   { nome: 'mobile', width: 390, height: 844, mobile: true },

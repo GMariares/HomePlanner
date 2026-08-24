@@ -20,6 +20,17 @@ export function Linha({ entrada, contexto, destaque, aoAlterar, aoApagar, aoMove
   const tinta = tintaDe(entrada.autor)
   const feita = entrada.genero === 'tarefa' && entrada.feita
   const continuacao = entrada.extensao === 'meio' || entrada.extensao === 'fim'
+  /** Uma tarefa pode ter hora marcada; se tiver, abre coluna para ela. */
+  const comHora = entrada.genero === 'tarefa' && entrada.hora !== null && entrada.hora !== undefined
+
+  /* A tinta do texto sai daqui e não do CSS: o `style` em linha ganha sempre
+     à folha de estilos, e uma regra que nunca se aplica não é uma decisão.
+     Uma continuação e uma tarefa cumprida recuam para a tinta do impresso —
+     lêem-se na mesma, mas não competem com o que ainda está por acontecer. */
+  const corDoTexto =
+    entrada.genero === 'refeicao' ? 'var(--casa)'
+    : continuacao || feita ? 'var(--impresso-tinta)'
+    : tinta
 
   const opcoesAutor: Opcao[] = [
     ...AUTOR_IDS.map(a => ({
@@ -45,6 +56,13 @@ export function Linha({ entrada, contexto, destaque, aoAlterar, aoApagar, aoMove
       aoEscolher: () => aoMover(i),
     })),
     { id: 'sem-data', rotulo: 'Esta semana, sem dia', activa: entrada.dia === null, aoEscolher: () => aoMover(null) },
+    ...(entrada.genero === 'tarefa'
+      ? [{
+          id: 'hora',
+          rotulo: entrada.hora === null || entrada.hora === undefined ? 'Marcar uma hora' : 'Tirar a hora',
+          aoEscolher: () => aoAlterar({ hora: entrada.hora === null || entrada.hora === undefined ? '' : null }),
+        }]
+      : []),
     { id: 'apagar', rotulo: 'Apagar a linha', tinta: 'var(--margem)', aoEscolher: aoApagar },
   ]
 
@@ -72,7 +90,12 @@ export function Linha({ entrada, contexto, destaque, aoAlterar, aoApagar, aoMove
   }
 
   return (
-    <div className={`linha ${destaque ? 'linha--destaque' : ''}`} data-genero={entrada.genero} data-feita={feita || undefined}>
+    <div
+      className={`linha ${destaque ? 'linha--destaque' : ''}`}
+      data-genero={entrada.genero}
+      data-feita={feita || undefined}
+      data-com-hora={comHora || undefined}
+    >
       <span className="linha-goteira" style={{ color: tinta }}>
         {entrada.extensao ? (
           <span className="chaveta"><Chaveta parte={entrada.extensao} /></span>
@@ -108,14 +131,14 @@ export function Linha({ entrada, contexto, destaque, aoAlterar, aoApagar, aoMove
         <Escrita
           valor={entrada.texto}
           rotulo={`${contexto}: o que está escrito nesta linha`}
-          cor={entrada.genero === 'refeicao' ? 'var(--casa)' : tinta}
+          cor={corDoTexto}
           esbatido={continuacao}
           aoMudar={texto => aoAlterar({ texto })}
         />
       </span>
 
       <span className="linha-hora">
-        {entrada.genero === 'tarefa' ? (
+        {entrada.genero === 'tarefa' && !comHora ? (
           <CampoDeCarimbo
             feita={!!entrada.feita}
             aoAlternar={() => aoAlterar({ feita: !entrada.feita })}
@@ -129,10 +152,20 @@ export function Linha({ entrada, contexto, destaque, aoAlterar, aoApagar, aoMove
             inputMode="numeric"
             maxLength={5}
             aria-label={`${contexto}: horas de “${entrada.texto || 'linha em branco'}”`}
-            onChange={e => aoAlterar({ hora: e.target.value || null })}
+            onChange={e => aoAlterar({ hora: e.target.value })}
           />
         ) : null}
       </span>
+
+      {comHora && (
+        <span className="linha-carimbo">
+          <CampoDeCarimbo
+            feita={!!entrada.feita}
+            aoAlternar={() => aoAlterar({ feita: !entrada.feita })}
+            rotulo={`${contexto}: dar o visto a “${entrada.texto || 'linha em branco'}”`}
+          />
+        </span>
+      )}
 
       <span className="linha-accoes">
         <Menu

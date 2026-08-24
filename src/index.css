@@ -72,7 +72,7 @@ body {
 
 /* ---- o impresso: printed register. Never used for household content. ---- */
 .impresso {
-  font-size: 0.6875rem;
+  font-size: var(--t-impresso);
   font-weight: 600;
   font-stretch: 112%;
   letter-spacing: 0.14em;
@@ -131,8 +131,8 @@ body {
   overflow: hidden;
   overflow-wrap: break-word;
 }
-/* a continuação de um compromisso longo é secundária, mas continua a ler-se */
-.escrita[data-esbatido] { color: var(--impresso-tinta); }
+/* A subordinação da continuação vem da tinta que o componente passa, não daqui:
+   o `style` em linha ganharia sempre a esta regra. */
 .escrita::placeholder { color: transparent; }
 .escrita:hover::placeholder,
 .escrita:focus::placeholder { color: var(--impresso-tinta); }
