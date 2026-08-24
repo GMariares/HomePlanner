@@ -132,7 +132,6 @@ export function Linha({ entrada, contexto, destaque, aoAlterar, aoApagar, aoMove
           valor={entrada.texto}
           rotulo={`${contexto}: o que está escrito nesta linha`}
           cor={corDoTexto}
-          esbatido={continuacao}
           aoMudar={texto => aoAlterar({ texto })}
         />
       </span>

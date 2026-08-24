@@ -4,11 +4,10 @@ import { useEffect, useLayoutEffect, useRef } from 'react'
  * Escrever na linha. Um texto comprido não estica o dia nem se corta:
  * passa para a pauta seguinte, como num caderno.
  */
-export function Escrita({ valor, rotulo, cor, esbatido, aoMudar, aoTerminar, aoConfirmar }: {
+export function Escrita({ valor, rotulo, cor, aoMudar, aoTerminar, aoConfirmar }: {
   valor: string
   rotulo: string
   cor?: string
-  esbatido?: boolean
   aoMudar: (v: string) => void
   aoTerminar?: () => void
   /** Enter confirma e deixa o cursor onde está, para se escrever linha atrás de linha. */
@@ -43,7 +42,6 @@ export function Escrita({ valor, rotulo, cor, esbatido, aoMudar, aoTerminar, aoC
       ref={ref}
       className="escrita"
       style={cor ? { color: cor } : undefined}
-      data-esbatido={esbatido || undefined}
       rows={1}
       value={valor}
       placeholder="escrever…"

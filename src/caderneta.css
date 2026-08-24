@@ -419,4 +419,3 @@
 }
 .menu-item:hover { background: color-mix(in srgb, var(--pauta) 45%, transparent); }
 .menu-item[aria-current] { font-weight: 700; }
-.menu-item[aria-current]::after { content: ""; }
