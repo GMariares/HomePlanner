@@ -1,0 +1,147 @@
+@import "tailwindcss";
+@import "./fonts.css";
+@import "./caderneta.css";
+
+@theme {
+  --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-mao: "Caveat", ui-sans-serif, cursive;
+}
+
+:root {
+  /* ---- o impresso: what the book arrives with ---- */
+  --papel: #eef1f6;        /* cool stock the opening sits on */
+  --folha: #f8fafc;        /* the sheet itself */
+  --pauta: #c7d2e0;        /* printed rules */
+  --pauta-forte: #a5b6cc;  /* day divider */
+  --impresso: #55668014;   /* printed wash */
+  --impresso-tinta: #5a6b85; /* printed labels */
+  --margem: #c0392b;       /* margin rule and corrections */
+  --capa: #16224a;         /* cover */
+  --capa-funda: #0e1730;
+  --fita: #c8912b;         /* today's ribbon */
+  --carimbo: #6b3fa8;      /* Visto stamp */
+
+  /* ---- as canetas: one pen per member. Attribution is the ink. ---- */
+  --pai: #2440b0;          /* esferográfica azul */
+  --mae: #157a52;          /* esferográfica verde */
+  --filha: #4a5568;        /* lápis */
+  --casa: #1a1f2e;         /* esferográfica preta */
+
+  /* the rule pitch is the layout unit: one entry is exactly one rule */
+  --pauta-passo: 2.125rem;
+  --margem-x: 3.25rem;     /* where the red rule falls */
+  --hora-x: 4.25rem;       /* fixed right-hand time column */
+
+  color-scheme: light;
+}
+
+@media (max-width: 47.99rem) {
+  :root {
+    --pauta-passo: 2.375rem;
+    --margem-x: 2.5rem;
+    --hora-x: 3.25rem;
+    --largura-accoes: 1.5rem;
+  }
+}
+
+/* ---- browser surfaces: the parts we did not draw still carry the design ---- */
+::selection { background: color-mix(in srgb, var(--pai) 22%, transparent); color: var(--capa-funda); }
+html { scrollbar-color: var(--pauta-forte) var(--papel); }
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: var(--papel); }
+::-webkit-scrollbar-thumb { background: var(--pauta-forte); border: 3px solid var(--papel); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--impresso-tinta); }
+
+:focus-visible {
+  outline: 2px solid var(--margem);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--casa);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  caret-color: var(--pai);
+}
+
+/* ---- o impresso: printed register. Never used for household content. ---- */
+.impresso {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  font-stretch: 112%;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--impresso-tinta);
+}
+
+/* ---- a pauta: every day renders its rules, full or empty ---- */
+.pauta {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(var(--pauta-passo) - 1px),
+    var(--pauta) calc(var(--pauta-passo) - 1px),
+    var(--pauta) var(--pauta-passo)
+  );
+}
+
+/* the red margin rule, drawn where a school book prints it */
+.margem::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--margem-x);
+  width: 1px;
+  background: color-mix(in srgb, var(--margem) 55%, transparent);
+  pointer-events: none;
+}
+
+/* a written line: sits ON the rule, in its author's ink.
+   A long entry runs onto the next rule instead of being clipped. */
+.linha {
+  min-height: var(--pauta-passo);
+  line-height: var(--pauta-passo);
+}
+
+/* what you write in is the page, not a widget on it */
+.escrita {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-stretch: inherit;
+  letter-spacing: inherit;
+  line-height: var(--pauta-passo);
+  color: inherit;
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+  border-radius: 1px;
+  resize: none;
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
+.escrita[data-esbatido] { opacity: 0.62; }
+.escrita::placeholder { color: transparent; }
+.escrita:hover::placeholder { color: color-mix(in srgb, var(--impresso-tinta) 45%, transparent); }
+.escrita:focus::placeholder { color: color-mix(in srgb, var(--impresso-tinta) 60%, transparent); }
+.escrita:focus { outline: none; }
+.linha:focus-within {
+  background: color-mix(in srgb, var(--fita) 9%, transparent);
+  box-shadow: inset 2px 0 0 var(--fita);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
+}

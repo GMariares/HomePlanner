@@ -1,0 +1,153 @@
+import { AUTORES, tintaDe, type Autor, type Entrada } from '../dominio/tipos'
+import { DIAS } from '../dominio/semana'
+import { Menu, type Opcao } from './Menu'
+import { Carimbo, CasaDeCarimbo } from './Carimbo'
+import { Chaveta, Reticencias, SetaMudanca } from './Icones'
+import { Escrita } from './Escrita'
+
+const AUTOR_IDS: Autor[] = ['pai', 'mae', 'filha', 'casa']
+
+export function Linha({ entrada, contexto, aoAlterar, aoApagar, aoMover }: {
+  entrada: Entrada
+  /** Onde esta linha vive, para quem ouve a página em vez de a ver. */
+  contexto: string
+  aoAlterar: (mudanca: Partial<Entrada>) => void
+  aoApagar: () => void
+  aoMover: (destino: number | null) => void
+}) {
+  const tinta = tintaDe(entrada.autor)
+  const feita = entrada.genero === 'tarefa' && entrada.feita
+  const continuacao = entrada.extensao === 'meio' || entrada.extensao === 'fim'
+
+  const opcoesAutor: Opcao[] = [
+    ...AUTOR_IDS.map(a => ({
+      id: a,
+      rotulo: AUTORES[a].nome,
+      tinta: AUTORES[a].tinta,
+      activa: entrada.autor === a,
+      aoEscolher: () => aoAlterar({ autor: a }),
+    })),
+    { id: 'sem', rotulo: 'Sem ninguém', activa: !entrada.autor, aoEscolher: () => aoAlterar({ autor: null }) },
+  ]
+
+  const opcoesRefeicao: Opcao[] = [
+    { id: 'almoco', rotulo: 'Almoço', activa: entrada.refeicao === 'almoco', aoEscolher: () => aoAlterar({ refeicao: 'almoco' }) },
+    { id: 'jantar', rotulo: 'Jantar', activa: entrada.refeicao === 'jantar', aoEscolher: () => aoAlterar({ refeicao: 'jantar' }) },
+  ]
+
+  const opcoesLinha: Opcao[] = [
+    ...DIAS.map((d, i) => ({
+      id: `d${i}`,
+      rotulo: d,
+      activa: entrada.dia === i,
+      aoEscolher: () => aoMover(i),
+    })),
+    { id: 'sem-data', rotulo: 'Esta semana, sem dia', activa: entrada.dia === null, aoEscolher: () => aoMover(null) },
+    { id: 'apagar', rotulo: 'Apagar a linha', tinta: 'var(--margem)', aoEscolher: aoApagar },
+  ]
+
+  if (entrada.riscada) {
+    const destino = entrada.movidaPara === null ? 'sem dia' : DIAS[entrada.movidaPara ?? 0]
+    return (
+      <div className="linha linha--riscada">
+        <span className="linha-goteira" />
+        <span className="linha-corpo">
+          <s>{entrada.texto}</s>
+          <span className="linha-mudanca">
+            <SetaMudanca />
+            {destino.toLowerCase()}
+          </span>
+        </span>
+        <span className="linha-hora" />
+        <span className="linha-accoes">
+          <button type="button" className="botao-nu" onClick={aoApagar}>
+            <span className="sr-only">{contexto}: apagar a linha riscada “{entrada.texto}”</span>
+            <Reticencias />
+          </button>
+        </span>
+      </div>
+    )
+  }
+
+  return (
+    <div className="linha" data-genero={entrada.genero} data-feita={feita || undefined}>
+      <span className="linha-goteira" style={{ color: tinta }}>
+        {entrada.genero === 'tarefa' ? (
+          <CasaDeCarimbo
+            feita={!!entrada.feita}
+            onToggle={() => aoAlterar({ feita: !entrada.feita })}
+            rotulo={`${contexto}: dar o visto a “${entrada.texto || 'linha em branco'}”`}
+          />
+        ) : entrada.extensao ? (
+          <span className="chaveta"><Chaveta parte={entrada.extensao} /></span>
+        ) : null}
+      </span>
+
+      <span className="linha-corpo">
+        {entrada.genero === 'refeicao' ? (
+          <Menu
+            titulo="Que refeição"
+            opcoes={opcoesRefeicao}
+            gatilho={({ abrir, refs, controla, aberto }) => (
+              <button type="button" ref={refs} onClick={abrir} aria-haspopup="menu"
+                aria-expanded={aberto} aria-controls={controla} className="etiqueta etiqueta--impressa">
+                {entrada.refeicao === 'almoco' ? 'Almoço' : 'Jantar'}
+              </button>
+            )}
+          />
+        ) : (
+          <Menu
+            titulo="De quem é"
+            opcoes={opcoesAutor}
+            gatilho={({ abrir, refs, controla, aberto }) => (
+              <button type="button" ref={refs} onClick={abrir} aria-haspopup="menu"
+                aria-expanded={aberto} aria-controls={controla}
+                className="etiqueta" style={{ color: tinta }}>
+                {entrada.autor ? AUTORES[entrada.autor].etiqueta : '—'}
+              </button>
+            )}
+          />
+        )}
+
+        <Escrita
+          valor={entrada.texto}
+          rotulo={`${contexto}: o que está escrito nesta linha`}
+          cor={entrada.genero === 'refeicao' ? 'var(--casa)' : tinta}
+          esbatido={continuacao}
+          aoMudar={texto => aoAlterar({ texto })}
+        />
+      </span>
+
+      <span className="linha-hora">
+        {feita ? (
+          <span className="carimbo-lugar"><Carimbo /></span>
+        ) : entrada.genero !== 'refeicao' ? (
+          <input
+            className="escrita escrita--hora"
+            value={entrada.hora ?? ''}
+            placeholder="--:--"
+            inputMode="numeric"
+            maxLength={5}
+            aria-label={`${contexto}: horas de “${entrada.texto || 'linha em branco'}”`}
+            onChange={e => aoAlterar({ hora: e.target.value || null })}
+          />
+        ) : null}
+      </span>
+
+      <span className="linha-accoes">
+        <Menu
+          titulo="Mover para"
+          alinhar="direita"
+          opcoes={opcoesLinha}
+          gatilho={({ abrir, refs, controla, aberto }) => (
+            <button type="button" ref={refs} onClick={abrir} aria-haspopup="menu"
+              aria-expanded={aberto} aria-controls={controla} className="botao-nu">
+              <span className="sr-only">{contexto}: mover ou apagar “{entrada.texto || 'linha em branco'}”</span>
+              <Reticencias />
+            </button>
+          )}
+        />
+      </span>
+    </div>
+  )
+}

@@ -1,0 +1,389 @@
+/* ------------------------------------------------------------------
+   A Caderneta — quatro tamanhos de letra, com saltos largos entre eles.
+   Nada vive entre um degrau e o seguinte.
+   ------------------------------------------------------------------ */
+:root {
+  --t-impresso: 0.6875rem;   /* o que vem impresso no caderno */
+  --t-escrita: 1.0625rem;    /* o que a família escreve */
+  --largura-accoes: 2rem;
+  --t-capa: 1.375rem;        /* a capa */
+  --t-dia: 2.5rem;           /* o nome do dia */
+}
+
+@media (max-width: 47.99rem) {
+  :root { --t-dia: 1.875rem; --t-escrita: 1rem; }
+}
+
+.caderneta { min-height: 100dvh; padding-bottom: 4rem; }
+
+/* ---------------- a capa ---------------- */
+.capa {
+  background: var(--capa);
+  background-image: linear-gradient(180deg, color-mix(in srgb, var(--capa) 88%, white) 0%, var(--capa) 62%, var(--capa-funda) 100%);
+  color: var(--folha);
+  padding: 1.25rem 0 1.125rem;
+  box-shadow: 0 2px 0 color-mix(in srgb, var(--capa-funda) 70%, transparent),
+              0 10px 24px -14px rgb(14 23 48 / 0.55);
+}
+.capa-interior {
+  max-width: 82rem;
+  margin: 0 auto;
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.capa-nome {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px dashed color-mix(in srgb, var(--folha) 32%, transparent);
+  padding: 0 0 0.125rem;
+  font-family: var(--font-mao);
+  font-size: 1.875rem;
+  line-height: 1.15;
+  color: var(--folha);
+  width: min(20ch, 60vw);
+  border-radius: 1px;
+}
+.capa-nome::placeholder { color: color-mix(in srgb, var(--folha) 52%, transparent); }
+.capa-nome:focus { outline: none; border-bottom-color: var(--fita); }
+.capa-nome:focus-visible { outline: 2px solid var(--fita); outline-offset: 4px; }
+.capa-intervalo { margin: 0.5rem 0 0; color: color-mix(in srgb, var(--folha) 72%, var(--capa)); }
+
+.capa-navegacao { display: flex; align-items: center; gap: 0.375rem; }
+.capa-botao {
+  appearance: none;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--folha) 26%, transparent);
+  color: var(--folha);
+  border-radius: 2px;
+  min-height: 2.25rem;
+  min-width: 2.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), border-color 160ms;
+}
+.capa-botao--texto { padding-inline: 0.875rem; color: color-mix(in srgb, var(--folha) 88%, transparent); }
+.capa-botao:hover:not(:disabled) { background: color-mix(in srgb, var(--folha) 12%, transparent); border-color: color-mix(in srgb, var(--folha) 44%, transparent); }
+.capa-botao:disabled { opacity: 0.38; cursor: default; }
+.capa-botao:focus-visible { outline: 2px solid var(--fita); outline-offset: 2px; }
+
+/* ---------------- o aviso de exemplo ---------------- */
+.aviso {
+  max-width: 82rem;
+  margin: 0 auto;
+  padding: 0.75rem clamp(1rem, 4vw, 2.5rem) 0;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+  font-size: 0.8125rem;
+  color: var(--impresso-tinta);
+}
+.aviso-selo {
+  border: 1.5px solid color-mix(in srgb, var(--margem) 70%, transparent);
+  color: var(--margem);
+  padding: 0.1875rem 0.4375rem;
+  border-radius: 2px;
+  transform: rotate(-2.5deg);
+}
+.aviso-repor {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  padding: 0;
+  color: var(--impresso-tinta);
+  cursor: pointer;
+}
+.aviso-repor:hover { color: var(--capa); }
+
+/* guardar falhou — acontece mesmo, em navegação privada */
+.falha {
+  max-width: 82rem;
+  margin: 0.75rem auto 0;
+  padding: 0.625rem clamp(0.75rem, 4vw, 2.5rem);
+  display: flex;
+  align-items: baseline;
+  gap: 0.625rem;
+  font-size: 0.8125rem;
+  color: var(--margem);
+}
+.falha-marca {
+  border-bottom: 1.5px solid currentColor;
+  flex: none;
+}
+
+/* ---------------- a abertura ---------------- */
+.abertura-envelope {
+  max-width: 82rem;
+  margin: 1rem auto 0;
+  padding-inline: clamp(0.5rem, 3vw, 2.5rem);
+}
+/* uma abertura, não dois cartões: uma folha só, vincada ao meio */
+.abertura {
+  display: grid;
+  gap: 0;
+  background: var(--folha);
+  border: 1px solid color-mix(in srgb, var(--pauta-forte) 70%, transparent);
+  box-shadow: 0 18px 40px -30px rgb(14 23 48 / 0.55);
+}
+.pagina {
+  padding: 1.25rem clamp(0.625rem, 2vw, 1.5rem) 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  min-width: 0;
+}
+
+/* a lombada: em ecrã largo é o vinco entre as duas páginas,
+   em telemóvel é a quebra entre a quinta e a sexta */
+.lombada { position: relative; }
+
+@media (min-width: 64rem) {
+  .abertura { grid-template-columns: 1fr 2.25rem 1fr; align-items: stretch; }
+  .lombada {
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgb(22 34 74 / 0.07) 26%,
+      rgb(22 34 74 / 0.16) 50%,
+      rgb(22 34 74 / 0.07) 74%,
+      transparent 100%);
+  }
+  .lombada::after {
+    content: "";
+    position: absolute;
+    inset-block: 1.25rem;
+    left: 50%;
+    width: 1px;
+    background: color-mix(in srgb, var(--pauta-forte) 85%, transparent);
+  }
+}
+@media (max-width: 63.99rem) {
+  .lombada {
+    height: 2rem;
+    background: linear-gradient(180deg,
+      transparent 0%,
+      rgb(22 34 74 / 0.07) 26%,
+      rgb(22 34 74 / 0.16) 50%,
+      rgb(22 34 74 / 0.07) 74%,
+      transparent 100%);
+  }
+  .lombada::after {
+    content: "";
+    position: absolute;
+    inset-inline: 1.25rem;
+    top: 50%;
+    height: 1px;
+    background: color-mix(in srgb, var(--pauta-forte) 85%, transparent);
+  }
+}
+
+/* ---------------- um dia ---------------- */
+.dia, .lista { position: relative; }
+
+.dia-cabecalho {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.375rem;
+  border-bottom: 1.5px solid var(--pauta-forte);
+  margin-bottom: 0.25rem;
+}
+.dia-nome {
+  margin: 0;
+  font-size: var(--t-dia);
+  line-height: 0.95;
+  font-weight: 700;
+  font-stretch: 118%;
+  letter-spacing: -0.012em;
+  text-transform: uppercase;
+  color: var(--capa);
+  display: flex;
+  align-items: baseline;
+  gap: 0.625rem;
+}
+.dia-nome--lista { font-stretch: 100%; text-transform: none; letter-spacing: -0.02em; color: var(--impresso-tinta); }
+.dia-hoje {
+  color: var(--capa-funda);
+  background: var(--fita);
+  padding: 0.1875rem 0.375rem 0.125rem;
+  border-radius: 2px;
+  transform: translateY(-0.25rem);
+}
+.dia-data { flex: none; }
+
+.dia--hoje .dia-nome { color: var(--capa-funda); }
+.fita {
+  position: absolute;
+  inset-inline-start: -0.5rem;
+  top: -1.75rem;
+  width: 0.5625rem;
+  height: 5.5rem;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--fita) 88%, white), var(--fita));
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 0.4375rem), 0 100%);
+  box-shadow: 0 1px 3px rgb(14 23 48 / 0.28);
+}
+@media (max-width: 63.99rem) {
+  .fita { inset-inline-start: -0.375rem; top: -1.5rem; height: 4.5rem; }
+}
+
+.dia-corpo { position: relative; }
+
+/* ---------------- uma linha ---------------- */
+.linha {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--margem-x) minmax(0, 1fr) var(--hora-x) var(--largura-accoes);
+  align-items: start;
+  font-size: var(--t-escrita);
+}
+.linha-goteira {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-inline-end: 0.5rem;
+  height: var(--pauta-passo);
+}
+.linha-corpo { display: flex; align-items: flex-start; gap: 0.5rem; min-width: 0; padding-inline-start: 0.625rem; }
+.linha-hora { text-align: right; position: relative; height: var(--pauta-passo); padding-inline-end: 0.375rem; }
+.linha-accoes { display: flex; justify-content: flex-end; height: var(--pauta-passo); align-items: center; }
+
+.escrita--hora {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.9375rem;
+  color: var(--impresso-tinta);
+  letter-spacing: 0.01em;
+}
+.escrita[data-continuacao] { opacity: 0.62; }
+
+.etiqueta {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0 0.25rem;
+  margin-inline-start: -0.25rem;
+  line-height: var(--pauta-passo);
+  height: var(--pauta-passo);
+  font-size: var(--t-impresso);
+  font-weight: 700;
+  font-stretch: 112%;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  flex: none;
+  white-space: nowrap;
+}
+.etiqueta:hover { background: color-mix(in srgb, currentColor 12%, transparent); }
+.etiqueta--impressa { color: var(--impresso-tinta); border: 1px solid color-mix(in srgb, var(--impresso-tinta) 32%, transparent); }
+
+/* riscada: a agenda guarda o que aconteceu */
+.linha--riscada { color: color-mix(in srgb, var(--impresso-tinta) 88%, transparent); }
+.linha--riscada s { text-decoration-color: var(--margem); text-decoration-thickness: 1.5px; }
+.linha-mudanca {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--margem);
+  font-size: var(--t-impresso);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-inline-start: 0.5rem;
+}
+
+/* tarefa carimbada */
+.linha[data-feita] .escrita { color: color-mix(in srgb, var(--impresso-tinta) 90%, transparent); text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--carimbo) 60%, transparent); }
+.casa-carimbo {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: color-mix(in srgb, var(--impresso-tinta) 78%, transparent);
+  cursor: pointer;
+  display: inline-flex;
+  position: relative;
+  border-radius: 2px;
+}
+.casa-carimbo::before { content: ""; position: absolute; inset: -0.75rem -0.875rem; }
+.casa-carimbo:hover { color: var(--carimbo); }
+.linha[data-feita] .casa-carimbo { color: var(--carimbo); }
+
+.carimbo-lugar {
+  position: absolute;
+  inset-inline-end: 0;
+  top: 50%;
+  translate: 0 -50%;
+  pointer-events: none;
+  line-height: 0;
+}
+.carimbo { display: block; color: var(--carimbo); }
+.carimbo svg { display: block; width: var(--hora-x); height: auto; transform: rotate(-6deg); animation: carimbar 420ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+@keyframes carimbar {
+  0%   { transform: rotate(-11deg) scale(1.5); opacity: 0; }
+  55%  { opacity: 1; }
+  100% { transform: rotate(-6deg) scale(1); opacity: 1; }
+}
+
+.chaveta { color: currentColor; opacity: 0.7; display: inline-flex; }
+
+.botao-nu {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0.25rem;
+  color: color-mix(in srgb, var(--impresso-tinta) 65%, transparent);
+  cursor: pointer;
+  border-radius: 2px;
+  display: inline-flex;
+  position: relative;
+}
+.botao-nu::before { content: ""; position: absolute; inset: -0.5rem -0.5rem; }
+.botao-nu:hover { color: var(--capa); background: color-mix(in srgb, var(--impresso-tinta) 12%, transparent); }
+@media (hover: hover) {
+  .linha-accoes .botao-nu { opacity: 0; transition: opacity 140ms ease-out; }
+  .linha:hover .botao-nu, .linha:focus-within .botao-nu, .botao-nu:focus-visible { opacity: 1; }
+}
+
+/* ---------------- o menu ---------------- */
+.menu-raiz { position: relative; display: inline-flex; }
+.menu {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.375rem);
+  inset-inline-start: 0;
+  min-width: 12rem;
+  background: var(--folha);
+  border: 1px solid var(--pauta-forte);
+  border-radius: 3px;
+  box-shadow: 0 12px 28px -12px rgb(14 23 48 / 0.4), 0 2px 6px -2px rgb(14 23 48 / 0.25);
+  padding: 0.375rem;
+  text-align: start;
+  animation: abrir 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.menu--direita { inset-inline-start: auto; inset-inline-end: 0; }
+@keyframes abrir { from { opacity: 0; translate: 0 -0.25rem; } to { opacity: 1; translate: 0 0; } }
+.menu-titulo { margin: 0.125rem 0.5rem 0.375rem; }
+.menu-item {
+  appearance: none;
+  background: none;
+  border: 0;
+  width: 100%;
+  text-align: start;
+  padding: 0.4375rem 0.5rem;
+  font-size: 0.9375rem;
+  color: var(--casa);
+  border-radius: 2px;
+  cursor: pointer;
+}
+.menu-item:hover { background: color-mix(in srgb, var(--pauta) 45%, transparent); }
+.menu-item[aria-current] { font-weight: 700; }
+.menu-item[aria-current]::after { content: ""; }

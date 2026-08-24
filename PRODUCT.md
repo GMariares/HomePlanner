@@ -86,8 +86,11 @@ Five areas, all confirmed by the user:
 Locale: Euro, Portuguese conventions — `€`, dd/mm/yyyy, comma as decimal separator,
 Monday-first weeks. Single currency; multi-currency was offered and not taken.
 
-Undecided: interface language (Portuguese or English); budgeting periods; how income is
-modelled; whether the shopping list tracks quantities or only items.
+Interface language: **Portuguese (pt-PT)**. All labels, copy, dates and errors ship in
+Portuguese; English appears nowhere in the interface.
+
+Undecided: budgeting periods; how income is modelled; whether the shopping list tracks
+quantities or only items.
 
 ## Brand Commitments
 

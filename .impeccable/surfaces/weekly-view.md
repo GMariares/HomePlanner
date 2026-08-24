@@ -145,14 +145,14 @@ survive more.
 
 **Binding:** React + Vite + TypeScript + Tailwind over Supabase with row-level security;
 installable PWA; euro and Portuguese conventions (dd/mm/yyyy, comma decimal,
-Monday-first weeks); multi-user household from the first screen.
+Monday-first weeks); interface language Portuguese (pt-PT) throughout; multi-user
+household from the first screen.
 
 **Accessibility:** touch targets sized for one-handed use in motion; contrast validated in
 direct sunlight, not on a desk monitor; person attribution must not rely on colour alone.
 
 **A builder must not invent these — they are open:**
 
-- Interface language: Portuguese or English. Unresolved in PRODUCT.md.
 - Whether children have their own accounts, and whether their view differs.
 - The night register (the 22:00 desktop session). A dark mode is plausible as the cover
   inverted, but it is not decided here.

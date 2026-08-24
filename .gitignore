@@ -1,0 +1,7 @@
+node_modules
+dist
+.impeccable/config.local.json
+.impeccable/review/
+.impeccable/mocks/
+*.local
+.DS_Store
