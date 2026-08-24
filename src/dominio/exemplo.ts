@@ -26,7 +26,7 @@ export const EXEMPLO: Entrada[] = [
   { id: 'e8', dia: 3, genero: 'refeicao', autor: null, texto: 'Arroz de pato', hora: null, refeicao: 'jantar' },
 
   { id: 'e9', dia: 4, genero: 'evento', autor: 'mae', texto: 'Espetáculo', hora: '21:00' },
-  { id: 'e10', dia: 4, genero: 'tarefa', autor: 'casa', texto: 'Comprar os livros escolares', hora: null, feita: false },
+  { id: 'e10', dia: 4, genero: 'tarefa', autor: 'casa', texto: 'Comprar os livros escolares', hora: '17:30', feita: false },
   { id: 'e11', dia: 4, genero: 'refeicao', autor: null, texto: 'Pizza', hora: null, refeicao: 'jantar' },
 
   { id: 'e12', dia: 5, genero: 'evento', autor: 'casa', texto: 'Almoço em casa dos avós', hora: '13:00' },

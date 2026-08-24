@@ -277,7 +277,6 @@
   color: var(--impresso-tinta);
   letter-spacing: 0.01em;
 }
-.escrita[data-continuacao] { opacity: 0.62; }
 
 .etiqueta {
   appearance: none;
