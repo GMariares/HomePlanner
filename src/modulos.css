@@ -1009,3 +1009,170 @@
 .calendario-ajuda summary:hover { color: var(--tinta); }
 .calendario-ajuda p { margin: calc(var(--u) * 0.5) 0; line-height: 1.5; }
 .conta-painel { max-height: min(80vh, 40rem); overflow-y: auto; }
+
+/* ---------------- Finanças: o passo do mês ----------------
+   A pista é o módulo que lidera a página. O estado diz-se por palavras e
+   por posição; a cor vem atrás, nunca à frente. */
+.pista {
+  background: var(--modulo);
+  border-radius: var(--raio-modulo);
+  box-shadow: var(--sombra-modulo);
+  padding: calc(var(--u) * 3);
+  display: grid;
+  gap: calc(var(--u) * 1.5);
+  min-width: 0;
+}
+.pista-cabeca { display: flex; align-items: baseline; justify-content: space-between; gap: calc(var(--u) * 2); flex-wrap: wrap; }
+.pista-titulo { margin: 0; font-size: var(--t-corpo); font-weight: 800; letter-spacing: -0.01em; }
+.pista-dia { margin: 0; color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 700; font-variant-numeric: tabular-nums; }
+.pista-numero { margin: 0; display: flex; align-items: baseline; gap: calc(var(--u) * 1.25); flex-wrap: wrap; }
+.pista-gasto { font-size: var(--t-grande); font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.pista-de { color: var(--tinta-2); font-size: var(--t-forte); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.pista-barra {
+  position: relative;
+  height: calc(var(--u) * 2);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--tinta) 7%, #fff);
+  overflow: hidden;
+}
+/* o corredor: onde o ritmo uniforme diria que se devia estar, com folga */
+.pista-corredor {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: color-mix(in oklab, var(--tinta) 12%, transparent);
+  border-inline: 1.5px solid color-mix(in oklab, var(--tinta) 30%, transparent);
+}
+.pista-gasta {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  border-radius: 999px;
+  background: var(--c-financas);
+  transition: width 520ms var(--mola);
+}
+.pista-gasta[data-excedeu] { background: var(--perigo); }
+
+.pista-leitura { margin: 0; display: flex; align-items: baseline; gap: calc(var(--u) * 1.25); flex-wrap: wrap; }
+.pista-selo {
+  font-size: var(--t-etiqueta);
+  font-weight: 800;
+  padding: calc(var(--u) * 0.5) calc(var(--u) * 1.25);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--tinta) 6%, #fff);
+  color: var(--tinta-2);
+}
+.pista-selo[data-estado="a-tempo"] { background: color-mix(in oklab, var(--c-financas) 12%, #fff); color: color-mix(in oklab, var(--c-financas) 78%, var(--tinta)); }
+.pista-selo[data-estado="folgado"] { background: color-mix(in oklab, var(--c-ementa) 12%, #fff); color: color-mix(in oklab, var(--c-ementa) 78%, var(--tinta)); }
+.pista-selo[data-estado="apertado"] { background: color-mix(in oklab, var(--c-lista) 14%, #fff); color: color-mix(in oklab, var(--c-lista) 80%, var(--tinta)); }
+.pista-selo[data-estado="passou"] { background: color-mix(in oklab, var(--perigo) 10%, #fff); color: var(--perigo); }
+.pista-nota { color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* ---------------- Finanças: envelopes ---------------- */
+.envelopes { display: grid; gap: calc(var(--u) * 0.5); }
+@media (min-width: 64rem) { .envelopes { grid-template-columns: 1fr 1fr; gap: calc(var(--u) * 0.5) calc(var(--u) * 3); } }
+.envelope { display: flex; align-items: flex-start; gap: calc(var(--u) * 1.5); padding: calc(var(--u) * 1.25) 0; min-width: 0; }
+.envelope + .envelope { border-top: 1px solid var(--linha-d); }
+@media (min-width: 64rem) { .envelope:nth-child(2) { border-top: 0; } }
+.envelope-tile { width: calc(var(--u) * 4.5); height: calc(var(--u) * 4.5); border-radius: calc(var(--u) * 1.5); }
+/* Também é uma grelha: sem a coluna a minmax(0,1fr) as filhas recusam
+   encolher e é o nome comprido que decide a largura do módulo. */
+.envelope-corpo {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: calc(var(--u) * 0.75);
+}
+.envelope-cabeca { display: flex; align-items: baseline; justify-content: space-between; gap: calc(var(--u) * 1); min-width: 0; }
+/* Um nome comprido encolhe e corta; nunca come o número ao lado. */
+.envelope-nome { font-weight: 700; min-width: 0; flex: 0 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.envelope-cabeca > * { min-width: 0; }
+.envelope-valor { font-variant-numeric: tabular-nums; font-weight: 800; flex: none; }
+.envelope-barra { display: block; height: 6px; border-radius: 999px; background: color-mix(in oklab, var(--tinta) 7%, #fff); overflow: hidden; }
+.envelope-cheio { display: block; height: 100%; border-radius: 999px; background: var(--cor); transition: width 420ms var(--mola); }
+.envelope[data-rebentou] .envelope-cheio { background: var(--perigo); }
+/* "faltam 118,00 €" e "2 movimentos" não cabem lado a lado num telemóvel
+   estreito: dobram em vez de empurrarem o envelope para fora do módulo. */
+.envelope-pe {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0 calc(var(--u) * 1);
+  flex-wrap: wrap;
+  font-size: var(--t-etiqueta);
+  min-width: 0;
+}
+.envelope-pe > * { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.envelope-tecto { font-weight: 800; }
+.envelope[data-rebentou] .envelope-tecto { color: var(--perigo); }
+.envelope-conta { color: var(--tinta-3); font-weight: 600; }
+.envelope-limite { width: calc(var(--u) * 12); padding: calc(var(--u) * 0.5) calc(var(--u) * 1); font-variant-numeric: tabular-nums; }
+.compromisso-atraso { color: var(--perigo); font-weight: 800; }
+.movimento-cat { color: var(--cor-texto); font-weight: 800; }
+.movimento-mes { color: var(--c-financas); font-weight: 800; }
+.fila-numero[data-entrada] { color: var(--c-ementa); }
+
+/* ---------------- Finanças: registar ---------------- */
+/* Uma filha de grelha tem min-width:auto e recusa encolher abaixo do seu
+   conteúdo. A fila de categorias sem quebra media 975px e obrigava a página
+   a 1085 — a partir daí o telemóvel alarga a janela, a media query deixa de
+   valer, e o desenho de telemóvel desaparece. É por isso que isto está aqui. */
+.registo {
+  background: var(--modulo);
+  border-radius: var(--raio-modulo);
+  box-shadow: var(--sombra-modulo);
+  padding: calc(var(--u) * 2);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: calc(var(--u) * 1.5);
+  min-width: 0;
+}
+.registo-linha, .registo-baixo { min-width: 0; }
+.registo-linha { display: flex; align-items: center; gap: calc(var(--u) * 1); }
+.registo-sinal { font-size: var(--t-forte); font-weight: 800; color: var(--tinta-3); flex: none; width: 1ch; text-align: center; }
+.registo-valor { width: calc(var(--u) * 14); flex: none; font-variant-numeric: tabular-nums; font-weight: 800; font-size: var(--t-forte); text-align: right; }
+.registo-descricao { flex: 1; min-width: 0; }
+.registo-guardar { flex: none; padding-inline: calc(var(--u) * 2.5); }
+.registo-baixo { display: flex; align-items: flex-start; gap: calc(var(--u) * 1.5); flex-wrap: wrap; }
+.registo-cats { flex: 1; min-width: 0; }
+.registo-cat[data-activa] { background: var(--cor); color: #fff; }
+.registo-cat[data-activa] .chip-conta { color: color-mix(in oklab, #fff 70%, transparent); }
+@media (max-width: 47.99rem) {
+  .registo-valor { width: calc(var(--u) * 11); font-size: var(--t-corpo); }
+  .registo-guardar { padding-inline: calc(var(--u) * 1.75); }
+  .registo-guardar-texto { display: none; }
+  /* As categorias correm de lado em vez de encherem o ecrã, e o corte
+     desvanece para dizer que há mais — um corte a direito lê-se como um erro. */
+  .registo-cats {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - var(--u) * 4), transparent);
+    mask-image: linear-gradient(90deg, #000 calc(100% - var(--u) * 4), transparent);
+  }
+  .registo-cats::-webkit-scrollbar { display: none; }
+}
+
+/* ---------------- Finanças: a página ---------------- */
+.pagina-sub--mes::first-letter { text-transform: uppercase; }
+.financas { display: grid; grid-template-columns: minmax(0, 1fr); gap: calc(var(--u) * 2); }
+.financas > *, .financas-topo > *, .financas-grelha > * { min-width: 0; }
+.financas-topo { display: grid; gap: calc(var(--u) * 2); }
+@media (min-width: 64rem) { .financas-topo { grid-template-columns: 3fr 2fr; align-items: start; } }
+.financas-grelha { display: grid; gap: calc(var(--u) * 2); align-items: start; }
+@media (min-width: 64rem) { .financas-grelha { grid-template-columns: 3fr 2fr; } }
+.financas-resumo { margin: 0; display: flex; align-items: baseline; gap: calc(var(--u) * 1.25); flex-wrap: wrap; padding-inline: calc(var(--u) * 0.5); }
+.financas-primeiro { max-width: 34rem; display: grid; gap: calc(var(--u) * 2); justify-items: start; padding: calc(var(--u) * 4); }
+
+/* ---------------- Finanças: importar ---------------- */
+.importar { display: grid; gap: calc(var(--u) * 1.5); }
+.importar-escolher { justify-self: start; cursor: pointer; }
+.importar-colunas { display: flex; gap: calc(var(--u) * 1.5); flex-wrap: wrap; align-items: end; }
+.importar-colunas .campo { min-width: calc(var(--u) * 16); }
+.importar-cabecalho { justify-items: start; }
+.importar-conta { margin: 0; font-weight: 800; font-size: var(--t-etiqueta); color: var(--tinta-2); }
+.importar-categoria { max-width: 22rem; }
+.importar-lista { display: grid; max-height: 22rem; overflow-y: auto; }

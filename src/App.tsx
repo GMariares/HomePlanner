@@ -83,7 +83,7 @@ export default function App() {
           {vista === 'semana' && <Semana casa={sessao.casa} />}
           {vista === 'ementa' && <Ementa casa={sessao.casa} />}
           {vista === 'livro' && <Livro casa={sessao.casa} />}
-          {vista === 'financas' && <Financas />}
+          {vista === 'financas' && <Financas casa={sessao.casa} />}
         </Concha>
       )
   }
