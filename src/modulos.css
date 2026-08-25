@@ -962,3 +962,11 @@
   .periodo-dia { min-width: calc(var(--u) * 12); }
   .periodo-hora { width: calc(var(--u) * 8); }
 }
+/* o dia, quando uma linha do início não é de hoje */
+.amostra-dia {
+  flex: none;
+  font-size: var(--t-etiqueta);
+  font-weight: 800;
+  color: var(--cor-texto, var(--tinta-2));
+  min-width: 1.9rem;
+}

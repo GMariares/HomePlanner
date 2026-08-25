@@ -3,6 +3,7 @@ import type { Vista } from './Concha'
 import { useEmenta } from '../dominio/ementa'
 import { useSemana } from '../dominio/estado'
 import { chaveDaSemana, DIAS, indiceDeHoje, inicioDaSemana } from '../dominio/semana'
+import { daquiParaAFrente, type ComParte } from '../dominio/agenda'
 import { tintaDe, type Casa, type Compra, type Entrada, type Prato } from '../dominio/tipos'
 import { ICalendario, ICesto, ILivro, IMoeda, ITalheres, iconeDePrato } from './Icones'
 
@@ -12,14 +13,16 @@ const saudacaoDaHora = () => {
 }
 
 /** A página em si, sem servidor: é isto que se vê e é isto que se ensaia. */
-export function PaginaInicio({ hoje, jantar, porComprar, deHoje, pratos, aoIr }: {
+export function PaginaInicio({ hoje, jantar, porComprar, aiVem, pratos, aoIr }: {
   hoje: number
   jantar: Entrada | null
   porComprar: Compra[]
-  deHoje: Entrada[]
+  /** O que ainda está para vir esta semana, a começar por hoje. */
+  aiVem: ComParte[]
   pratos: Prato[]
   aoIr: (v: Vista) => void
 }) {
+  const quantosHoje = aiVem.filter(c => c.dia === hoje).length
   const totalPorComprar = porComprar.reduce((soma, c) => soma + (c.preco ?? 0), 0)
   const IconeJantar = iconeDePrato(jantar?.texto ?? '')
   const dataLonga = new Intl.DateTimeFormat('pt-PT', {
@@ -79,21 +82,29 @@ export function PaginaInicio({ hoje, jantar, porComprar, deHoje, pratos, aoIr }:
         <button type="button" className="modulo modulo--tocavel bento-2 com-cor" style={{ '--cor': 'var(--c-semana)' } as React.CSSProperties} onClick={() => aoIr('semana')}>
           <span className="modulo-cabeca">
             <span className="tile"><ICalendario /></span>
-            <h3 className="modulo-titulo">Hoje na semana</h3>
-            <span className="modulo-meta modulo-numero">{deHoje.length === 0 ? 'sem nada marcado' : `${deHoje.length} na agenda`}</span>
+            <h3 className="modulo-titulo">A semana</h3>
+            <span className="modulo-meta modulo-numero">
+              {quantosHoje > 0 ? `${quantosHoje} hoje` : aiVem.length > 0 ? 'nada hoje' : 'nada por vir'}
+            </span>
           </span>
-          {deHoje.length > 0 ? (
+          {aiVem.length > 0 ? (
             <ul className="amostra">
-              {deHoje.map(x => (
-                <li key={x.id}>
-                  <span className="amostra-ponto" style={{ background: tintaDe(x.autor) }} />
-                  <span className="amostra-texto">{x.texto}</span>
-                  {x.hora && <span className="amostra-hora">{x.hora}</span>}
+              {aiVem.map(({ entrada, dia, parte }) => (
+                <li key={`${entrada.id}-${dia}`}>
+                  <span className="amostra-ponto" style={{ background: tintaDe(entrada.autor) }} />
+                  {/* O dia só se diz quando não é hoje: hoje é o que já se está a ver. */}
+                  {dia !== hoje && <span className="amostra-dia">{DIAS[dia].slice(0, 3)}</span>}
+                  <span className="amostra-texto">{entrada.texto}</span>
+                  <span className="amostra-hora">
+                    {parte === 'fim' ? (entrada.horaFim ? `até ${entrada.horaFim}` : 'acaba')
+                      : parte === 'meio' ? 'todo o dia'
+                      : entrada.hora ?? ''}
+                  </span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="modulo-nota">Um dia livre. A semana inteira está a um toque.</p>
+            <p className="modulo-nota">O resto da semana está livre.</p>
           )}
         </button>
 
@@ -150,12 +161,12 @@ export function Inicio({ casa, aoIr }: { casa: Casa; aoIr: (v: Vista) => void })
 
   const jantar = hoje >= 0 ? e.jantarDe(hoje) : null
   const porComprar = useMemo(() => e.compras.filter(c => !c.comprado), [e.compras])
-  const deHoje = useMemo(
-    () => s.entradas
-      .filter(x => x.dia === hoje && !x.riscada && x.genero !== 'refeicao')
-      .sort((a, b) => (a.hora ?? '99').localeCompare(b.hora ?? '99'))
-      .slice(0, 4),
-    [s.entradas, hoje],
+  /* O mesmo cálculo que a semana faz, vindo do mesmo sítio: comparar
+     `dia === hoje` ignorava períodos e casava por acaso com linhas de
+     outras semanas que entram nesta. */
+  const aiVem = useMemo(
+    () => daquiParaAFrente(s.entradas, inicio, hoje),
+    [s.entradas, inicio, hoje],
   )
 
   return (
@@ -163,7 +174,7 @@ export function Inicio({ casa, aoIr }: { casa: Casa; aoIr: (v: Vista) => void })
       hoje={hoje}
       jantar={jantar}
       porComprar={porComprar}
-      deHoje={deHoje}
+      aiVem={aiVem}
       pratos={e.pratos}
       aoIr={aoIr}
     />

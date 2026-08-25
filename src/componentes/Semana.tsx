@@ -2,19 +2,11 @@ import { useMemo, useState } from 'react'
 import { Dia } from './Dia'
 import { ListaSemana } from './ListaSemana'
 import { useSemana } from '../dominio/estado'
-import { chaveDaSemana, dataDeChave, diaDaSemana, diasEntre, indiceDeHoje, inicioDaSemana, intervalo } from '../dominio/semana'
-import { parteDoDia, type Parte } from './Periodo'
-import type { Casa, Entrada } from '../dominio/tipos'
+import { chaveDaSemana, diaDaSemana, indiceDeHoje, inicioDaSemana, intervalo } from '../dominio/semana'
+import { porDiaDaSemana } from '../dominio/agenda'
+import type { Casa } from '../dominio/tipos'
+export type { ComParte } from '../dominio/agenda'
 import { ISetaEsq, ISetaDir } from './Icones'
-
-const ORDEM = { evento: 0, tarefa: 1, refeicao: 2 } as const
-
-/** Uma entrada vista de um dia: qual parte do período este dia mostra. */
-export interface ComParte {
-  entrada: Entrada
-  parte: Parte
-  dataDoInicio: Date
-}
 
 export function Semana({ casa }: { casa: Casa }) {
   const [inicio, definirInicio] = useState(() => inicioDaSemana())
@@ -25,45 +17,7 @@ export function Semana({ casa }: { casa: Casa }) {
   } = useSemana(casa.id, chave)
   const hoje = indiceDeHoje(inicio)
 
-  /* Uma entrada com período ocupa todos os dias entre o princípio e o fim,
-     e é uma linha só na base de dados: aqui repete-se por dia, com a parte
-     deduzida — começa, continua, acaba. Uma viagem que entrou pela semana
-     passada aparece nesta a partir de segunda, como deve. */
-  const porDia = useMemo(() => {
-    const mapa: Record<number, ComParte[]> = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] }
-
-    for (const e of entradas) {
-      if (e.dia === null) continue
-
-      /* Onde começa: a data que a base de dados gerou. Uma entrada lida nesta
-         semana pode ter começado na anterior, e é `inicio_data` que o diz.
-         Sem a migração corrida, cai-se no dia dentro da semana mostrada. */
-      const dataDoInicio = e.inicioData ? dataDeChave(e.inicioData) : diaDaSemana(inicio, e.dia)
-      const fim = e.fimData ? dataDeChave(e.fimData) : dataDoInicio
-
-      for (let i = 0; i <= 6; i++) {
-        const data = diaDaSemana(inicio, i)
-        if (diasEntre(dataDoInicio, data) < 0 || diasEntre(data, fim) < 0) continue
-        mapa[i].push({
-          entrada: e,
-          parte: parteDoDia(e, dataDoInicio, data),
-          dataDoInicio,
-        })
-      }
-    }
-
-    for (const k of Object.keys(mapa)) {
-      mapa[+k].sort((a, b) => {
-        const g = ORDEM[a.entrada.genero] - ORDEM[b.entrada.genero]
-        if (g !== 0) return g
-        const ha = a.parte === 'unico' || a.parte === 'inicio' ? a.entrada.hora : null
-        const hb = b.parte === 'unico' || b.parte === 'inicio' ? b.entrada.hora : null
-        if (ha && hb) return ha.localeCompare(hb)
-        return ha ? -1 : hb ? 1 : 0
-      })
-    }
-    return mapa
-  }, [entradas, inicio])
+  const porDia = useMemo(() => porDiaDaSemana(entradas, inicio), [entradas, inicio])
 
   const semData = useMemo(() => entradas.filter(e => e.dia === null), [entradas])
 
