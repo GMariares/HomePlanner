@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { supabase } from '../dominio/supabase'
+import { ICasa } from './Icones'
 import { recado } from '../dominio/recados'
 
 /**
@@ -88,8 +89,9 @@ export function Entrar() {
   return (
     <main className="portada">
       <form className="cartao-portada" onSubmit={submeter}>
-        <p className="portada-marca">HomePlanner</p>
-        <h1 className="portada-titulo">A semana da família</h1>
+        <span className="marca-tile" aria-hidden="true"><ICasa lado={24} /></span>
+        <h1 className="portada-titulo">HomePlanner</h1>
+        <p className="portada-texto">A semana, a ementa e as contas da casa — num sítio só.</p>
 
         <label className="campo">
           <span className="campo-nome">Email</span>

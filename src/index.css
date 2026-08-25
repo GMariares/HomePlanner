@@ -20,8 +20,8 @@
   --fundo: #f2f0ea;         /* porcelana: o único chão da aplicação */
   --modulo: #ffffff;        /* um módulo pousado no chão */
   --tinta: #1c1b20;         /* a tinta que escreve e as pílulas que agem */
-  --tinta-2: #75705f;       /* secundária, tingida do chão — nunca cinzento puro */
-  --tinta-3: #a29c8a;       /* terciária: metadados, placeholders */
+  --tinta-2: #696456;       /* secundária, tingida do chão — nunca cinzento puro; 5,2:1 no chão */
+  --tinta-3: #6f6a5c;       /* terciária: metadados e placeholders; 4,7:1 no chão, 5,4:1 no módulo */
   --linha-d: #e7e4da;       /* divisórias dentro de um módulo, raras */
   --perigo: #b4432c;
 
@@ -32,10 +32,11 @@
   --c-livro: #bd5f3a;       /* terracota */
   --c-financas: #2f7e78;    /* azulejo-verde */
 
-  /* as canetas: cada membro escreve com a sua cor */
-  --pai: #4a67c7;
-  --mae: #3e8560;
-  --filha: #8a63c0;
+  /* As canetas: cada membro escreve com a sua cor, e a cor tem de se ler.
+     Medidas sobre o módulo branco: todas acima de 4,5:1 ao tamanho do corpo. */
+  --pai: #3f57ad;    /* 6,6:1 */
+  --mae: #336f50;    /* 6,0:1 */
+  --filha: #7a51a8;  /* 5,9:1 */
   --casa: #1c1b20;
 
   /* a unidade: 8px rege todos os vãos, raios e azulejos */

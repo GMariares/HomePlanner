@@ -3,7 +3,7 @@ import type { Vista } from './Concha'
 import { useEmenta } from '../dominio/ementa'
 import { useSemana } from '../dominio/estado'
 import { chaveDaSemana, DIAS, indiceDeHoje, inicioDaSemana } from '../dominio/semana'
-import { tintaDe, type Casa, type Compra, type Entrada } from '../dominio/tipos'
+import { tintaDe, type Casa, type Compra, type Entrada, type Prato } from '../dominio/tipos'
 import { ICalendario, ICesto, ILivro, IMoeda, ITalheres, iconeDePrato } from './Icones'
 
 const saudacaoDaHora = () => {
@@ -12,14 +12,15 @@ const saudacaoDaHora = () => {
 }
 
 /** A página em si, sem servidor: é isto que se vê e é isto que se ensaia. */
-export function PaginaInicio({ hoje, jantar, porComprar, deHoje, nPratos, aoIr }: {
+export function PaginaInicio({ hoje, jantar, porComprar, deHoje, pratos, aoIr }: {
   hoje: number
   jantar: Entrada | null
   porComprar: Compra[]
   deHoje: Entrada[]
-  nPratos: number
+  pratos: Prato[]
   aoIr: (v: Vista) => void
 }) {
+  const totalPorComprar = porComprar.reduce((soma, c) => soma + (c.preco ?? 0), 0)
   const IconeJantar = iconeDePrato(jantar?.texto ?? '')
   const dataLonga = new Intl.DateTimeFormat('pt-PT', {
     weekday: 'long', day: 'numeric', month: 'long',
@@ -100,12 +101,21 @@ export function PaginaInicio({ hoje, jantar, porComprar, deHoje, nPratos, aoIr }
           <span className="modulo-cabeca">
             <span className="tile"><ILivro /></span>
             <h3 className="modulo-titulo">O livro</h3>
+            {pratos.length > 0 && (
+              <span className="modulo-meta modulo-numero">
+                {pratos.length === 1 ? '1 prato' : `${pratos.length} pratos`}
+              </span>
+            )}
           </span>
-          <p className="modulo-nota modulo-numero">
-            {nPratos === 0 ? 'Ainda em branco — escreva os pratos da casa.'
-              : nPratos === 1 ? '1 prato da casa.'
-              : `${nPratos} pratos da casa.`}
-          </p>
+          {pratos.length > 0 ? (
+            <ul className="amostra">
+              {pratos.slice(0, 3).map(p => (
+                <li key={p.id}><span className="amostra-texto">{p.nome}</span></li>
+              ))}
+            </ul>
+          ) : (
+            <p className="modulo-nota">Ainda em branco — escreva os pratos da casa.</p>
+          )}
         </button>
 
         <div className="modulo modulo--tocavel modulo--mudo com-cor" style={{ '--cor': 'var(--c-financas)' } as React.CSSProperties} role="note">
@@ -114,7 +124,15 @@ export function PaginaInicio({ hoje, jantar, porComprar, deHoje, nPratos, aoIr }
             <h3 className="modulo-titulo">Finanças</h3>
             <span className="modulo-meta">em breve</span>
           </span>
-          <p className="modulo-nota">As contas da casa vão viver aqui.</p>
+          {totalPorComprar > 0 ? (
+            <p className="modulo-nota modulo-numero">
+              A lista desta semana já soma{' '}
+              {new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(totalPorComprar)}.
+              As contas da casa vêm para aqui.
+            </p>
+          ) : (
+            <p className="modulo-nota">As contas da casa vão viver aqui.</p>
+          )}
         </div>
       </div>
     </main>
@@ -146,7 +164,7 @@ export function Inicio({ casa, aoIr }: { casa: Casa; aoIr: (v: Vista) => void })
       jantar={jantar}
       porComprar={porComprar}
       deHoje={deHoje}
-      nPratos={e.pratos.length}
+      pratos={e.pratos}
       aoIr={aoIr}
     />
   )

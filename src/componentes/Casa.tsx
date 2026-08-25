@@ -40,7 +40,6 @@ export function Casa({ email, aoEntrar, aoSair, aoSairDaCasa }: {
   return (
     <main className="portada">
       <form className="cartao-portada" onSubmit={submeter}>
-        <p className="portada-marca">{email}</p>
         <h1 className="portada-titulo">
           {modo === 'criar' ? 'Abrir uma caderneta' : 'Entrar numa caderneta'}
         </h1>
@@ -93,6 +92,7 @@ export function Casa({ email, aoEntrar, aoSair, aoSairDaCasa }: {
           Estou preso a uma casa antiga — sair dela
         </button>
         <button type="button" className="botao-texto" onClick={aoSair}>Sair desta conta</button>
+        <p className="portada-conta">{email}</p>
       </form>
     </main>
   )

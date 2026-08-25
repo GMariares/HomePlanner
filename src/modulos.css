@@ -220,7 +220,8 @@
 .modulo-cabeca {
   display: flex;
   align-items: center;
-  gap: calc(var(--u) * 1.25);
+  flex-wrap: wrap;
+  gap: calc(var(--u) * 0.5) calc(var(--u) * 1.25);
   width: 100%;
 }
 .modulo-titulo { margin: 0; font-size: var(--t-corpo); font-weight: 800; letter-spacing: -0.01em; }
@@ -278,7 +279,9 @@
   padding: calc(var(--u) * 0.875) calc(var(--u) * 1.5);
   border-radius: 999px;
   background: var(--cor-chip, color-mix(in oklab, var(--tinta) 6%, #fff));
-  color: var(--cor-texto, var(--tinta));
+  /* o rótulo do chip assenta sobre o tom da própria cor: leva mais tinta
+     do que --cor-texto, senão fica nos 3,7:1 */
+  color: color-mix(in oklab, var(--cor, var(--tinta)) 42%, var(--tinta));
   font-size: var(--t-etiqueta);
   font-weight: 800;
   letter-spacing: 0.01em;
@@ -288,7 +291,7 @@
 .chip:hover { background: var(--cor-premido, color-mix(in oklab, var(--tinta) 10%, #fff)); }
 .chip:active { transform: scale(0.96); }
 .chip:disabled { color: var(--tinta-3); background: color-mix(in oklab, var(--tinta) 4%, #fff); cursor: default; }
-.chip-conta { font-weight: 700; color: color-mix(in oklab, var(--cor-texto, var(--tinta)) 60%, transparent); }
+.chip-conta { font-weight: 700; color: color-mix(in oklab, var(--cor, var(--tinta)) 25%, var(--tinta)); }
 .chips { display: flex; flex-wrap: wrap; gap: calc(var(--u) * 1); margin: 0; padding: 0; }
 
 /* ---------------- botões ---------------- */
@@ -635,8 +638,17 @@
 .saudacao-dia::first-letter { text-transform: uppercase; }
 
 /* Semana: um módulo por dia */
-.dias { display: grid; gap: calc(var(--u) * 2); grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); align-items: start; }
-.dia-modulo[data-hoje] { box-shadow: var(--sombra-alta), inset 0 0 0 2px var(--c-semana); }
+/* Os dias empacotam-se em colunas: um dia curto empilha debaixo do anterior
+   em vez de deixar uma banda de porcelana à altura do dia mais alto. A ordem
+   de leitura desce cada coluna, como numa folha de semana. */
+.dias { columns: 19rem; column-gap: calc(var(--u) * 2); }
+.dias > * { break-inside: avoid; margin-bottom: calc(var(--u) * 2); }
+/* hoje é luz, não um anel: o módulo levanta-se e a cor entra como banho,
+   com a pílula "hoje" a dizer o resto */
+.dia-modulo[data-hoje] {
+  box-shadow: var(--sombra-alta);
+  background: linear-gradient(180deg, var(--cor-chip), var(--modulo) 42%);
+}
 .dia-cabeca { display: flex; align-items: baseline; gap: calc(var(--u) * 1.25); margin-bottom: calc(var(--u) * 0.5); }
 .dia-nome { margin: 0; font-size: var(--t-forte); font-weight: 800; letter-spacing: -0.01em; }
 .dia-data { color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 800; font-variant-numeric: tabular-nums; }
@@ -678,13 +690,19 @@
 .tira {
   list-style: none;
   margin: 0 calc(var(--u) * -2.5);
-  padding: calc(var(--u) * 0.5) calc(var(--u) * 2.5) calc(var(--u) * 1);
+  /* o remate direito folga o suficiente para o desvanecimento nunca
+     morder a última pastilha quando se chega ao fim */
+  padding: calc(var(--u) * 0.5) calc(var(--u) * 6) calc(var(--u) * 1) calc(var(--u) * 2.5);
   display: flex;
   gap: calc(var(--u) * 1);
   overflow-x: auto;
   scrollbar-width: none;
 }
 .tira::-webkit-scrollbar { display: none; }
+.tira {
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - var(--u) * 4), transparent);
+  mask-image: linear-gradient(90deg, #000 calc(100% - var(--u) * 4), transparent);
+}
 .tira-celula {
   appearance: none;
   border: 0;
@@ -701,8 +719,9 @@
 }
 .tira-celula:hover { background: var(--cor-chip); }
 .tira-celula:active { transform: scale(0.97); }
-.tira-celula[data-aberta] { background: var(--cor-tile); box-shadow: inset 0 0 0 2px var(--cor, var(--tinta)); }
-.tira-celula[data-hoje]:not([data-aberta]) { box-shadow: inset 0 0 0 1.5px color-mix(in oklab, var(--cor) 45%, transparent); }
+/* aberta enche-se da cor e levanta-se; hoje traz só o banho leve da cor */
+.tira-celula[data-aberta] { background: var(--cor-tile); box-shadow: var(--sombra-modulo); }
+.tira-celula[data-hoje]:not([data-aberta]) { background: var(--cor-chip); }
 .tira-dia { font-size: var(--t-etiqueta); font-weight: 800; color: var(--cor-texto); }
 .tira-data { color: var(--tinta-3); font-variant-numeric: tabular-nums; }
 .tira-prato {
@@ -834,3 +853,16 @@
 .dentro .ingredientes-titulo { margin-top: calc(var(--u) * 0.5); }
 .dentro .fila { min-height: calc(var(--u) * 4.5); padding-block: calc(var(--u) * 0.75); }
 .portada-marca { margin: 0; color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 800; letter-spacing: 0.02em; overflow: hidden; text-overflow: ellipsis; }
+
+/* a marca na portada: o azulejo da casa, em tinta */
+.marca-tile {
+  width: calc(var(--u) * 6);
+  height: calc(var(--u) * 6);
+  border-radius: var(--raio-tile);
+  background: var(--tinta);
+  color: var(--modulo);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.portada-conta { margin: 0; color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 700; overflow: hidden; text-overflow: ellipsis; }
