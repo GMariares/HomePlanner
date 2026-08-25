@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { daBaseDeDados, paraBaseDeDados, type Entrada, type EntradaDb } from './tipos'
-import { EXEMPLO } from './exemplo'
-import { semTabelas, supabase } from './supabase'
+import { exemploDaSemana } from './exemplo'
+import { esquemaAtrasado, supabase } from './supabase'
+import { chaveDeData, dataDeChave, somarDias } from './semana'
 
 const CACHE = 'homeplanner:cache'
 
@@ -39,6 +40,7 @@ export function useSemana(casaId: string | null, semana: string) {
   )
   const [estado, definirEstado] = useState<EstadoDaSemana>('a-carregar')
   const [falhouAoGuardar, definirFalha] = useState(false)
+  const [semPeriodos, definirSemPeriodos] = useState(false)
 
   // O texto muda a cada tecla; a rede não precisa de saber a cada tecla.
   const porGravar = useRef(new Map<string, Partial<Entrada>>())
@@ -46,20 +48,49 @@ export function useSemana(casaId: string | null, semana: string) {
 
   const buscar = useCallback(async () => {
     if (!casaId) return
+    const domingo = chaveDeData(somarDias(dataDeChave(semana), 6))
+
+    /* A semana lê-se por sobreposição, não por igualdade: uma viagem que
+       começa num sábado e acaba na quarta seguinte pertence às duas semanas,
+       e é uma linha só. O que não tem dia marcado continua preso à sua. */
     const { data, error } = await supabase
       .from('entradas')
       .select('*')
       .eq('casa_id', casaId)
-      .eq('semana', semana)
+      .or(
+        `and(dia.is.null,semana.eq.${semana}),` +
+        `and(inicio_data.lte.${domingo},fim_efectivo.gte.${semana})`,
+      )
 
-    if (error) {
-      definirEstado(semTabelas(error) ? 'sem-migracao' : 'sem-rede')
+    if (!error) {
+      const lidas = (data as EntradaDb[]).map(daBaseDeDados)
+      definir(lidas)
+      guardarCache(casaId, semana, lidas)
+      definirEstado('pronto')
+      definirSemPeriodos(false)
       return
     }
-    const lidas = (data as EntradaDb[]).map(daBaseDeDados)
-    definir(lidas)
-    guardarCache(casaId, semana, lidas)
-    definirEstado('pronto')
+
+    /* Entre publicar e correr o SQL, as colunas do período ainda não existem.
+       A semana abre à mesma, sem períodos, e a página di-lo. */
+    if (esquemaAtrasado(error)) {
+      const antiga = await supabase
+        .from('entradas')
+        .select('*')
+        .eq('casa_id', casaId)
+        .eq('semana', semana)
+      if (!antiga.error) {
+        const lidas = (antiga.data as EntradaDb[]).map(daBaseDeDados)
+        definir(lidas)
+        guardarCache(casaId, semana, lidas)
+        definirEstado('pronto')
+        definirSemPeriodos(true)
+        return
+      }
+      definirEstado(esquemaAtrasado(antiga.error) ? 'sem-migracao' : 'sem-rede')
+      return
+    }
+    definirEstado('sem-rede')
   }, [casaId, semana])
 
   useEffect(() => {
@@ -147,19 +178,29 @@ export function useSemana(casaId: string | null, semana: string) {
     const original = entradas.find(e => e.id === id)
     if (!original || original.dia === destino) return
 
+    /* Mover um período move-o inteiro: o fim anda os mesmos dias que o
+       princípio, senão a viagem encurtava sozinha ao mudar de dia. */
+    const passo = destino === null || original.dia === null ? 0 : destino - original.dia
+    const fimMovido = original.fimData && passo !== 0
+      ? chaveDeData(somarDias(dataDeChave(original.fimData), passo))
+      : original.fimData ?? null
+    /* Sem dia não há período: o que vai para "esta semana" perde o fim. */
+    const fimFinal = destino === null ? null : fimMovido
+
     const fantasma: Entrada = {
       ...original,
       id: novoId(),
       riscada: true,
       movidaPara: destino,
       extensao: undefined,
+      fimData: null,
     }
-    const movida: Entrada = { ...original, dia: destino, extensao: undefined }
+    const movida: Entrada = { ...original, dia: destino, extensao: undefined, fimData: fimFinal }
     guardarLocal(entradas.flatMap(e => (e.id === id ? [fantasma, movida] : [e])))
 
     const [inserida, actualizada] = await Promise.all([
       supabase.from('entradas').insert({ ...paraBaseDeDados(fantasma), id: fantasma.id, casa_id: casaId, semana }),
-      supabase.from('entradas').update(paraBaseDeDados({ dia: destino, extensao: undefined })).eq('id', id),
+      supabase.from('entradas').update(paraBaseDeDados({ dia: destino, fimData: fimFinal })).eq('id', id),
     ])
     definirFalha(Boolean(inserida.error || actualizada.error))
   }, [casaId, entradas, guardarLocal, semana])
@@ -167,7 +208,7 @@ export function useSemana(casaId: string | null, semana: string) {
   /** Escreve o exemplo na caderneta a sério — só quando alguém pede. */
   const escreverExemplo = useCallback(async () => {
     if (!casaId) return
-    const linhas = EXEMPLO.map(e => ({ ...e, id: novoId() }))
+    const linhas = exemploDaSemana(semana).map(e => ({ ...e, id: novoId() }))
     guardarLocal(linhas)
     const { error } = await supabase
       .from('entradas')
@@ -178,5 +219,5 @@ export function useSemana(casaId: string | null, semana: string) {
 
   const vazia = useMemo(() => entradas.length === 0, [entradas])
 
-  return { entradas, estado, vazia, falhouAoGuardar, alterar, acrescentar, apagar, mover, escreverExemplo }
+  return { entradas, estado, vazia, falhouAoGuardar, semPeriodos, alterar, acrescentar, apagar, mover, escreverExemplo }
 }

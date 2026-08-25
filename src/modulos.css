@@ -866,3 +866,99 @@
   justify-content: center;
 }
 .portada-conta { margin: 0; color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 700; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------------- o período: princípio e fim ----------------
+   A coluna das horas é um botão de duas linhas — começa em cima, acaba em
+   baixo — e abre o painel onde as duas se escrevem. Um gesto, como manda
+   a regra: nada de campos soltos pela linha. */
+.periodo-raiz { position: relative; flex: none; }
+.periodo-botao {
+  appearance: none;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: grid;
+  justify-items: end;
+  gap: 1px;
+  min-width: calc(var(--u) * 7);
+  padding: calc(var(--u) * 0.5) calc(var(--u) * 0.75);
+  border-radius: calc(var(--u) * 1);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--t-etiqueta);
+  font-weight: 700;
+  color: var(--tinta-2);
+  line-height: 1.25;
+  transition: background-color 140ms var(--mola);
+}
+.periodo-botao:hover { background: color-mix(in oklab, var(--tinta) 6%, transparent); }
+.periodo-botao[data-vazio] { color: var(--tinta-3); }
+.periodo-num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* o fim recua um degrau: lê-se depois do princípio, não ao lado dele */
+.periodo-num--fim { color: var(--tinta-3); }
+.periodo-sinal { margin-inline-end: 1px; }
+.periodo-corre { display: inline-flex; vertical-align: -2px; margin-inline-start: 1px; color: var(--cor, var(--tinta-3)); }
+.periodo-todo { color: var(--tinta-3); font-weight: 700; white-space: nowrap; }
+.periodo-ghost { letter-spacing: 0.02em; }
+
+/* o período inteiro, ao lado do autor, só quando atravessa dias */
+.fila-periodo {
+  font-variant-numeric: tabular-nums;
+  color: var(--cor-texto, var(--tinta-2));
+  white-space: nowrap;
+}
+
+.periodo-painel {
+  position: absolute;
+  top: calc(100% + var(--u) * 0.75);
+  inset-inline-end: 0;
+  z-index: 45;
+  min-width: 19.5rem;
+  background: var(--modulo);
+  border-radius: var(--raio-tile);
+  box-shadow: var(--sombra-alta);
+  padding: calc(var(--u) * 2);
+  display: grid;
+  gap: calc(var(--u) * 1.25);
+  animation: chegar 200ms var(--mola) both;
+}
+.periodo-linha {
+  display: grid;
+  grid-template-columns: 4rem 1fr;
+  align-items: center;
+  gap: calc(var(--u) * 1);
+}
+/* o fim são duas coisas — que dia e a que horas — e cabem lado a lado */
+.periodo-fim { display: flex; gap: calc(var(--u) * 1); min-width: 0; }
+.periodo-hora {
+  padding: calc(var(--u) * 1) calc(var(--u) * 1.25);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  text-align: center;
+  width: calc(var(--u) * 9);
+  flex: none;
+}
+.periodo-dia {
+  padding: calc(var(--u) * 1) calc(var(--u) * 1.25);
+  font-weight: 700;
+  flex: 1 1 auto;
+  min-width: calc(var(--u) * 13);
+  /* a seta do sistema não pertence a este mundo: desenha-se uma */
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--tinta-2) 50%),
+                    linear-gradient(135deg, var(--tinta-2) 50%, transparent 50%);
+  background-position: calc(100% - 15px) calc(50% + 1px), calc(100% - 10px) calc(50% + 1px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-inline-end: calc(var(--u) * 3.5);
+}
+.periodo-tirar { justify-self: start; }
+
+@media (max-width: 47.99rem) {
+  /* Num telemóvel o painel encostado à direita da linha saía pela esquerda
+     da folha. O dia e a hora do fim passam a empilhar, e o painel encolhe ao
+     que precisa — medido a 390px: 312px saíam da folha, 200px cabem. */
+  .periodo-painel { min-width: 12.5rem; }
+  .periodo-fim { flex-wrap: wrap; }
+  .periodo-dia { min-width: calc(var(--u) * 12); }
+  .periodo-hora { width: calc(var(--u) * 8); }
+}

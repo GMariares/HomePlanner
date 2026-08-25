@@ -4,21 +4,28 @@ import { Menu, type Opcao } from './Menu'
 import { Visto } from './Marcar'
 import { IPontos, ISetaMudanca } from './Icones'
 import { Escrita } from './Escrita'
+import { BotaoDePeriodo, resumoDoPeriodo, type Parte } from './Periodo'
 
 const AUTOR_IDS: Autor[] = ['pai', 'mae', 'filha', 'casa']
 
 /** Uma linha da semana: quem, o quê, quando, feito. Tipo e espaço — sem caixas. */
-export function Linha({ entrada, contexto, aoAlterar, aoApagar, aoMover }: {
+export function Linha({ entrada, contexto, parte = 'unico', dataDoInicio, aoAlterar, aoApagar, aoMover }: {
   entrada: Entrada
   /** Onde esta linha vive, para quem ouve a página em vez de a ver. */
   contexto: string
+  /** Onde este dia cai dentro do período — deduzido pela semana. */
+  parte?: Parte
+  /** O dia em que o período começa. Sem período, é o próprio dia. */
+  dataDoInicio?: Date
   aoAlterar: (mudanca: Partial<Entrada>) => void
   aoApagar: () => void
   aoMover: (destino: number | null) => void
 }) {
   const tinta = tintaDe(entrada.autor)
   const feita = entrada.genero === 'tarefa' && entrada.feita
-  const continuacao = entrada.extensao === 'meio' || entrada.extensao === 'fim'
+  const continuacao = parte === 'meio' || parte === 'fim'
+    || entrada.extensao === 'meio' || entrada.extensao === 'fim'
+  const periodo = dataDoInicio ? resumoDoPeriodo(entrada, dataDoInicio) : null
 
   const opcoesAutor: Opcao[] = [
     ...AUTOR_IDS.map(a => ({
@@ -44,13 +51,7 @@ export function Linha({ entrada, contexto, aoAlterar, aoApagar, aoMover }: {
       aoEscolher: () => aoMover(i),
     })),
     { id: 'sem-data', rotulo: 'Esta semana, sem dia', activa: entrada.dia === null, aoEscolher: () => aoMover(null) },
-    ...(entrada.genero === 'tarefa'
-      ? [{
-          id: 'hora',
-          rotulo: entrada.hora === null || entrada.hora === undefined ? 'Marcar uma hora' : 'Tirar a hora',
-          aoEscolher: () => aoAlterar({ hora: entrada.hora === null || entrada.hora === undefined ? '' : null }),
-        }]
-      : []),
+
     { id: 'apagar', rotulo: 'Apagar a linha', tinta: 'var(--perigo)', aoEscolher: aoApagar },
   ]
 
@@ -113,19 +114,18 @@ export function Linha({ entrada, contexto, aoAlterar, aoApagar, aoMover }: {
               )}
             />
           )}
-          {continuacao && <span>continuação</span>}
+          {periodo && <span className="fila-periodo">{periodo}</span>}
+          {continuacao && !periodo && <span>continua</span>}
         </span>
       </span>
 
       {entrada.genero !== 'refeicao' && (
-        <input
-          className="escrita escrita--num escrita--hora"
-          value={entrada.hora ?? ''}
-          placeholder="--:--"
-          inputMode="numeric"
-          maxLength={5}
-          aria-label={`${contexto}: horas de “${entrada.texto || 'linha em branco'}”`}
-          onChange={e => aoAlterar({ hora: e.target.value })}
+        <BotaoDePeriodo
+          entrada={entrada}
+          parte={parte}
+          dataDoInicio={dataDoInicio ?? new Date()}
+          contexto={contexto}
+          aoAlterar={aoAlterar}
         />
       )}
 

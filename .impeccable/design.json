@@ -1,698 +1,413 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-24T13:46:57Z",
+  "generatedAt": "2026-08-25T00:00:00Z",
   "title": "Design System: HomePlanner",
   "extensions": {
     "colorMeta": {
-      "papel": {
+      "porcelana": {
         "role": "neutral",
-        "displayName": "Papel",
-        "purpose": "The cool blue-grey stock the opening sits on; page ground, scrollbar track, PWA background.",
-        "tonalRamp": [
-          "oklch(15% 0.004 260.7)",
-          "oklch(26% 0.005 260.7)",
-          "oklch(37% 0.005 260.7)",
-          "oklch(48% 0.005 260.7)",
-          "oklch(59% 0.006 260.7)",
-          "oklch(70% 0.006 260.7)",
-          "oklch(82% 0.007 260.7)",
-          "oklch(94% 0.007 260.7)"
-        ]
+        "displayName": "Porcelana",
+        "canonical": "oklch(95.5% 0.008 91.5)",
+        "purpose": "The one floor of the application: page background, PWA theme colour, scrollbar track. Warm, never blue-grey.",
+        "tonalRamp": ["oklch(15% 0.008 91.5)", "oklch(26% 0.008 91.5)", "oklch(37% 0.008 91.5)", "oklch(48% 0.008 91.5)", "oklch(59% 0.008 91.5)", "oklch(70% 0.008 91.5)", "oklch(82% 0.008 91.5)", "oklch(94% 0.003 91.5)"]
+      },
+      "modulo": {
+        "role": "neutral",
+        "displayName": "Módulo",
+        "canonical": "oklch(100% 0 0)",
+        "purpose": "Pure white — the only surface that rests on the floor, plus popovers and the sign-in card.",
+        "tonalRamp": ["oklch(15% 0 0)", "oklch(26% 0 0)", "oklch(37% 0 0)", "oklch(48% 0 0)", "oklch(59% 0 0)", "oklch(70% 0 0)", "oklch(82% 0 0)", "oklch(94% 0 0)"]
+      },
+      "tinta": {
+        "role": "primary",
+        "displayName": "Tinta",
+        "canonical": "oklch(22.5% 0.010 294.8)",
+        "purpose": "Near-black with a trace of violet: the writing ink of the product and the fill of every pill that acts — primary button, current nav item, brand tile.",
+        "tonalRamp": ["oklch(15% 0.010 294.8)", "oklch(26% 0.010 294.8)", "oklch(37% 0.010 294.8)", "oklch(48% 0.010 294.8)", "oklch(59% 0.010 294.8)", "oklch(70% 0.010 294.8)", "oklch(82% 0.010 294.8)", "oklch(94% 0.003 294.8)"]
+      },
+      "tinta-2": {
+        "role": "neutral",
+        "displayName": "Tinta Secundária",
+        "canonical": "oklch(50.4% 0.022 90.7)",
+        "purpose": "Supporting prose — page subtitles, module notes, text buttons at rest. Tinted from the floor rather than a pure grey; 5.2:1 on porcelain.",
+        "tonalRamp": ["oklch(15% 0.022 90.7)", "oklch(26% 0.022 90.7)", "oklch(37% 0.022 90.7)", "oklch(48% 0.022 90.7)", "oklch(59% 0.022 90.7)", "oklch(70% 0.022 90.7)", "oklch(82% 0.022 90.7)", "oklch(94% 0.008 90.7)"]
+      },
+      "tinta-3": {
+        "role": "neutral",
+        "displayName": "Tinta Terciária",
+        "canonical": "oklch(52.5% 0.022 90.7)",
+        "purpose": "Metadata and placeholders only — times, counts, \"e mais 9…\", disabled controls. 4.7:1 on porcelain, 5.4:1 on a module.",
+        "tonalRamp": ["oklch(15% 0.022 90.7)", "oklch(26% 0.022 90.7)", "oklch(37% 0.022 90.7)", "oklch(48% 0.022 90.7)", "oklch(59% 0.022 90.7)", "oklch(70% 0.022 90.7)", "oklch(82% 0.022 90.7)", "oklch(94% 0.008 90.7)"]
+      },
+      "linha": {
+        "role": "neutral",
+        "displayName": "Linha",
+        "canonical": "oklch(91.8% 0.014 93.0)",
+        "purpose": "The single hairline in the system: between consecutive rows inside a module, above a totals row, along the top of the mobile thumb bar.",
+        "tonalRamp": ["oklch(15% 0.014 93.0)", "oklch(26% 0.014 93.0)", "oklch(37% 0.014 93.0)", "oklch(48% 0.014 93.0)", "oklch(59% 0.014 93.0)", "oklch(70% 0.014 93.0)", "oklch(82% 0.014 93.0)", "oklch(94% 0.005 93.0)"]
+      },
+      "perigo": {
+        "role": "tertiary",
+        "displayName": "Perigo",
+        "canonical": "oklch(53.5% 0.152 33.3)",
+        "purpose": "Destructive text buttons, invalid field rings, the marker word of a warning strip, and the 7% wash behind an inline confirmation. Never a fill.",
+        "tonalRamp": ["oklch(15% 0.152 33.3)", "oklch(26% 0.152 33.3)", "oklch(37% 0.152 33.3)", "oklch(48% 0.152 33.3)", "oklch(59% 0.152 33.3)", "oklch(70% 0.152 33.3)", "oklch(82% 0.152 33.3)", "oklch(94% 0.053 33.3)"]
+      },
+      "iris": {
+        "role": "secondary",
+        "displayName": "Íris",
+        "canonical": "oklch(52.6% 0.136 274.8)",
+        "purpose": "The hue of the week: day modules, the \"hoje\" badge, the schedule column on Início.",
+        "tonalRamp": ["oklch(15% 0.136 274.8)", "oklch(26% 0.136 274.8)", "oklch(37% 0.136 274.8)", "oklch(48% 0.136 274.8)", "oklch(59% 0.136 274.8)", "oklch(70% 0.136 274.8)", "oklch(82% 0.136 274.8)", "oklch(94% 0.048 274.8)"]
       },
       "folha": {
-        "role": "neutral",
+        "role": "secondary",
         "displayName": "Folha",
-        "purpose": "The sheet, one step brighter than the stock: the opening, the menu, the label card, the open thumb tab, the cover's text colour, and the mask behind the touch action menu.",
-        "tonalRamp": [
-          "oklch(15% 0.002 247.9)",
-          "oklch(26% 0.002 247.9)",
-          "oklch(37% 0.002 247.9)",
-          "oklch(48% 0.002 247.9)",
-          "oklch(59% 0.003 247.9)",
-          "oklch(70% 0.003 247.9)",
-          "oklch(82% 0.003 247.9)",
-          "oklch(94% 0.003 247.9)"
-        ]
+        "canonical": "oklch(53.2% 0.084 150.2)",
+        "purpose": "The hue of the menu and dinners: the dinner module, the seven-day strip, the dish tiles.",
+        "tonalRamp": ["oklch(15% 0.084 150.2)", "oklch(26% 0.084 150.2)", "oklch(37% 0.084 150.2)", "oklch(48% 0.084 150.2)", "oklch(59% 0.084 150.2)", "oklch(70% 0.084 150.2)", "oklch(82% 0.084 150.2)", "oklch(94% 0.029 150.2)"]
       },
-      "pauta": {
-        "role": "neutral",
-        "displayName": "Pauta",
-        "purpose": "The printed rules, drawn as a repeating gradient rather than as borders. Also the strip's frame and cell dividers, the dish picker's separators, and every light hover wash (28-45%).",
-        "tonalRamp": [
-          "oklch(15% 0.014 254.4)",
-          "oklch(26% 0.015 254.4)",
-          "oklch(37% 0.017 254.4)",
-          "oklch(48% 0.018 254.4)",
-          "oklch(59% 0.019 254.4)",
-          "oklch(70% 0.021 254.4)",
-          "oklch(82% 0.022 254.4)",
-          "oklch(94% 0.022 254.4)"
-        ]
-      },
-      "pauta-forte": {
-        "role": "neutral",
-        "displayName": "Pauta Forte",
-        "purpose": "The heavier printed line: day-header divider, opening border, gutter crease, menu and label-card borders, the resting underline of a cover-screen field, scrollbar thumb.",
-        "tonalRamp": [
-          "oklch(15% 0.024 254.9)",
-          "oklch(26% 0.026 254.9)",
-          "oklch(37% 0.029 254.9)",
-          "oklch(48% 0.031 254.9)",
-          "oklch(59% 0.033 254.9)",
-          "oklch(70% 0.035 254.9)",
-          "oklch(82% 0.036 254.9)",
-          "oklch(94% 0.033 254.9)"
-        ]
-      },
-      "impresso-tinta": {
-        "role": "neutral",
-        "displayName": "Tinta do Impresso",
-        "purpose": "The grey-blue the book is printed in: every printed label, date and role tag; the time and quantity columns; a printed caption on a ruled page; a dish's ingredient count; the dish a shopping item came from; and the recessive state for a continuation, a completed task and a bought item.",
-        "tonalRamp": [
-          "oklch(15% 0.037 258.8)",
-          "oklch(26% 0.039 258.8)",
-          "oklch(37% 0.042 258.8)",
-          "oklch(48% 0.045 258.8)",
-          "oklch(59% 0.044 258.8)",
-          "oklch(70% 0.042 258.8)",
-          "oklch(82% 0.039 258.8)",
-          "oklch(94% 0.036 258.8)"
-        ]
-      },
-      "margem": {
-        "role": "tertiary",
-        "displayName": "Vermelho da Margem",
-        "purpose": "Correction, and the mark of the book: the margin rule at 55% on every ruled page and down the label card; the strike and arrow on a moved entry; the 'de trás' mark on a shopping item carried over; the destructive menu item; every failure strip; the inline confirmation's 7% wash, 2px inset edge and outlined button; and the focus ring everywhere except the navy cover.",
-        "tonalRamp": [
-          "oklch(15% 0.136 29.7)",
-          "oklch(26% 0.147 29.7)",
-          "oklch(37% 0.157 29.7)",
-          "oklch(48% 0.168 29.7)",
-          "oklch(59% 0.170 29.7)",
-          "oklch(70% 0.159 29.7)",
-          "oklch(82% 0.148 29.7)",
-          "oklch(94% 0.136 29.7)"
-        ]
-      },
-      "capa": {
-        "role": "primary",
-        "displayName": "Azul da Capa",
-        "purpose": "The cover, in both jobs: the header band, the full navy ground behind every pre-week screen, day names, the label card's title, hover-darkened controls, and the one solid button fill. Never written content.",
-        "tonalRamp": [
-          "oklch(15% 0.071 268.3)",
-          "oklch(26% 0.076 268.3)",
-          "oklch(37% 0.072 268.3)",
-          "oklch(48% 0.067 268.3)",
-          "oklch(59% 0.062 268.3)",
-          "oklch(70% 0.058 268.3)",
-          "oklch(82% 0.053 268.3)",
-          "oklch(94% 0.048 268.3)"
-        ]
-      },
-      "capa-funda": {
-        "role": "primary",
-        "displayName": "Fundo da Capa",
-        "purpose": "The cover's deepest tone: the bottom of both cover gradients, the ink of today's day name, selected text, and the solid button's hover fill.",
-        "tonalRamp": [
-          "oklch(15% 0.049 267.1)",
-          "oklch(26% 0.050 267.1)",
-          "oklch(37% 0.047 267.1)",
-          "oklch(48% 0.044 267.1)",
-          "oklch(59% 0.041 267.1)",
-          "oklch(70% 0.037 267.1)",
-          "oklch(82% 0.034 267.1)",
-          "oklch(94% 0.031 267.1)"
-        ]
-      },
-      "fita": {
+      "mel": {
         "role": "secondary",
-        "displayName": "Ocre da Fita",
-        "purpose": "The marker colour. It answers one question — where are you? — and nothing else: today's ribbon on the day block and on today's strip cell, the HOJE chip, the rule under the cursor, the opened strip cell and the opened dish row. On the navy cover it is the focus ring, and it marks the household's join code — the one mark that answers a different question, and the only exception.",
-        "tonalRamp": [
-          "oklch(15% 0.091 78.2)",
-          "oklch(26% 0.099 78.2)",
-          "oklch(37% 0.107 78.2)",
-          "oklch(48% 0.115 78.2)",
-          "oklch(59% 0.123 78.2)",
-          "oklch(70% 0.130 78.2)",
-          "oklch(82% 0.121 78.2)",
-          "oklch(94% 0.112 78.2)"
-        ]
+        "displayName": "Mel",
+        "canonical": "oklch(65.5% 0.120 77.4)",
+        "purpose": "The hue of the shopping list: the list module, the set chips, the filled checks in the aisle, and the text selection highlight.",
+        "tonalRamp": ["oklch(15% 0.120 77.4)", "oklch(26% 0.120 77.4)", "oklch(37% 0.120 77.4)", "oklch(48% 0.120 77.4)", "oklch(59% 0.120 77.4)", "oklch(70% 0.120 77.4)", "oklch(82% 0.120 77.4)", "oklch(94% 0.042 77.4)"]
       },
-      "carimbo": {
+      "terracota": {
         "role": "secondary",
-        "displayName": "Violeta do Carimbo",
-        "purpose": "Acknowledgement: the VISTO stamp, the strike on a stamped task and on a bought shopping item, and at 70% over the sheet the dashed field waiting for a stamp.",
-        "tonalRamp": [
-          "oklch(15% 0.133 299.5)",
-          "oklch(26% 0.143 299.5)",
-          "oklch(37% 0.153 299.5)",
-          "oklch(48% 0.161 299.5)",
-          "oklch(59% 0.152 299.5)",
-          "oklch(70% 0.142 299.5)",
-          "oklch(82% 0.131 299.5)",
-          "oklch(94% 0.120 299.5)"
-        ]
+        "displayName": "Terracota",
+        "canonical": "oklch(59.1% 0.131 41.4)",
+        "purpose": "The hue of the book of dishes and its pantry.",
+        "tonalRamp": ["oklch(15% 0.131 41.4)", "oklch(26% 0.131 41.4)", "oklch(37% 0.131 41.4)", "oklch(48% 0.131 41.4)", "oklch(59% 0.131 41.4)", "oklch(70% 0.131 41.4)", "oklch(82% 0.131 41.4)", "oklch(94% 0.046 41.4)"]
+      },
+      "azulejo-verde": {
+        "role": "secondary",
+        "displayName": "Azulejo-verde",
+        "canonical": "oklch(54.3% 0.077 188.2)",
+        "purpose": "The hue of Finanças — present and designed while the area is still \"em breve\".",
+        "tonalRamp": ["oklch(15% 0.077 188.2)", "oklch(26% 0.077 188.2)", "oklch(37% 0.077 188.2)", "oklch(48% 0.077 188.2)", "oklch(59% 0.077 188.2)", "oklch(70% 0.077 188.2)", "oklch(82% 0.077 188.2)", "oklch(94% 0.027 188.2)"]
       },
       "pai": {
-        "role": "primary",
-        "displayName": "Esferográfica Azul",
-        "purpose": "The father's ballpoint in the week and the system's writing ink everywhere: the document caret, the selection tint, and the ink and caret of every text field on the cover screens.",
-        "tonalRamp": [
-          "oklch(15% 0.153 267.1)",
-          "oklch(26% 0.164 267.1)",
-          "oklch(37% 0.175 267.1)",
-          "oklch(48% 0.175 267.1)",
-          "oklch(59% 0.165 267.1)",
-          "oklch(70% 0.154 267.1)",
-          "oklch(82% 0.142 267.1)",
-          "oklch(94% 0.130 267.1)"
-        ]
+        "role": "tertiary",
+        "displayName": "Caneta do Pai",
+        "canonical": "oklch(48.4% 0.140 269.0)",
+        "purpose": "One household member's pen: the dot beside their line and the tint of their author tag. 6.6:1 on a white module.",
+        "tonalRamp": ["oklch(15% 0.140 269.0)", "oklch(26% 0.140 269.0)", "oklch(37% 0.140 269.0)", "oklch(48% 0.140 269.0)", "oklch(59% 0.140 269.0)", "oklch(70% 0.140 269.0)", "oklch(82% 0.140 269.0)", "oklch(94% 0.049 269.0)"]
       },
       "mae": {
         "role": "tertiary",
-        "displayName": "Esferográfica Verde",
-        "purpose": "The mother's pen.",
-        "tonalRamp": [
-          "oklch(15% 0.087 160.6)",
-          "oklch(26% 0.093 160.6)",
-          "oklch(37% 0.100 160.6)",
-          "oklch(48% 0.107 160.6)",
-          "oklch(59% 0.104 160.6)",
-          "oklch(70% 0.098 160.6)",
-          "oklch(82% 0.090 160.6)",
-          "oklch(94% 0.083 160.6)"
-        ]
+        "displayName": "Caneta da Mãe",
+        "canonical": "oklch(49.2% 0.081 158.8)",
+        "purpose": "One household member's pen. 6.0:1 on a white module.",
+        "tonalRamp": ["oklch(15% 0.081 158.8)", "oklch(26% 0.081 158.8)", "oklch(37% 0.081 158.8)", "oklch(48% 0.081 158.8)", "oklch(59% 0.081 158.8)", "oklch(70% 0.081 158.8)", "oklch(82% 0.081 158.8)", "oklch(94% 0.028 158.8)"]
       },
       "filha": {
         "role": "tertiary",
-        "displayName": "Lápis",
-        "purpose": "The daughter's pencil — the one grey-toned pen, softer than the ballpoints.",
-        "tonalRamp": [
-          "oklch(15% 0.029 261.3)",
-          "oklch(26% 0.031 261.3)",
-          "oklch(37% 0.033 261.3)",
-          "oklch(48% 0.034 261.3)",
-          "oklch(59% 0.032 261.3)",
-          "oklch(70% 0.030 261.3)",
-          "oklch(82% 0.027 261.3)",
-          "oklch(94% 0.025 261.3)"
-        ]
-      },
-      "casa": {
-        "role": "tertiary",
-        "displayName": "Esferográfica Preta",
-        "purpose": "The household pen, for what belongs to everyone: the document's base text colour, every meal, and everything in the ementa and the dish book — a dinner, a shopping item, a dish and an ingredient belong to the table rather than to a person.",
-        "tonalRamp": [
-          "oklch(15% 0.028 269.9)",
-          "oklch(26% 0.029 269.9)",
-          "oklch(37% 0.028 269.9)",
-          "oklch(48% 0.026 269.9)",
-          "oklch(59% 0.024 269.9)",
-          "oklch(70% 0.022 269.9)",
-          "oklch(82% 0.020 269.9)",
-          "oklch(94% 0.018 269.9)"
-        ]
+        "displayName": "Caneta da Filha",
+        "canonical": "oklch(51.9% 0.137 303.8)",
+        "purpose": "One household member's pen. 5.9:1 on a white module.",
+        "tonalRamp": ["oklch(15% 0.137 303.8)", "oklch(26% 0.137 303.8)", "oklch(37% 0.137 303.8)", "oklch(48% 0.137 303.8)", "oklch(59% 0.137 303.8)", "oklch(70% 0.137 303.8)", "oklch(82% 0.137 303.8)", "oklch(94% 0.048 303.8)"]
       }
     },
     "typographyMeta": {
       "display": {
-        "displayName": "O Dia (--t-dia)",
-        "purpose": "The day name and the name of a section — OS JANTARES, A LISTA, O LIVRO — at poster scale. The book is navigated by these before anything else is read."
-      },
-      "headline": {
-        "displayName": "Destaque (--t-destaque)",
-        "purpose": "The raised step: each day's lead entry, the chosen dish at the head of an open day's panel, and the household name on the cover."
-      },
-      "body": {
-        "displayName": "A Escrita (--t-escrita)",
-        "purpose": "Everything the household writes, plus menu items, dish-picker lines, cover-screen fields, explanatory copy, the inline confirmation sentence and every failure sentence. Line-height locks to the rule pitch on a ruled page."
-      },
-      "label": {
-        "displayName": "O Impresso (--t-impresso)",
-        "purpose": "Everything the book arrives with: dates, the week interval, role and meal tags, the HOJE chip, the thumb tabs, the strip's day abbreviations, a dish's ingredient count, a shopping item's provenance, the 'de trás' mark, a printed caption occupying one rule, every text-underline control, the inline confirm button, and the mark that opens a failure strip."
-      },
-      "hand": {
-        "displayName": "A Mão (Caveat)",
-        "purpose": "The household's real name on the cover, and nowhere else. The single permitted handwriting setting."
+        "displayName": "Display",
+        "purpose": "The greeting, the page title, and the single hero value inside a bento module — tonight's dinner. Drops to 1.75rem below 768px; clamps to three lines."
       },
       "title": {
-        "displayName": "O Título da Etiqueta (--t-destaque, 700)",
-        "purpose": "The one heading on a label card. Same 1.5rem step as Headline, set hard at 700/112% width — the Four Steps Rule constrains size, not setting. Measured 14.74:1 on the label."
+        "displayName": "Title",
+        "purpose": "The sign-in card heading and the running totals at the foot of the list. Drops to 1.375rem below 768px."
+      },
+      "strong": {
+        "displayName": "Strong",
+        "purpose": "The first thing read in a row or a header — house name, day name, chosen dish, household code."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Everything else, at 500 weight; row names take 700. Prose is held to about 46ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Field names, counts, metadata, chips, text buttons, the day badge. Sentence case at 700–800."
       }
     },
+    "fonts": [
+      {
+        "name": "Manrope",
+        "value": "variable 200–800, self-hosted woff2 (latin + latin-ext subsets), font-display: swap",
+        "purpose": "The entire voice of the system. One family; emphasis is a weight jump, never a second face."
+      }
+    ],
+    "derivation": [
+      {
+        "name": "--cor-tile",
+        "value": "color-mix(in oklab, var(--cor) 14%, #fff)",
+        "purpose": "The icon tile and the fill of an opened dinner pastille."
+      },
+      {
+        "name": "--cor-chip",
+        "value": "color-mix(in oklab, var(--cor) 8%, #fff)",
+        "purpose": "Chip background, today's soft wash, hover on a dinner pastille."
+      },
+      {
+        "name": "--cor-premido",
+        "value": "color-mix(in oklab, var(--cor) 20%, #fff)",
+        "purpose": "The pressed / hovered state of a chip."
+      },
+      {
+        "name": "--cor-texto",
+        "value": "color-mix(in oklab, var(--cor) 78%, var(--tinta))",
+        "purpose": "The drawing inside a tile, and hue-tinted labels on white."
+      },
+      {
+        "name": "chip label",
+        "value": "color-mix(in oklab, var(--cor) 42%, var(--tinta))",
+        "purpose": "Deeper than --cor-texto on purpose: the lighter mix measured 3.7:1 on its own chip."
+      }
+    ],
     "shadows": [
       {
-        "name": "cover-edge",
-        "value": "0 2px 0 color-mix(in srgb, #0e1730 70%, transparent), 0 10px 24px -14px rgb(14 23 48 / 0.55)",
-        "purpose": "The cover board's hard edge and the shade beneath it. Header band only."
+        "name": "sombra-modulo",
+        "value": "0 10px 30px -18px rgb(28 27 32 / 0.22), 0 1px 2px rgb(28 27 32 / 0.05)",
+        "purpose": "Resting elevation of every module, the week navigation pill group, and an opened dinner pastille."
       },
       {
-        "name": "sheet",
-        "value": "0 18px 40px -30px rgb(14 23 48 / 0.55)",
-        "purpose": "The opening resting on the stock. Very wide, very low, no lift."
+        "name": "sombra-alta",
+        "value": "0 18px 44px -20px rgb(28 27 32 / 0.30), 0 2px 4px rgb(28 27 32 / 0.06)",
+        "purpose": "Hover on a touchable module, today's day module, floating popovers, and the sign-in card."
       },
       {
-        "name": "menu",
-        "value": "0 12px 28px -12px rgb(14 23 48 / 0.4), 0 2px 6px -2px rgb(14 23 48 / 0.25)",
-        "purpose": "The only surface in the system that genuinely floats above the page."
+        "name": "aro-foco",
+        "value": "inset 0 0 0 2px var(--tinta)",
+        "purpose": "The 2px ink ring drawn inside a focused field. An inset stroke, not elevation."
       },
       {
-        "name": "label-card",
-        "value": "0 22px 44px -26px rgb(6 10 24 / 0.75), 0 2px 0 rgb(255 255 255 / 0.5) inset",
-        "purpose": "Paper glued to a navy board: the system's only deep shadow, deep because the ground behind it is dark. The inset white line is the glue's lip."
-      },
-      {
-        "name": "ribbon",
-        "value": "0 1px 3px rgb(14 23 48 / 0.28)",
-        "purpose": "The ribbon's cast shadow: a real object clipped over the edge of the paper."
-      },
-      {
-        "name": "focus-rule",
-        "value": "inset 2px 0 0 #c8912b",
-        "purpose": "The inset ochre edge on the rule that currently has focus, over a 9% fita wash."
+        "name": "aro-visto",
+        "value": "inset 0 0 0 2px color-mix(in oklab, var(--cor) 38%, #fff)",
+        "purpose": "The unchecked check circle; goes to full hue on hover and to a full fill when checked."
       }
     ],
     "motion": [
       {
-        "name": "carimbar",
-        "value": "420ms cubic-bezier(0.16, 1, 0.3, 1)",
-        "purpose": "The one authored moment: the stamp press, from -11°/1.5× and transparent to -6°/1×. Fires on the act of stamping only, never on render."
-      },
-      {
-        "name": "abrir",
-        "value": "180ms cubic-bezier(0.16, 1, 0.3, 1)",
-        "purpose": "The menu opening: fade plus a 0.25rem rise."
-      },
-      {
-        "name": "ease-papel",
+        "name": "mola",
         "value": "cubic-bezier(0.16, 1, 0.3, 1)",
-        "purpose": "The system easing. Nothing moves on a curve that a page would not."
-      },
-      {
-        "name": "estado",
-        "value": "160ms",
-        "purpose": "Colour transitions on the stamp field and the cover buttons."
-      },
-      {
-        "name": "accoes",
-        "value": "140ms ease-out",
-        "purpose": "The row actions fading in on hover-capable devices."
-      },
-      {
-        "name": "reduced",
-        "value": "1ms",
-        "purpose": "Under prefers-reduced-motion every animation and transition collapses to 1ms, and the scroll-to-today becomes an instant jump."
-      }
-    ],
-    "breakpoints": [
-      {
-        "name": "movel",
-        "value": "47.99rem",
-        "purpose": "Type steps down, and the rule pitch, margin and column widths widen for touch: --pauta-passo 2.375rem, --margem-x 2.5rem, --hora-x 3.25rem, --qtd-x 5.25rem."
-      },
-      {
-        "name": "abertura",
-        "value": "64rem",
-        "purpose": "At and above, the week is a true two-page grid with a 2.25rem gutter and the strip is seven columns; below, the week is one column with the gutter as a horizontal break, the strip stacks into seven single rules, and a shopping item's provenance is hidden — in the aisle the measure is worth more."
+        "purpose": "The only easing in the system. Every transition and animation uses it."
       },
       {
         "name": "toque",
-        "value": "(hover: none)",
-        "purpose": "The actions column collapses to 0 and the row menu lifts out of the grid; the focused row takes padding-inline-end: 1.75rem so it shrinks to let the menu in rather than the menu covering the quantity and the ingredient count."
+        "value": "120–160ms",
+        "purpose": "Washes and colour changes on small controls — nav items, chips, text buttons, menu items."
+      },
+      {
+        "name": "elevacao",
+        "value": "200ms",
+        "purpose": "A touchable module lifting 2px on hover and pressing to 0.985 on active."
+      },
+      {
+        "name": "chegar",
+        "value": "360ms — opacity 0→1, translateY 10px→0",
+        "purpose": "A page arriving; popovers reuse it at 200ms."
+      },
+      {
+        "name": "vistopop",
+        "value": "320ms overshoot to scale 1.12",
+        "purpose": "The single flourish in the product, spent on the moment a shopping item is completed."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: reduce → all transitions and animations collapse to 0.01ms; the page entrance is removed entirely",
+        "purpose": "Non-negotiable; declared globally, not per-component."
       }
     ],
-    "measurements": [
-      {
-        "name": "contrast-impresso-tinta",
-        "value": "5.23:1",
-        "purpose": "Printed ink, continuations and completed text on the #f8fafc sheet. Measured in Chromium against the built output."
-      },
-      {
-        "name": "contrast-pai",
-        "value": "8.33:1",
-        "purpose": "The father's ballpoint on the sheet."
-      },
-      {
-        "name": "contrast-mae",
-        "value": "5.15:1",
-        "purpose": "The mother's pen on the sheet, and it additionally clears when struck."
-      },
-      {
-        "name": "contrast-carimbo",
-        "value": "6.99:1",
-        "purpose": "The given VISTO stamp on the sheet."
-      },
-      {
-        "name": "contrast-carimbo-campo",
-        "value": "3.57:1",
-        "purpose": "The pending stamp field (#9577c1). Non-text; above the 3:1 floor."
-      },
-      {
-        "name": "medida-movel-evento",
-        "value": "199px",
-        "purpose": "Mobile text column for an event."
-      },
-      {
-        "name": "medida-movel-refeicao",
-        "value": "223px",
-        "purpose": "Mobile text column for a meal — the time column closes and the width is returned to the measure."
-      },
-      {
-        "name": "medida-movel-tarefa",
-        "value": "128px",
-        "purpose": "Mobile text column for a task with a set time, which opens a fifth column for the stamp."
-      },
-      {
-        "name": "medida-movel-compra-jantar",
-        "value": "199px",
-        "purpose": "Mobile text column for a dinner row on the shopping list."
-      },
-      {
-        "name": "medida-movel-compra-refeicao",
-        "value": "223px",
-        "purpose": "Mobile text column for a meal row on the shopping list."
-      },
-      {
-        "name": "toque-conta-fim",
-        "value": "x=334",
-        "purpose": "Right edge of the ingredient-count button on touch with the row focused."
-      },
-      {
-        "name": "toque-carril-inicio",
-        "value": "x=343",
-        "purpose": "Left edge of the revealed menu rail on touch. 9px clear of the count button — no overlap."
-      }
+    "breakpoints": [
+      { "name": "telemovel", "value": "max-width: 47.99rem (768px)" },
+      { "name": "largo", "value": "min-width: 48rem (768px)" },
+      { "name": "amplo", "value": "min-width: 64rem (1024px)" },
+      { "name": "medida", "value": "max-width: 75rem (1200px) — the shared measure of top bar, page and warning strips" },
+      { "name": "coluna-dia", "value": "columns: 19rem — the packing width of the week's day modules" }
     ]
   },
   "components": [
     {
-      "name": "Linha",
-      "kind": "custom",
-      "refersTo": "linha",
-      "description": "The signature component: one printed rule with writing on it, in the author’s ink beside a printed role tag.",
-      "html": "<div class=\"ds-pauta\"><div class=\"ds-linha\"><span class=\"ds-linha-goteira\"></span><span class=\"ds-linha-corpo\"><button type=\"button\" class=\"ds-etiqueta ds-etiqueta--pai\">Pai</button><textarea class=\"ds-escrita ds-escrita--pai\" rows=\"1\" placeholder=\"escrever…\">Viagem de trabalho — Lisboa</textarea></span><span class=\"ds-linha-hora\">07:15</span><span class=\"ds-linha-accoes\"></span></div><div class=\"ds-linha\"><span class=\"ds-linha-goteira\"></span><span class=\"ds-linha-corpo\"><button type=\"button\" class=\"ds-etiqueta ds-etiqueta--mae\">Mãe</button><textarea class=\"ds-escrita ds-escrita--mae\" rows=\"1\" placeholder=\"escrever…\">Espetáculo</textarea></span><span class=\"ds-linha-hora\">21:00</span><span class=\"ds-linha-accoes\"></span></div><div class=\"ds-linha\"><span class=\"ds-linha-goteira\"></span><span class=\"ds-linha-corpo\"><textarea class=\"ds-escrita ds-escrita--casa\" rows=\"1\" placeholder=\"escrever…\"></textarea></span><span class=\"ds-linha-hora\"></span><span class=\"ds-linha-accoes\"></span></div></div>",
-      "css": ".ds-pauta { position: relative; background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--pauta-passo, 2.125rem) - 1px), var(--pauta, #c7d2e0) calc(var(--pauta-passo, 2.125rem) - 1px), var(--pauta, #c7d2e0) var(--pauta-passo, 2.125rem)); } .ds-pauta::before { content: \"\"; position: absolute; inset-block: 0; inset-inline-start: var(--margem-x, 3.25rem); width: 1px; background: color-mix(in srgb, var(--margem, #c0392b) 55%, transparent); pointer-events: none; } .ds-linha { position: relative; display: grid; grid-template-columns: var(--margem-x, 3.25rem) minmax(0, 1fr) var(--hora-x, 4.25rem) 2rem; align-items: start; font-size: var(--t-escrita, 1.0625rem); font-family: Archivo, ui-sans-serif, system-ui, sans-serif; min-height: var(--pauta-passo, 2.125rem); line-height: var(--pauta-passo, 2.125rem); } .ds-linha-goteira, .ds-linha-hora, .ds-linha-accoes { height: var(--pauta-passo, 2.125rem); } .ds-linha-corpo { display: flex; align-items: flex-start; gap: 0.5rem; min-width: 0; padding-inline-start: 0.625rem; } .ds-linha-hora { text-align: right; padding-inline-end: 0.375rem; color: var(--impresso-tinta, #5a6b85); font-variant-numeric: tabular-nums; } .ds-linha-accoes { display: flex; justify-content: flex-end; align-items: center; } .ds-etiqueta { appearance: none; background: none; border: 0; padding: 0 0.25rem; margin-inline-start: -0.25rem; line-height: var(--pauta-passo, 2.125rem); height: var(--pauta-passo, 2.125rem); font-family: Archivo, ui-sans-serif, system-ui, sans-serif; font-size: var(--t-impresso, 0.6875rem); font-weight: 700; font-stretch: 112%; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border-radius: 2px; flex: none; white-space: nowrap; } .ds-etiqueta:hover { background: color-mix(in srgb, currentColor 12%, transparent); } .ds-etiqueta:focus-visible { outline: 2px solid var(--margem, #c0392b); outline-offset: 2px; } .ds-escrita { appearance: none; background: transparent; border: 0; padding: 0; margin: 0; font: inherit; font-family: inherit; font-size: inherit; letter-spacing: inherit; line-height: var(--pauta-passo, 2.125rem); width: 100%; display: block; box-sizing: border-box; border-radius: 1px; resize: none; overflow: hidden; overflow-wrap: break-word; } .ds-escrita::placeholder { color: transparent; } .ds-escrita:hover::placeholder, .ds-escrita:focus::placeholder { color: var(--impresso-tinta, #5a6b85); } .ds-escrita:focus { outline: none; } .ds-etiqueta--pai, .ds-escrita--pai { color: var(--pai, #2440b0); } .ds-etiqueta--mae, .ds-escrita--mae { color: var(--mae, #157a52); } .ds-escrita--casa { color: var(--casa, #1a1f2e); } .ds-linha:focus-within { background: color-mix(in srgb, var(--fita, #c8912b) 9%, transparent); box-shadow: inset 2px 0 0 var(--fita, #c8912b); }"
-    },
-    {
-      "name": "Linha em destaque",
-      "kind": "custom",
-      "refersTo": "linha-destaque",
-      "description": "The first entry of each day, raised one type step. Exactly one per day; the rule pitch does not change.",
-      "html": "<div class=\"ds-pauta-d\"><div class=\"ds-linha ds-linha--destaque\"><span class=\"ds-linha-goteira\"></span><span class=\"ds-linha-corpo\"><button type=\"button\" class=\"ds-etiqueta ds-etiqueta--mae\">Mãe</button><textarea class=\"ds-escrita ds-escrita--mae\" rows=\"1\">Levar a filha à escola</textarea></span><span class=\"ds-linha-hora\"><span class=\"ds-hora\">08:30</span></span><span class=\"ds-linha-accoes\"></span></div></div>",
-      "css": ".ds-pauta-d { background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--pauta-passo, 2.125rem) - 1px), var(--pauta, #c7d2e0) calc(var(--pauta-passo, 2.125rem) - 1px), var(--pauta, #c7d2e0) var(--pauta-passo, 2.125rem)); } .ds-linha { position: relative; display: grid; grid-template-columns: var(--margem-x, 3.25rem) minmax(0, 1fr) var(--hora-x, 4.25rem) 2rem; align-items: start; font-size: var(--t-escrita, 1.0625rem); font-family: Archivo, ui-sans-serif, system-ui, sans-serif; min-height: var(--pauta-passo, 2.125rem); line-height: var(--pauta-passo, 2.125rem); } .ds-linha-goteira, .ds-linha-hora, .ds-linha-accoes { height: var(--pauta-passo, 2.125rem); } .ds-linha-corpo { display: flex; align-items: flex-start; gap: 0.5rem; min-width: 0; padding-inline-start: 0.625rem; } .ds-linha-hora { text-align: right; padding-inline-end: 0.375rem; color: var(--impresso-tinta, #5a6b85); font-variant-numeric: tabular-nums; } .ds-linha-accoes { display: flex; justify-content: flex-end; align-items: center; } .ds-etiqueta { appearance: none; background: none; border: 0; padding: 0 0.25rem; margin-inline-start: -0.25rem; line-height: var(--pauta-passo, 2.125rem); height: var(--pauta-passo, 2.125rem); font-family: Archivo, ui-sans-serif, system-ui, sans-serif; font-size: var(--t-impresso, 0.6875rem); font-weight: 700; font-stretch: 112%; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border-radius: 2px; flex: none; white-space: nowrap; } .ds-etiqueta:hover { background: color-mix(in srgb, currentColor 12%, transparent); } .ds-etiqueta:focus-visible { outline: 2px solid var(--margem, #c0392b); outline-offset: 2px; } .ds-escrita { appearance: none; background: transparent; border: 0; padding: 0; margin: 0; font: inherit; font-family: inherit; font-size: inherit; letter-spacing: inherit; line-height: var(--pauta-passo, 2.125rem); width: 100%; display: block; box-sizing: border-box; border-radius: 1px; resize: none; overflow: hidden; overflow-wrap: break-word; } .ds-escrita::placeholder { color: transparent; } .ds-escrita:hover::placeholder, .ds-escrita:focus::placeholder { color: var(--impresso-tinta, #5a6b85); } .ds-escrita:focus { outline: none; } .ds-etiqueta--mae, .ds-escrita--mae { color: var(--mae, #157a52); } .ds-linha--destaque { font-size: var(--t-destaque, 1.5rem); } .ds-linha--destaque .ds-escrita { letter-spacing: -0.01em; } .ds-linha--destaque .ds-etiqueta { align-self: center; } .ds-hora { font-size: var(--t-escrita, 1.0625rem); letter-spacing: 0.01em; font-variant-numeric: tabular-nums; } .ds-linha:focus-within { background: color-mix(in srgb, var(--fita, #c8912b) 9%, transparent); box-shadow: inset 2px 0 0 var(--fita, #c8912b); }"
-    },
-    {
-      "name": "Escrita",
-      "kind": "input",
-      "refersTo": "escrita",
-      "description": "The writing field. Transparent, borderless, line-height locked to the rule pitch, auto-growing in whole pitches. No edit mode: it is always live.",
-      "html": "<div class=\"ds-pauta-e\"><textarea class=\"ds-escrita ds-escrita--pai\" rows=\"1\" placeholder=\"escrever…\">Arranjar a casa de banho</textarea><textarea class=\"ds-escrita ds-escrita--vazia\" rows=\"1\" placeholder=\"escrever…\"></textarea></div>",
-      "css": ".ds-pauta-e { background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--pauta-passo, 2.125rem) - 1px), var(--pauta, #c7d2e0) calc(var(--pauta-passo, 2.125rem) - 1px), var(--pauta, #c7d2e0) var(--pauta-passo, 2.125rem)); font-family: Archivo, ui-sans-serif, system-ui, sans-serif; font-size: var(--t-escrita, 1.0625rem); padding-inline-start: 0.625rem; } .ds-escrita { appearance: none; background: transparent; border: 0; padding: 0; margin: 0; font: inherit; font-family: inherit; font-size: inherit; letter-spacing: inherit; line-height: var(--pauta-passo, 2.125rem); width: 100%; display: block; box-sizing: border-box; border-radius: 1px; resize: none; overflow: hidden; overflow-wrap: break-word; } .ds-escrita::placeholder { color: transparent; } .ds-escrita:hover::placeholder, .ds-escrita:focus::placeholder { color: var(--impresso-tinta, #5a6b85); } .ds-escrita:focus { outline: none; } .ds-escrita--pai { color: var(--pai, #2440b0); } .ds-escrita--vazia { color: var(--casa, #1a1f2e); } .ds-escrita:focus-visible { outline: none; }"
-    },
-    {
-      "name": "Campo de Carimbo",
-      "kind": "custom",
-      "refersTo": "campo-carimbo",
-      "description": "Completion, in the column where the ink lands. Pending is a dashed field at the stamp’s own footprint; given is the VISTO stamp, rotated. Never a checkbox in a gutter.",
-      "html": "<span class=\"ds-carimbos\"><button type=\"button\" role=\"checkbox\" aria-checked=\"false\" class=\"ds-campo-carimbo\" title=\"Dar o visto\"><svg viewBox=\"0 0 74 30\" fill=\"none\" aria-hidden=\"true\"><rect x=\"1.6\" y=\"1.6\" width=\"70.8\" height=\"26.8\" rx=\"4\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-dasharray=\"4 3.5\" stroke-linecap=\"round\"/></svg></button><button type=\"button\" role=\"checkbox\" aria-checked=\"true\" class=\"ds-campo-carimbo ds-campo-carimbo--feito\" title=\"Tirar o visto\"><span class=\"ds-carimbo\"><svg viewBox=\"0 0 74 30\" fill=\"none\" aria-hidden=\"true\"><rect x=\"1.6\" y=\"1.6\" width=\"70.8\" height=\"26.8\" rx=\"4\" stroke=\"currentColor\" stroke-width=\"2.4\"/><text x=\"37\" y=\"20.5\" text-anchor=\"middle\" fill=\"currentColor\" font-family=\"Archivo, sans-serif\" font-size=\"13.5\" font-weight=\"700\" letter-spacing=\"2.4\">VISTO</text></svg></span></button></span>",
-      "css": ".ds-carimbos { display: inline-flex; gap: 1.5rem; align-items: center; } .ds-campo-carimbo { appearance: none; background: none; border: 0; padding: 0; margin: 0; color: color-mix(in srgb, var(--carimbo, #6b3fa8) 70%, var(--folha, #f8fafc)); cursor: pointer; display: block; position: relative; width: var(--hora-x, 4.25rem); height: var(--pauta-passo, 2.125rem); border-radius: 2px; transition: color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-campo-carimbo::before { content: \"\"; position: absolute; inset: -0.25rem -0.5rem; } .ds-campo-carimbo:hover { color: var(--carimbo, #6b3fa8); } .ds-campo-carimbo:focus-visible { outline: 2px solid var(--margem, #c0392b); outline-offset: 2px; } .ds-campo-carimbo svg { display: block; width: 100%; height: auto; } .ds-campo-carimbo--feito { color: var(--carimbo, #6b3fa8); } .ds-carimbo svg { transform: rotate(-6deg); } .ds-campo-carimbo--feito:active .ds-carimbo svg { animation: ds-carimbar 420ms cubic-bezier(0.16, 1, 0.3, 1) both; } @keyframes ds-carimbar { 0% { transform: rotate(-11deg) scale(1.5); opacity: 0; } 55% { opacity: 1; } 100% { transform: rotate(-6deg) scale(1); opacity: 1; } }"
-    },
-    {
-      "name": "Etiqueta",
-      "kind": "chip",
-      "refersTo": "etiqueta-autor",
-      "description": "The printed role tag that makes attribution more than colour. Author tags take the member’s ink with no border; a meal tag is printed ink inside a hairline outline, because a meal has no author.",
-      "html": "<span class=\"ds-etiquetas\"><button type=\"button\" class=\"ds-etiqueta ds-etiqueta--pai\">Pai</button><button type=\"button\" class=\"ds-etiqueta ds-etiqueta--mae\">Mãe</button><button type=\"button\" class=\"ds-etiqueta ds-etiqueta--filha\">Filha</button><button type=\"button\" class=\"ds-etiqueta ds-etiqueta--casa\">Todos</button><button type=\"button\" class=\"ds-etiqueta ds-etiqueta--impressa\">Jantar</button></span>",
-      "css": ".ds-etiquetas { display: inline-flex; align-items: center; gap: 0.75rem; } .ds-etiqueta { appearance: none; background: none; border: 0; padding: 0 0.25rem; margin-inline-start: -0.25rem; line-height: var(--pauta-passo, 2.125rem); height: var(--pauta-passo, 2.125rem); font-family: Archivo, ui-sans-serif, system-ui, sans-serif; font-size: var(--t-impresso, 0.6875rem); font-weight: 700; font-stretch: 112%; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border-radius: 2px; flex: none; white-space: nowrap; } .ds-etiqueta:hover { background: color-mix(in srgb, currentColor 12%, transparent); } .ds-etiqueta:focus-visible { outline: 2px solid var(--margem, #c0392b); outline-offset: 2px; } .ds-etiqueta--pai { color: var(--pai, #2440b0); } .ds-etiqueta--mae { color: var(--mae, #157a52); } .ds-etiqueta--filha { color: var(--filha, #4a5568); } .ds-etiqueta--casa { color: var(--casa, #1a1f2e); } .ds-etiqueta--impressa { color: var(--impresso-tinta, #5a6b85); border: 1px solid color-mix(in srgb, var(--impresso-tinta, #5a6b85) 32%, transparent); }"
-    },
-    {
-      "name": "Cabeçalho de Dia",
-      "kind": "custom",
-      "refersTo": "dia-nome",
-      "description": "The day header at poster scale, over a heavier printed divider. Today additionally carries the ochre ribbon down its leading edge and a HOJE chip beside its name.",
-      "html": "<div class=\"ds-dia ds-dia--hoje\"><span class=\"ds-fita\" aria-hidden=\"true\"></span><header class=\"ds-dia-cabecalho\"><h3 class=\"ds-dia-nome\">Segunda<span class=\"ds-dia-hoje\">hoje</span></h3><span class=\"ds-dia-data\">24/08</span></header></div>",
-      "css": ".ds-dia { position: relative; padding-top: 2rem; padding-inline-start: 0.75rem; font-family: Archivo, ui-sans-serif, system-ui, sans-serif; } .ds-dia-cabecalho { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding-bottom: 0.375rem; border-bottom: 1.5px solid var(--pauta-forte, #a5b6cc); } .ds-dia-nome { margin: 0; font-size: var(--t-dia, 2.5rem); line-height: 0.95; font-weight: 700; font-stretch: 118%; letter-spacing: 0.015em; text-transform: uppercase; color: var(--capa, #16224a); display: flex; align-items: baseline; gap: 0.625rem; } .ds-dia--hoje .ds-dia-nome { color: var(--capa-funda, #0e1730); } .ds-dia-hoje, .ds-dia-data { font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; color: var(--impresso-tinta, #5a6b85); } .ds-dia-hoje { color: var(--capa-funda, #0e1730); background: var(--fita, #c8912b); padding: 0.1875rem 0.375rem 0.125rem; border-radius: 2px; transform: translateY(-0.25rem); } .ds-dia-data { flex: none; font-variant-numeric: tabular-nums; } .ds-fita { position: absolute; inset-inline-start: 0.25rem; top: 0.25rem; width: 0.5625rem; height: 5.5rem; background: linear-gradient(180deg, color-mix(in srgb, var(--fita, #c8912b) 88%, white), var(--fita, #c8912b)); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 0.4375rem), 0 100%); box-shadow: 0 1px 3px rgb(14 23 48 / 0.28); }"
-    },
-    {
-      "name": "Linha riscada",
-      "kind": "custom",
-      "refersTo": "linha",
-      "description": "A moved entry. The old line stays where it was, struck in margin red with an arrow to its new day — the agenda keeps what happened rather than deleting it.",
-      "html": "<div class=\"ds-pauta-r\"><div class=\"ds-linha ds-linha--riscada\"><span class=\"ds-linha-goteira\"></span><span class=\"ds-linha-corpo\"><s>Reunião de pais</s><span class=\"ds-linha-mudanca\"><svg viewBox=\"0 0 16 12\" width=\"16\" height=\"12\" fill=\"none\" aria-hidden=\"true\"><path d=\"M1 6h13m0 0-4.5-4.5M14 6l-4.5 4.5\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>quinta</span></span><span class=\"ds-linha-hora\"></span><span class=\"ds-linha-accoes\"></span></div></div>",
-      "css": ".ds-pauta-r { background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--pauta-passo, 2.125rem) - 1px), var(--pauta, #c7d2e0) calc(var(--pauta-passo, 2.125rem) - 1px), var(--pauta, #c7d2e0) var(--pauta-passo, 2.125rem)); } .ds-linha { position: relative; display: grid; grid-template-columns: var(--margem-x, 3.25rem) minmax(0, 1fr) var(--hora-x, 4.25rem) 2rem; align-items: start; font-size: var(--t-escrita, 1.0625rem); font-family: Archivo, ui-sans-serif, system-ui, sans-serif; min-height: var(--pauta-passo, 2.125rem); line-height: var(--pauta-passo, 2.125rem); } .ds-linha-goteira, .ds-linha-hora, .ds-linha-accoes { height: var(--pauta-passo, 2.125rem); } .ds-linha-corpo { display: flex; align-items: flex-start; gap: 0.5rem; min-width: 0; padding-inline-start: 0.625rem; } .ds-linha-hora { text-align: right; padding-inline-end: 0.375rem; color: var(--impresso-tinta, #5a6b85); font-variant-numeric: tabular-nums; } .ds-linha-accoes { display: flex; justify-content: flex-end; align-items: center; } .ds-linha--riscada { color: var(--impresso-tinta, #5a6b85); } .ds-linha--riscada s { text-decoration-color: var(--margem, #c0392b); text-decoration-thickness: 1.5px; } .ds-linha-mudanca { display: inline-flex; align-items: center; gap: 0.25rem; color: var(--margem, #c0392b); font-size: var(--t-impresso, 0.6875rem); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-inline-start: 0.5rem; }"
-    },
-    {
-      "name": "Menu",
-      "kind": "nav",
-      "refersTo": "menu",
-      "description": "A short list that opens beside the row it belongs to. Never a modal; the page under it stays readable. The active option is bolded, not ticked.",
-      "html": "<div class=\"ds-menu\" role=\"menu\" aria-label=\"De quem é\"><p class=\"ds-menu-titulo\">De quem é</p><button type=\"button\" role=\"menuitem\" class=\"ds-menu-item ds-menu-item--pai\" aria-current=\"true\">Pai</button><button type=\"button\" role=\"menuitem\" class=\"ds-menu-item ds-menu-item--mae\">Mãe</button><button type=\"button\" role=\"menuitem\" class=\"ds-menu-item\">Sem ninguém</button><button type=\"button\" role=\"menuitem\" class=\"ds-menu-item ds-menu-item--apagar\">Apagar a linha</button></div>",
-      "css": ".ds-menu { min-width: 12rem; display: inline-block; background: var(--folha, #f8fafc); border: 1px solid var(--pauta-forte, #a5b6cc); border-radius: 3px; box-shadow: 0 12px 28px -12px rgb(14 23 48 / 0.4), 0 2px 6px -2px rgb(14 23 48 / 0.25); padding: 0.375rem; text-align: start; font-family: Archivo, ui-sans-serif, system-ui, sans-serif; animation: ds-abrir 180ms cubic-bezier(0.16, 1, 0.3, 1) both; } @keyframes ds-abrir { from { opacity: 0; translate: 0 -0.25rem; } to { opacity: 1; translate: 0 0; } } .ds-menu-titulo { margin: 0.125rem 0.5rem 0.375rem; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; color: var(--impresso-tinta, #5a6b85); } .ds-menu-item { appearance: none; background: none; border: 0; width: 100%; text-align: start; padding: 0.4375rem 0.5rem; font-family: inherit; font-size: var(--t-escrita, 1.0625rem); color: var(--casa, #1a1f2e); border-radius: 2px; cursor: pointer; } .ds-menu-item:hover { background: color-mix(in srgb, var(--pauta, #c7d2e0) 45%, transparent); } .ds-menu-item:focus-visible { outline: 2px solid var(--margem, #c0392b); outline-offset: -2px; } .ds-menu-item[aria-current] { font-weight: 700; } .ds-menu-item--pai { color: var(--pai, #2440b0); } .ds-menu-item--mae { color: var(--mae, #157a52); } .ds-menu-item--apagar { color: var(--margem, #c0392b); }"
-    },
-    {
-      "name": "Capa",
-      "kind": "nav",
-      "refersTo": "capa-botao",
-      "description": "The cover band: the household's real name in the one handwriting face on a dashed rule, the week interval printed beneath it, three ghost controls for moving between weeks, and — beneath them — the account row carrying the join code, the signed-in email and Sair. Focus rings here are ochre, because margin red does not read on navy. The interval and the \"Esta semana\" label carry the printed class, which is defined after every component sheet and therefore sets their colour: they render in printed ink, not in the sheet mix their own rules declare (see The Override-Last Rule).",
-      "html": "<header class=\"ds-capa\"><div class=\"ds-capa-interior\"><div><input class=\"ds-capa-nome\" placeholder=\"o nome da família\" aria-label=\"Nome da família, escrito na capa\" value=\"\"><p class=\"ds-capa-intervalo\">24 – 30 de agosto de 2026</p></div><nav class=\"ds-capa-navegacao\" aria-label=\"Semanas\"><button type=\"button\" class=\"ds-capa-botao\"><svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" aria-hidden=\"true\"><path d=\"M10 3 5 8l5 5\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button><button type=\"button\" class=\"ds-capa-botao ds-capa-botao--texto\" disabled>Esta semana</button><button type=\"button\" class=\"ds-capa-botao\"><svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" aria-hidden=\"true\"><path d=\"M6 3l5 5-5 5\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button></nav></div></header>",
-      "css": ".ds-capa { background: var(--capa, #16224a); background-image: linear-gradient(180deg, color-mix(in srgb, var(--capa, #16224a) 88%, white) 0%, var(--capa, #16224a) 62%, var(--capa-funda, #0e1730) 100%); color: var(--folha, #f8fafc); padding: 1.25rem 0 1.125rem; box-shadow: 0 2px 0 color-mix(in srgb, var(--capa-funda, #0e1730) 70%, transparent), 0 10px 24px -14px rgb(14 23 48 / 0.55); font-family: Archivo, ui-sans-serif, system-ui, sans-serif; } .ds-capa-interior { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; padding-inline: clamp(1rem, 4vw, 2.5rem); } .ds-capa-nome { appearance: none; background: transparent; border: 0; border-bottom: 1px dashed color-mix(in srgb, var(--folha, #f8fafc) 32%, transparent); padding: 0 0 0.125rem; font-family: Caveat, ui-sans-serif, cursive; font-size: var(--t-destaque, 1.5rem); line-height: 1.2; color: var(--folha, #f8fafc); width: min(20ch, 60vw); border-radius: 1px; } .ds-capa-nome::placeholder { color: color-mix(in srgb, var(--folha, #f8fafc) 52%, transparent); } .ds-capa-nome:focus { outline: none; border-bottom-color: var(--fita, #c8912b); } .ds-capa-nome:focus-visible { outline: 2px solid var(--fita, #c8912b); outline-offset: 4px; } .ds-capa-intervalo { margin: 0.5rem 0 0; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; color: var(--impresso-tinta, #5a6b85); } .ds-capa-navegacao { display: flex; align-items: center; gap: 0.375rem; } .ds-capa-botao { appearance: none; background: transparent; border: 1px solid color-mix(in srgb, var(--folha, #f8fafc) 26%, transparent); color: var(--folha, #f8fafc); border-radius: 2px; min-height: 2.25rem; min-width: 2.25rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), border-color 160ms; } .ds-capa-botao--texto { padding-inline: 0.875rem; font-family: inherit; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; color: var(--impresso-tinta, #5a6b85); } .ds-capa-botao:hover:not(:disabled) { background: color-mix(in srgb, var(--folha, #f8fafc) 12%, transparent); border-color: color-mix(in srgb, var(--folha, #f8fafc) 44%, transparent); } .ds-capa-botao:disabled { opacity: 0.38; cursor: default; } .ds-capa-botao:focus-visible { outline: 2px solid var(--fita, #c8912b); outline-offset: 2px; }"
-    },
-    {
-      "name": "Portada (Cover Screen)",
-      "kind": "custom",
-      "refersTo": "portada",
-      "description": "The navy ground behind every screen that comes before the week; one object centred on it.",
-      "html": "<div class=\"ds-portada\"><p class=\"ds-portada-espera\">A abrir a caderneta…</p></div>",
-      "css": ".ds-portada{min-height:16rem;display:grid;place-items:center;padding:clamp(1rem,5vw,3rem);background:var(--capa,#16224a);background-image:radial-gradient(120% 90% at 50% -10%, color-mix(in srgb, var(--capa,#16224a) 78%, white) 0%, transparent 60%),linear-gradient(180deg,var(--capa,#16224a) 0%,var(--capa-funda,#0e1730) 100%)}.ds-portada-espera{margin:0;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;font-size:.6875rem;font-weight:600;font-stretch:112%;letter-spacing:.14em;text-transform:uppercase;color:color-mix(in srgb, var(--folha,#f8fafc) 70%, var(--capa,#16224a))}"
-    },
-    {
-      "name": "Etiqueta de Capa (Label Card)",
+      "name": "Módulo (touchable)",
       "kind": "card",
-      "refersTo": "etiqueta-capa",
-      "description": "The glued name label of a school notebook: the one container for every pre-week screen.",
-      "html": "<form class=\"ds-etiqueta\"><p class=\"ds-etiqueta-marca\">HomePlanner</p><h1 class=\"ds-etiqueta-titulo\">A semana da família</h1><p class=\"ds-etiqueta-texto\">Fica com um código de seis letras. Quem o tiver entra na mesma caderneta.</p></form>",
-      "css": ".ds-etiqueta{position:relative;box-sizing:border-box;width:min(26rem,100%);background:var(--folha,#f8fafc);border:1px solid color-mix(in srgb, var(--pauta-forte,#a5b6cc) 70%, transparent);border-radius:3px;padding:clamp(1.5rem,4vw,2rem);padding-inline-start:clamp(2.75rem,7vw,3.5rem);display:flex;flex-direction:column;gap:1rem;rotate:-.35deg;box-shadow:0 22px 44px -26px rgb(6 10 24/.75),0 2px 0 rgb(255 255 255/.5) inset;font-family:Archivo,ui-sans-serif,system-ui,sans-serif}.ds-etiqueta::before{content:\"\";position:absolute;inset-block:0;inset-inline-start:clamp(1.75rem,4.5vw,2.25rem);width:1px;background:color-mix(in srgb, var(--margem,#c0392b) 55%, transparent)}.ds-etiqueta-marca{margin:0;font-size:.6875rem;font-weight:600;font-stretch:112%;letter-spacing:.14em;text-transform:uppercase;color:var(--impresso-tinta,#5a6b85)}.ds-etiqueta-titulo{margin:0;font-size:1.5rem;font-weight:700;font-stretch:112%;letter-spacing:-.015em;line-height:1.15;color:var(--capa,#16224a)}.ds-etiqueta-texto{margin:0;font-size:1.0625rem;line-height:1.5;color:var(--impresso-tinta,#5a6b85)}"
+      "refersTo": "modulo",
+      "description": "The defining surface: a white module resting on the porcelain floor, showing one area's real data. The whole surface is the button.",
+      "html": "<button class=\"ds-modulo\" style=\"--cor:#467a52\"><span class=\"ds-modulo-cabeca\"><span class=\"ds-tile\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5.5 10.5h13v5a4 4 0 0 1-4 4h-5a4 4 0 0 1-4-4Z\"/><path d=\"M3.5 10.5h17\"/><path d=\"M9 7.5c0-1.2 1-1.3 1-2.5M13.5 7.5c0-1.2 1-1.3 1-2.5\"/></svg></span><span class=\"ds-modulo-titulo\">O jantar de hoje</span><span class=\"ds-modulo-meta\">Terça</span></span><span class=\"ds-modulo-destaque\">Sopa de legumes da horta</span><span class=\"ds-modulo-nota\">Marcado na ementa desta semana.</span></button>",
+      "css": ".ds-modulo { --cor-tile: color-mix(in oklab, var(--cor) 14%, #fff); --cor-texto: color-mix(in oklab, var(--cor) 78%, #1c1b20); appearance: none; border: 0; text-align: start; cursor: pointer; display: flex; flex-direction: column; gap: 12px; width: 340px; max-width: 100%; box-sizing: border-box; padding: 20px; border-radius: 24px; background: #fff; color: #1c1b20; font-family: Manrope, ui-sans-serif, system-ui, sans-serif; box-shadow: 0 10px 30px -18px rgb(28 27 32 / 0.22), 0 1px 2px rgb(28 27 32 / 0.05); transition: transform 200ms cubic-bezier(0.16,1,0.3,1), box-shadow 200ms cubic-bezier(0.16,1,0.3,1); } .ds-modulo:hover { transform: translateY(-2px); box-shadow: 0 18px 44px -20px rgb(28 27 32 / 0.30), 0 2px 4px rgb(28 27 32 / 0.06); } .ds-modulo:active { transform: scale(0.985); box-shadow: 0 10px 30px -18px rgb(28 27 32 / 0.22), 0 1px 2px rgb(28 27 32 / 0.05); } .ds-modulo:focus-visible { outline: 2px solid #1c1b20; outline-offset: 2px; } .ds-modulo-cabeca { display: flex; align-items: center; gap: 10px; width: 100%; } .ds-tile { width: 40px; height: 40px; border-radius: 16px; background: var(--cor-tile); color: var(--cor-texto); display: inline-flex; align-items: center; justify-content: center; flex: none; } .ds-modulo-titulo { font-size: 0.9375rem; font-weight: 800; letter-spacing: -0.01em; } .ds-modulo-meta { margin-inline-start: auto; color: #6f6a5c; font-size: 0.75rem; font-weight: 700; white-space: nowrap; } .ds-modulo-destaque { font-size: 2.125rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; } .ds-modulo-nota { color: #696456; font-size: 0.9375rem; font-weight: 500; }"
     },
     {
-      "name": "Campo (Cover-Screen Field)",
+      "name": "Pílula (primary button)",
+      "kind": "button",
+      "refersTo": "pilula",
+      "description": "The one button that commits. Ink fill, white label, full pill. Never more than one on a screen.",
+      "html": "<button class=\"ds-pilula\">Entrar</button>",
+      "css": ".ds-pilula { appearance: none; border: 0; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border-radius: 999px; background: #1c1b20; color: #fff; font-family: Manrope, ui-sans-serif, system-ui, sans-serif; font-size: 0.9375rem; font-weight: 800; transition: transform 160ms cubic-bezier(0.16,1,0.3,1), background-color 160ms cubic-bezier(0.16,1,0.3,1), opacity 160ms cubic-bezier(0.16,1,0.3,1); } .ds-pilula:hover { background: color-mix(in oklab, #1c1b20 86%, #fff); } .ds-pilula:active { transform: scale(0.97); } .ds-pilula:focus-visible { outline: 2px solid #1c1b20; outline-offset: 2px; } .ds-pilula:disabled { opacity: 0.45; cursor: default; transform: none; }"
+    },
+    {
+      "name": "Botão de texto",
+      "kind": "button",
+      "refersTo": "botao-texto",
+      "description": "The quiet secondary action, including the destructive one. Label-size type, no background, negative margins so the label stays optically aligned.",
+      "html": "<span style=\"display:inline-flex;gap:16px\"><button class=\"ds-botao-texto\">esconder as compradas</button><button class=\"ds-botao-texto ds-botao-texto--perigo\">Sair desta casa</button></span>",
+      "css": ".ds-botao-texto { appearance: none; border: 0; background: none; cursor: pointer; padding: 4px 6px; margin: -4px -6px; border-radius: 12px; font-family: Manrope, ui-sans-serif, system-ui, sans-serif; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.01em; color: #696456; transition: background-color 140ms cubic-bezier(0.16,1,0.3,1), color 140ms cubic-bezier(0.16,1,0.3,1); } .ds-botao-texto:hover { background: color-mix(in oklab, #1c1b20 6%, transparent); color: #1c1b20; } .ds-botao-texto:focus-visible { outline: 2px solid #1c1b20; outline-offset: 2px; } .ds-botao-texto:disabled { color: #6f6a5c; background: none; cursor: default; } .ds-botao-texto--perigo { color: #b4432c; } .ds-botao-texto--perigo:hover { background: color-mix(in oklab, #b4432c 8%, transparent); color: #b4432c; }"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "An action chip in an area's hue — a set of shopping items to pour into the list. Background, hover and label all derive from one --cor.",
+      "html": "<span style=\"display:flex;gap:8px;flex-wrap:wrap\"><button class=\"ds-chip\" style=\"--cor:#b9862c\">Pequeno-almoço <span class=\"ds-chip-conta\">3</span></button><button class=\"ds-chip\" style=\"--cor:#b9862c\">Limpeza <span class=\"ds-chip-conta\">1</span></button></span>",
+      "css": ".ds-chip { appearance: none; border: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 999px; background: color-mix(in oklab, var(--cor) 8%, #fff); color: color-mix(in oklab, var(--cor) 42%, #1c1b20); font-family: Manrope, ui-sans-serif, system-ui, sans-serif; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.01em; white-space: nowrap; transition: background-color 140ms cubic-bezier(0.16,1,0.3,1), transform 140ms cubic-bezier(0.16,1,0.3,1); } .ds-chip:hover { background: color-mix(in oklab, var(--cor) 20%, #fff); } .ds-chip:active { transform: scale(0.96); } .ds-chip:focus-visible { outline: 2px solid #1c1b20; outline-offset: 2px; } .ds-chip-conta { font-weight: 700; color: color-mix(in oklab, var(--cor) 25%, #1c1b20); }"
+    },
+    {
+      "name": "Campo (text field)",
       "kind": "input",
       "refersTo": "campo-escrita",
-      "description": "A printed name over a ruled line. No box: the underline is the field, and the value is written in the blue pen.",
-      "html": "<label class=\"ds-campo\"><span class=\"ds-campo-nome\">Nome da família</span><input class=\"ds-campo-escrita\" placeholder=\"os Silva\"></label>",
-      "css": ".ds-campo{display:flex;flex-direction:column;gap:.25rem;font-family:Archivo,ui-sans-serif,system-ui,sans-serif}.ds-campo-nome{font-size:.6875rem;font-weight:600;font-stretch:112%;letter-spacing:.14em;text-transform:uppercase;color:var(--impresso-tinta,#5a6b85)}.ds-campo-escrita{appearance:none;background:transparent;border:0;border-bottom:1px solid var(--pauta-forte,#a5b6cc);border-radius:1px;padding:.25rem 0 .375rem;font:inherit;font-size:1.0625rem;color:var(--pai,#2440b0);caret-color:var(--pai,#2440b0)}.ds-campo-escrita::placeholder{color:var(--impresso-tinta,#5a6b85)}.ds-campo-escrita:focus{outline:none;border-bottom-color:var(--pai,#2440b0)}.ds-campo-escrita:focus-visible{outline:2px solid var(--margem,#c0392b);outline-offset:3px}"
+      "description": "Borderless field: an ink wash on white that deepens on hover and turns white with a 2px inset ink ring on focus. Nothing moves and nothing glows.",
+      "html": "<label class=\"ds-campo\"><span class=\"ds-campo-nome\">Nome da família</span><input class=\"ds-campo-escrita\" placeholder=\"a nossa casa\" /></label>",
+      "css": ".ds-campo { display: grid; gap: 6px; width: 280px; max-width: 100%; font-family: Manrope, ui-sans-serif, system-ui, sans-serif; } .ds-campo-nome { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.01em; color: #696456; } .ds-campo-escrita { appearance: none; border: 0; background: color-mix(in oklab, #1c1b20 5%, #fff); border-radius: 12px; padding: 12px 16px; font-family: inherit; font-size: 0.9375rem; font-weight: 600; color: #1c1b20; width: 100%; box-sizing: border-box; transition: background-color 140ms cubic-bezier(0.16,1,0.3,1), box-shadow 140ms cubic-bezier(0.16,1,0.3,1); } .ds-campo-escrita::placeholder { color: #6f6a5c; font-weight: 500; } .ds-campo-escrita:hover { background: color-mix(in oklab, #1c1b20 7%, #fff); } .ds-campo-escrita:focus { outline: none; background: #fff; box-shadow: inset 0 0 0 2px #1c1b20; } .ds-campo-escrita[aria-invalid=\"true\"] { box-shadow: inset 0 0 0 2px #b4432c; }"
     },
     {
-      "name": "Campo de Código",
-      "kind": "input",
-      "refersTo": "campo-escrita-codigo",
-      "description": "The six-letter join code, at the title step and widely tracked: six letters read as a serial number.",
-      "html": "<label class=\"ds-campo\"><span class=\"ds-campo-nome\">Código da casa</span><input class=\"ds-campo-escrita ds-campo-codigo\" placeholder=\"ABC234\" maxlength=\"6\"></label>",
-      "css": ".ds-campo-codigo{font-size:1.5rem;letter-spacing:.22em;text-transform:uppercase;font-variant-numeric:tabular-nums}"
-    },
-    {
-      "name": "Botão de Capa (Solid Button)",
-      "kind": "button",
-      "refersTo": "botao-capa",
-      "description": "The one filled button in the system, and at most one per screen. Everything else is a text-underline.",
-      "html": "<button class=\"ds-botao-capa\">Abrir a caderneta</button>",
-      "css": ".ds-botao-capa{appearance:none;border:0;border-radius:2px;background:var(--capa,#16224a);color:var(--folha,#f8fafc);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;font-size:1.0625rem;font-weight:600;min-height:2.875rem;width:100%;cursor:pointer;transition:background-color 160ms cubic-bezier(.16,1,.3,1)}.ds-botao-capa:hover:not(:disabled){background:var(--capa-funda,#0e1730)}.ds-botao-capa:focus-visible{outline:2px solid var(--margem,#c0392b);outline-offset:2px;border-radius:1px}.ds-botao-capa:disabled{opacity:.55;cursor:default}"
-    },
-    {
-      "name": "Botão de Linha (Text-Underline)",
-      "kind": "button",
-      "refersTo": "botao-linha",
-      "description": "Every secondary action in the application: printed caps with a 1px underline, no box at all.",
-      "html": "<button class=\"ds-botao-linha\">Já tenho conta</button>",
-      "css": ".ds-botao-linha{appearance:none;background:none;border:0;padding:0;align-self:flex-start;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;font-size:.6875rem;font-weight:600;font-stretch:112%;letter-spacing:.14em;text-transform:uppercase;color:var(--impresso-tinta,#5a6b85);border-bottom:1px solid currentColor;cursor:pointer}.ds-botao-linha:hover{color:var(--capa,#16224a)}.ds-botao-linha:focus-visible{outline:2px solid var(--margem,#c0392b);outline-offset:2px}"
-    },
-    {
-      "name": "Recado de Erro",
-      "kind": "custom",
-      "refersTo": "recado-erro",
-      "description": "A form's failure, in Portuguese and naming the recovery. A red left rule, never a box or a toast.",
-      "html": "<p class=\"ds-recado-erro\" role=\"alert\">Falta confirmar o email. Veja a caixa de entrada — a mensagem tem um link.</p>",
-      "css": ".ds-recado-erro{margin:0;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;font-size:1.0625rem;line-height:1.45;color:var(--margem,#c0392b);border-left:1px solid var(--margem,#c0392b);padding-inline-start:.625rem}"
-    },
-    {
-      "name": "Faixa de Falha",
-      "kind": "custom",
-      "refersTo": "falha",
-      "description": "A named data-layer state printed above the opening: a tracked mark, then a sentence saying what happened to what is written.",
-      "html": "<p class=\"ds-falha\" role=\"status\"><span class=\"ds-falha-marca\">Não guardado</span><span>Alguma coisa não chegou ao servidor. O que está escrito continua aqui, mas pode não estar na caderneta dos outros.</span></p>",
-      "css": ".ds-falha{max-width:82rem;margin:.75rem auto 0;padding:.625rem clamp(.75rem,4vw,2.5rem);display:flex;align-items:baseline;gap:.625rem;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;font-size:1.0625rem;color:var(--margem,#c0392b)}.ds-falha-marca{flex:none;font-size:.6875rem;font-weight:600;font-stretch:112%;letter-spacing:.14em;text-transform:uppercase;color:var(--impresso-tinta,#5a6b85);border-bottom:1.5px solid currentColor}"
-    },
-    {
-      "name": "Código da Casa",
-      "kind": "chip",
-      "refersTo": "capa-codigo",
-      "description": "The join code on the navy cover, in ribbon ochre — the cover's one accent, marking the one thing on it that is unique to this household.",
-      "html": "<p class=\"ds-capa-conta\"><span>Código <strong class=\"ds-capa-codigo\">ABC234</strong></span><span class=\"ds-capa-email\">alguem@exemplo.pt</span><button class=\"ds-capa-sair\">Sair</button></p>",
-      "css": ".ds-capa-conta{margin:0;padding:1rem;background:var(--capa,#16224a);display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;justify-content:flex-end;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;font-size:.6875rem;font-weight:600;font-stretch:112%;letter-spacing:.14em;text-transform:uppercase;color:var(--impresso-tinta,#5a6b85)}.ds-capa-codigo{color:var(--fita,#c8912b);letter-spacing:.16em;font-weight:700}.ds-capa-email{max-width:14ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ds-capa-sair{appearance:none;background:none;border:0;padding:0;font:inherit;color:inherit;border-bottom:1px solid currentColor;cursor:pointer}.ds-capa-sair:hover{color:var(--folha,#f8fafc)}"
-    },
-    {
-      "name": "Abas (Thumb Tabs)",
+      "name": "Navegação (pills)",
       "kind": "nav",
-      "refersTo": "aba",
-      "description": "The sections of the notebook, cut as thumb tabs into the navy cover band. The open tab fills with the sheet: it has become the page.",
-      "html": "<div class=\"ds-capa-band\"><nav class=\"ds-abas\" aria-label=\"Secções da caderneta\"><button type=\"button\" class=\"ds-aba\">A semana</button><button type=\"button\" class=\"ds-aba\" aria-current=\"true\">Ementa e compras</button><button type=\"button\" class=\"ds-aba\">O livro</button></nav></div>",
-      "css": ".ds-capa-band { background-image: linear-gradient(180deg, color-mix(in srgb, var(--capa, #16224a) 88%, white) 0%, var(--capa, #16224a) 62%, var(--capa-funda, #0e1730) 100%); padding: 1.25rem 1.5rem 0; } .ds-abas { display: flex; gap: 0.25rem; } .ds-aba { appearance: none; font-family: Archivo, ui-sans-serif, system-ui, sans-serif; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; background: color-mix(in srgb, var(--capa-funda, #0e1730) 55%, transparent); border: 1px solid color-mix(in srgb, var(--folha, #f8fafc) 18%, transparent); border-bottom: 0; border-radius: 3px 3px 0 0; color: color-mix(in srgb, var(--folha, #f8fafc) 68%, var(--capa, #16224a)); padding: 0.4375rem 0.75rem 0.5rem; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), color 160ms; } .ds-aba:hover { color: var(--folha, #f8fafc); } .ds-aba:focus-visible { outline: 2px solid var(--fita, #c8912b); outline-offset: 2px; } .ds-aba[aria-current] { background: var(--folha, #f8fafc); color: var(--capa, #16224a); border-color: var(--folha, #f8fafc); }"
+      "refersTo": "nav-item",
+      "description": "Five destinations, always all five. Desktop: pills in the top bar, current page a solid ink pill. Mobile: the same pills stack icon over label in a blurred bottom thumb bar.",
+      "html": "<nav class=\"ds-nav\"><button class=\"ds-nav-item\" aria-current=\"page\">Início</button><button class=\"ds-nav-item\">Semana</button><button class=\"ds-nav-item\">Ementa</button><button class=\"ds-nav-item\">Livro</button><button class=\"ds-nav-item\">Finanças</button></nav>",
+      "css": ".ds-nav { display: flex; gap: 4px; align-items: center; font-family: Manrope, ui-sans-serif, system-ui, sans-serif; } .ds-nav-item { appearance: none; border: 0; background: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; font-family: inherit; font-size: 0.9375rem; font-weight: 700; color: #696456; transition: background-color 160ms cubic-bezier(0.16,1,0.3,1), color 160ms cubic-bezier(0.16,1,0.3,1), transform 160ms cubic-bezier(0.16,1,0.3,1); } .ds-nav-item:hover { background: color-mix(in oklab, #1c1b20 6%, transparent); color: #1c1b20; } .ds-nav-item:active { transform: scale(0.97); } .ds-nav-item:focus-visible { outline: 2px solid #1c1b20; outline-offset: 2px; } .ds-nav-item[aria-current=\"page\"] { background: #1c1b20; color: #fff; } .ds-nav-item:disabled { color: #6f6a5c; background: none; cursor: default; }"
     },
     {
-      "name": "Tira (Strip)",
+      "name": "Visto (check)",
+      "kind": "custom",
+      "refersTo": "visto",
+      "description": "The check a shopping item gets: an aro in the module's hue when undone, a full fill with a drawn tick when done, plus a 320ms overshoot on completion. The hit area extends 8px past the drawing.",
+      "html": "<span style=\"display:inline-flex;gap:16px;align-items:center\"><button class=\"ds-visto\" role=\"checkbox\" aria-checked=\"false\" style=\"--cor:#b9862c\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m5.5 12.5 4 4 9-9\"/></svg></button><button class=\"ds-visto\" role=\"checkbox\" aria-checked=\"true\" style=\"--cor:#b9862c\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m5.5 12.5 4 4 9-9\"/></svg></button></span>",
+      "css": ".ds-visto { appearance: none; border: 0; cursor: pointer; padding: 0; width: 28px; height: 28px; border-radius: 999px; background: #fff; box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--cor) 38%, #fff); display: inline-flex; align-items: center; justify-content: center; color: #fff; flex: none; position: relative; transition: background-color 180ms cubic-bezier(0.16,1,0.3,1), box-shadow 180ms cubic-bezier(0.16,1,0.3,1), transform 180ms cubic-bezier(0.16,1,0.3,1); } .ds-visto::before { content: \"\"; position: absolute; inset: -8px; } .ds-visto:hover { box-shadow: inset 0 0 0 2px var(--cor); } .ds-visto:active { transform: scale(0.9); } .ds-visto:focus-visible { outline: 2px solid #1c1b20; outline-offset: 2px; } .ds-visto[aria-checked=\"true\"] { background: var(--cor); box-shadow: inset 0 0 0 2px var(--cor); } .ds-visto svg { opacity: 0; transform: scale(0.5); transition: opacity 140ms cubic-bezier(0.16,1,0.3,1), transform 220ms cubic-bezier(0.16,1,0.3,1); } .ds-visto[aria-checked=\"true\"] svg { opacity: 1; transform: none; }"
+    },
+    {
+      "name": "Fila (list row)",
+      "kind": "custom",
+      "refersTo": "fila",
+      "description": "A row inside a module: check, name over metadata, right-aligned tabular numbers, overflow button. A hairline between rows and nothing else — no box, no radius, no fill.",
+      "html": "<div class=\"ds-filas\" style=\"--cor:#b9862c\"><div class=\"ds-fila\"><span class=\"ds-fila-visto\" aria-hidden=\"true\"></span><span class=\"ds-fila-corpo\"><span class=\"ds-fila-nome\">Queijo flamengo fatiado</span><span class=\"ds-fila-meta\">Bacalhau à Brás</span></span><span class=\"ds-fila-numero\">300 g</span></div><div class=\"ds-fila ds-fila--feita\"><span class=\"ds-fila-visto ds-fila-visto--feito\" aria-hidden=\"true\"></span><span class=\"ds-fila-corpo\"><span class=\"ds-fila-nome\">Ovos M</span></span><span class=\"ds-fila-numero\">12 un</span></div></div>",
+      "css": ".ds-filas { display: grid; width: 340px; max-width: 100%; font-family: Manrope, ui-sans-serif, system-ui, sans-serif; } .ds-fila { display: flex; align-items: center; gap: 12px; padding: 10px 0; min-height: 40px; box-sizing: border-box; } .ds-fila + .ds-fila { border-top: 1px solid #e7e4da; } .ds-fila-visto { width: 28px; height: 28px; border-radius: 999px; flex: none; background: #fff; box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--cor) 38%, #fff); } .ds-fila-visto--feito { background: var(--cor); box-shadow: inset 0 0 0 2px var(--cor); } .ds-fila-corpo { flex: 1; min-width: 0; display: grid; gap: 2px; } .ds-fila-nome { font-size: 0.9375rem; font-weight: 700; color: #1c1b20; } .ds-fila-meta { color: #6f6a5c; font-size: 0.75rem; font-weight: 700; } .ds-fila-numero { margin-inline-start: auto; text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; color: #696456; font-size: 0.9375rem; flex: none; } .ds-fila--feita .ds-fila-nome { color: #6f6a5c; text-decoration: line-through; text-decoration-color: color-mix(in oklab, var(--cor) 55%, transparent); } .ds-fila--feita .ds-fila-numero { color: #6f6a5c; }"
+    },
+    {
+      "name": "Tira (day strip)",
       "kind": "custom",
       "refersTo": "tira-celula",
-      "description": "Seven dinners in one glance. Today carries a ribbon; the opened cell takes an ochre wash and a 2px inset edge along its bottom, where it meets what it opened.",
-      "html": "<ol class=\"ds-tira\"><li class=\"ds-tira-item\"><button type=\"button\" class=\"ds-tira-celula\" data-hoje><span class=\"ds-fita-tira\" aria-hidden=\"true\"></span><span class=\"ds-tira-dia\">Seg <span class=\"ds-tira-data\">24/08</span></span><span class=\"ds-tira-prato\">Massa com atum</span></button></li><li class=\"ds-tira-item\"><button type=\"button\" class=\"ds-tira-celula\" data-aberta aria-expanded=\"true\"><span class=\"ds-tira-dia\">Ter <span class=\"ds-tira-data\">25/08</span></span><span class=\"ds-tira-prato\">Bacalhau à Brás</span></button></li><li class=\"ds-tira-item\"><button type=\"button\" class=\"ds-tira-celula\"><span class=\"ds-tira-dia\">Qua <span class=\"ds-tira-data\">26/08</span></span><span class=\"ds-tira-prato ds-vazio\">por decidir</span></button></li></ol>",
-      "css": ".ds-tira { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-block: 1px solid var(--pauta, #c7d2e0); background: var(--folha, #f8fafc); font-family: Archivo, ui-sans-serif, system-ui, sans-serif; } .ds-tira-item { min-width: 0; } .ds-tira-celula { position: relative; appearance: none; background: none; border: 0; border-inline-start: 1px solid var(--pauta, #c7d2e0); width: 100%; min-height: calc(var(--pauta-passo, 2.125rem) * 2); padding: 0.4375rem 0.5rem 0.5rem; display: flex; flex-direction: column; gap: 0.1875rem; text-align: start; cursor: pointer; font: inherit; transition: background-color 140ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-tira-item:first-child .ds-tira-celula { border-inline-start: 0; } .ds-tira-celula:hover { background: color-mix(in srgb, var(--pauta, #c7d2e0) 28%, transparent); } .ds-tira-celula:focus-visible { outline: 2px solid var(--margem, #c0392b); outline-offset: -2px; } .ds-tira-celula[data-aberta] { background: color-mix(in srgb, var(--fita, #c8912b) 12%, transparent); box-shadow: inset 0 -2px 0 var(--fita, #c8912b); } .ds-tira-celula[data-hoje] { padding-inline-start: 1.25rem; } .ds-tira-dia { display: block; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; color: var(--impresso-tinta, #5a6b85); } .ds-tira-data { letter-spacing: 0.06em; } .ds-tira-prato { font-size: var(--t-escrita, 1.0625rem); line-height: 1.25; color: var(--casa, #1a1f2e); overflow-wrap: break-word; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; } .ds-tira-prato.ds-vazio { color: var(--impresso-tinta, #5a6b85); } .ds-fita-tira { position: absolute; inset-inline-start: 0.4375rem; top: -0.5rem; width: 0.4375rem; height: 1.75rem; background: linear-gradient(180deg, color-mix(in srgb, var(--fita, #c8912b) 88%, white), var(--fita, #c8912b)); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 0.4375rem), 0 100%); box-shadow: 0 1px 3px rgb(14 23 48 / 0.28); }"
+      "description": "The week's dinners as seven 96px pastilles. Today carries the chip tint; the open day fills with the tile tint and lifts onto the resting module shadow. A mask fades the trailing edge.",
+      "html": "<ol class=\"ds-tira\" style=\"--cor:#467a52\"><li><button class=\"ds-tira-celula\" data-aberta><span class=\"ds-tira-dia\">Seg <span class=\"ds-tira-data\">24/08</span></span><span class=\"ds-tira-prato\">Bacalhau à Brás</span></button></li><li><button class=\"ds-tira-celula\" data-hoje><span class=\"ds-tira-dia\">Ter <span class=\"ds-tira-data\">25/08</span></span><span class=\"ds-tira-prato\">Sopa de legumes</span></button></li><li><button class=\"ds-tira-celula\"><span class=\"ds-tira-dia\">Qua <span class=\"ds-tira-data\">26/08</span></span><span class=\"ds-tira-prato ds-tira-prato--vazio\">por decidir</span></button></li></ol>",
+      "css": ".ds-tira { --cor-tile: color-mix(in oklab, var(--cor) 14%, #fff); --cor-chip: color-mix(in oklab, var(--cor) 8%, #fff); --cor-texto: color-mix(in oklab, var(--cor) 78%, #1c1b20); list-style: none; margin: 0; padding: 4px 0 8px; display: flex; gap: 8px; overflow-x: auto; font-family: Manrope, ui-sans-serif, system-ui, sans-serif; scrollbar-width: none; } .ds-tira::-webkit-scrollbar { display: none; } .ds-tira-celula { appearance: none; border: 0; cursor: pointer; flex: none; width: 96px; border-radius: 16px; background: color-mix(in oklab, #1c1b20 4%, #fff); padding: 10px; display: grid; gap: 2px; text-align: start; font-family: inherit; transition: background-color 160ms cubic-bezier(0.16,1,0.3,1), box-shadow 160ms cubic-bezier(0.16,1,0.3,1), transform 160ms cubic-bezier(0.16,1,0.3,1); } .ds-tira-celula:hover { background: var(--cor-chip); } .ds-tira-celula:active { transform: scale(0.97); } .ds-tira-celula:focus-visible { outline: 2px solid #1c1b20; outline-offset: 2px; } .ds-tira-celula[data-aberta] { background: var(--cor-tile); box-shadow: 0 10px 30px -18px rgb(28 27 32 / 0.22), 0 1px 2px rgb(28 27 32 / 0.05); } .ds-tira-celula[data-hoje]:not([data-aberta]) { background: var(--cor-chip); } .ds-tira-dia { font-size: 0.75rem; font-weight: 800; color: var(--cor-texto); } .ds-tira-data { color: #6f6a5c; font-variant-numeric: tabular-nums; } .ds-tira-prato { font-size: 0.9375rem; font-weight: 700; color: #1c1b20; min-height: 2.6em; overflow-wrap: anywhere; } .ds-tira-prato--vazio { color: #6f6a5c; font-weight: 600; }"
     },
     {
-      "name": "Linha de Prato (Dish Row)",
+      "name": "Ícone desenhado",
       "kind": "custom",
-      "refersTo": "prato-conta",
-      "description": "A dish in the book: renamed by typing over it, opened by pressing its printed ingredient count, with its ingredients following as indented rows of the same ruled page.",
-      "html": "<div class=\"ds-pagina ds-pauta\"><div class=\"ds-linha ds-linha--prato\" data-aberto><span class=\"ds-goteira\"></span><span class=\"ds-corpo\"><textarea class=\"ds-escrita\" rows=\"1\">Bacalhau à Brás</textarea></span><span class=\"ds-col\"><button type=\"button\" class=\"ds-prato-conta\" aria-expanded=\"true\">3 coisas</button></span><span class=\"ds-col\"></span></div><div class=\"ds-linha ds-linha--legenda\"><span class=\"ds-goteira\"></span><span class=\"ds-corpo ds-impresso\">O que este prato leva</span><span class=\"ds-col\"></span><span class=\"ds-col\"></span></div><div class=\"ds-linha ds-linha--dentro\"><span class=\"ds-goteira\"></span><span class=\"ds-corpo\"><textarea class=\"ds-escrita\" rows=\"1\">Bacalhau desfiado</textarea></span><span class=\"ds-col\"><input class=\"ds-escrita ds-escrita--col\" value=\"400 g\" placeholder=\"qt.\"></span><span class=\"ds-col\"></span></div><div class=\"ds-linha ds-linha--dentro\"><span class=\"ds-goteira\"></span><span class=\"ds-corpo\"><textarea class=\"ds-escrita\" rows=\"1\">Batata palha</textarea></span><span class=\"ds-col\"><input class=\"ds-escrita ds-escrita--col\" value=\"1 pacote\" placeholder=\"qt.\"></span><span class=\"ds-col\"></span></div></div>",
-      "css": ".ds-pagina { position: relative; background-color: var(--folha, #f8fafc); background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--pauta-passo, 2.125rem) - 1px), var(--pauta, #c7d2e0) calc(var(--pauta-passo, 2.125rem) - 1px), var(--pauta, #c7d2e0) var(--pauta-passo, 2.125rem)); font-family: Archivo, ui-sans-serif, system-ui, sans-serif; } .ds-pagina::before { content: \"\"; position: absolute; inset-block: 0; inset-inline-start: var(--margem-x, 3.25rem); width: 1px; background: color-mix(in srgb, var(--margem, #c0392b) 55%, transparent); pointer-events: none; } .ds-linha { position: relative; display: grid; align-items: start; min-height: var(--pauta-passo, 2.125rem); line-height: var(--pauta-passo, 2.125rem); font-size: var(--t-escrita, 1.0625rem); color: var(--casa, #1a1f2e); } .ds-linha--prato { grid-template-columns: var(--margem-x, 3.25rem) minmax(0, 1fr) var(--qtd-x, 5.5rem) 2rem; } .ds-linha--legenda { grid-template-columns: var(--margem-x, 3.25rem) minmax(0, 1fr) var(--qtd-x, 5.5rem) 2rem; } .ds-linha--dentro { grid-template-columns: calc(var(--margem-x, 3.25rem) + 1.5rem) minmax(0, 1fr) var(--qtd-x, 5.5rem) 2rem; } .ds-linha--prato[data-aberto] { box-shadow: inset 2px 0 0 var(--fita, #c8912b); } .ds-linha:focus-within { background: color-mix(in srgb, var(--fita, #c8912b) 9%, transparent); box-shadow: inset 2px 0 0 var(--fita, #c8912b); } .ds-goteira, .ds-col { height: var(--pauta-passo, 2.125rem); } .ds-corpo { display: flex; align-items: center; gap: 0.5rem; min-width: 0; padding-inline-start: 0.625rem; } .ds-impresso { font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; color: var(--impresso-tinta, #5a6b85); line-height: var(--pauta-passo, 2.125rem); } .ds-escrita { appearance: none; background: transparent; border: 0; padding: 0; margin: 0; font: inherit; line-height: var(--pauta-passo, 2.125rem); color: inherit; width: 100%; display: block; box-sizing: border-box; border-radius: 1px; resize: none; overflow: hidden; } .ds-escrita:focus { outline: none; } .ds-escrita::placeholder { color: transparent; } .ds-escrita:hover::placeholder, .ds-escrita:focus::placeholder { color: var(--impresso-tinta, #5a6b85); } .ds-escrita--col { text-align: right; font-variant-numeric: tabular-nums; font-size: var(--t-escrita, 1.0625rem); color: var(--impresso-tinta, #5a6b85); letter-spacing: 0.01em; padding-inline-end: 0.375rem; } .ds-escrita--col::placeholder { color: var(--impresso-tinta, #5a6b85); opacity: 0; } .ds-escrita--col:hover::placeholder, .ds-escrita--col:focus::placeholder { opacity: 1; } .ds-prato-conta { appearance: none; background: none; border: 0; padding: 0 0.25rem; height: var(--pauta-passo, 2.125rem); line-height: var(--pauta-passo, 2.125rem); font-family: inherit; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; color: var(--impresso-tinta, #5a6b85); cursor: pointer; border-radius: 2px; white-space: nowrap; float: right; } .ds-prato-conta:hover { color: var(--capa, #16224a); background: color-mix(in srgb, var(--pauta, #c7d2e0) 40%, transparent); } .ds-prato-conta:focus-visible { outline: 2px solid var(--margem, #c0392b); outline-offset: 2px; }"
-    },
-    {
-      "name": "Linha de Compra (Shopping Row)",
-      "kind": "custom",
-      "refersTo": "compra-origem",
-      "description": "The one row that carries a stamp without a time: gutter, name, quantity, stamp, rail. A printed provenance says which dish put the item on the list, and is hidden below 64rem.",
-      "html": "<div class=\"ds-pagina ds-pauta\"><div class=\"ds-linha ds-linha--compra\" data-feita><span class=\"ds-goteira\"></span><span class=\"ds-corpo\"><textarea class=\"ds-escrita ds-feito\" rows=\"1\">Bacalhau desfiado</textarea><span class=\"ds-origem\">Bacalhau à Brás</span></span><span class=\"ds-col\"><input class=\"ds-escrita ds-escrita--col ds-feito\" value=\"400 g\"></span><span class=\"ds-col\"><span class=\"ds-carimbo\"><svg viewBox=\"0 0 74 30\" width=\"68\" aria-hidden=\"true\"><rect x=\"1.2\" y=\"1.2\" width=\"71.6\" height=\"27.6\" rx=\"4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\"/><text x=\"37\" y=\"20\" text-anchor=\"middle\" font-family=\"Archivo, sans-serif\" font-size=\"12\" font-weight=\"700\" letter-spacing=\"2\" fill=\"currentColor\">VISTO</text></svg></span></span><span class=\"ds-col\"></span></div><div class=\"ds-linha ds-linha--compra\"><span class=\"ds-goteira\"></span><span class=\"ds-corpo\"><textarea class=\"ds-escrita\" rows=\"1\">Pilhas AA</textarea><span class=\"ds-atrasada\">de trás</span></span><span class=\"ds-col\"><input class=\"ds-escrita ds-escrita--col\" value=\"4\"></span><span class=\"ds-col\"><button type=\"button\" class=\"ds-campo-carimbo\" role=\"checkbox\" aria-checked=\"false\"><svg viewBox=\"0 0 74 30\" width=\"68\" aria-hidden=\"true\"><rect x=\"1\" y=\"1\" width=\"72\" height=\"28\" rx=\"4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-dasharray=\"5 4\"/></svg></button></span><span class=\"ds-col\"></span></div></div>",
-      "css": ".ds-pagina { position: relative; background-color: var(--folha, #f8fafc); background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--pauta-passo, 2.125rem) - 1px), var(--pauta, #c7d2e0) calc(var(--pauta-passo, 2.125rem) - 1px), var(--pauta, #c7d2e0) var(--pauta-passo, 2.125rem)); font-family: Archivo, ui-sans-serif, system-ui, sans-serif; } .ds-pagina::before { content: \"\"; position: absolute; inset-block: 0; inset-inline-start: var(--margem-x, 3.25rem); width: 1px; background: color-mix(in srgb, var(--margem, #c0392b) 55%, transparent); pointer-events: none; } .ds-linha { position: relative; display: grid; align-items: start; min-height: var(--pauta-passo, 2.125rem); line-height: var(--pauta-passo, 2.125rem); font-size: var(--t-escrita, 1.0625rem); color: var(--casa, #1a1f2e); } .ds-linha--compra { grid-template-columns: var(--margem-x, 3.25rem) minmax(0, 1fr) var(--qtd-x, 5.5rem) var(--hora-x, 4.25rem) 2rem; } .ds-linha:focus-within { background: color-mix(in srgb, var(--fita, #c8912b) 9%, transparent); box-shadow: inset 2px 0 0 var(--fita, #c8912b); } .ds-goteira, .ds-col { height: var(--pauta-passo, 2.125rem); } .ds-corpo { display: flex; align-items: flex-start; gap: 0; min-width: 0; padding-inline-start: 0.625rem; } .ds-escrita { appearance: none; background: transparent; border: 0; padding: 0; margin: 0; font: inherit; line-height: var(--pauta-passo, 2.125rem); color: inherit; width: 100%; display: block; box-sizing: border-box; border-radius: 1px; resize: none; overflow: hidden; } .ds-escrita:focus { outline: none; } .ds-escrita--col { text-align: right; font-variant-numeric: tabular-nums; color: var(--impresso-tinta, #5a6b85); letter-spacing: 0.01em; padding-inline-end: 0.375rem; } .ds-feito { text-decoration: line-through; text-decoration-color: var(--carimbo, #6b3fa8); color: var(--impresso-tinta, #5a6b85); } .ds-origem, .ds-atrasada { flex: none; align-self: center; line-height: var(--pauta-passo, 2.125rem); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-inline-start: 0.5rem; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; } .ds-origem { color: var(--impresso-tinta, #5a6b85); max-width: 11rem; } .ds-atrasada { color: var(--margem, #c0392b); } @media (max-width: 63.99rem) { .ds-origem { display: none; } } .ds-campo-carimbo { appearance: none; background: none; border: 0; padding: 0; margin: 0; color: color-mix(in srgb, var(--carimbo, #6b3fa8) 70%, var(--folha, #f8fafc)); cursor: pointer; display: block; position: relative; width: var(--hora-x, 4.25rem); height: var(--pauta-passo, 2.125rem); border-radius: 2px; transition: color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-campo-carimbo::before { content: \"\"; position: absolute; inset: -0.25rem -0.5rem; } .ds-campo-carimbo:hover { color: var(--carimbo, #6b3fa8); } .ds-campo-carimbo:focus-visible { outline: 2px solid var(--margem, #c0392b); outline-offset: 2px; } .ds-campo-carimbo svg { display: block; } .ds-carimbo { display: block; color: var(--carimbo, #6b3fa8); } .ds-carimbo svg { transform: rotate(-6deg); }"
-    },
-    {
-      "name": "Confirmação na Linha (Inline Confirmation)",
-      "kind": "custom",
-      "refersTo": "confirmar",
-      "description": "A destructive act asks on the rule below the thing it would destroy, in the red register, naming what survives. No modal, no overlay, no dimming — the page under the question stays readable.",
-      "html": "<p class=\"ds-confirmar\" role=\"alert\"><span>Tirar <strong>Arroz de pato</strong> do livro? Os jantares já marcados ficam escritos como estão — só o prato sai.</span><button type=\"button\" class=\"ds-confirmar-sim\">Tirar do livro</button><button type=\"button\" class=\"ds-botao-linha\">Deixar ficar</button></p>",
-      "css": ".ds-confirmar { margin: 0; padding: 0.625rem 0 0.625rem var(--margem-x, 3.25rem); display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; font-family: Archivo, ui-sans-serif, system-ui, sans-serif; font-size: var(--t-escrita, 1.0625rem); line-height: 1.45; color: var(--casa, #1a1f2e); background: color-mix(in srgb, var(--margem, #c0392b) 7%, transparent); box-shadow: inset 2px 0 0 var(--margem, #c0392b); } .ds-confirmar-sim { appearance: none; border: 1px solid var(--margem, #c0392b); background: none; color: var(--margem, #c0392b); border-radius: 2px; padding: 0.3125rem 0.625rem; cursor: pointer; white-space: nowrap; font-family: inherit; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; } .ds-confirmar-sim:hover { background: var(--margem, #c0392b); color: var(--folha, #f8fafc); } .ds-confirmar-sim:focus-visible { outline: 2px solid var(--margem, #c0392b); outline-offset: 2px; } .ds-botao-linha { appearance: none; background: none; border: 0; padding: 0; color: var(--impresso-tinta, #5a6b85); border-bottom: 1px solid currentColor; cursor: pointer; font-family: inherit; font-size: var(--t-impresso, 0.6875rem); font-weight: 600; font-stretch: 112%; letter-spacing: 0.14em; text-transform: uppercase; } .ds-botao-linha:hover { color: var(--capa, #16224a); }"
+      "refersTo": "tile",
+      "description": "The in-house icon system: 24×24 viewBox, 1.8 stroke, round caps and joins, rendered at 20px inside a tile tinted from the area's hue. No emoji, no library, no photography.",
+      "html": "<span style=\"display:flex;gap:12px\"><span class=\"ds-tile\" style=\"--cor:#5561b8\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"4\" y=\"5.5\" width=\"16\" height=\"14.5\" rx=\"3\"/><path d=\"M4 10.5h16\"/><path d=\"M8.5 3.5v3.5M15.5 3.5v3.5\"/><path d=\"M8.5 14.5h2\"/></svg></span><span class=\"ds-tile\" style=\"--cor:#b9862c\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4.5 9.5h15l-1.5 10h-12Z\"/><path d=\"M8.5 9.5 12 3.5l3.5 6\"/><path d=\"M9.5 13v3.5M14.5 13v3.5\"/></svg></span><span class=\"ds-tile\" style=\"--cor:#bd5f3a\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 5.5A2.5 2.5 0 0 1 7.5 3H19v15H7.5A2.5 2.5 0 0 0 5 20.5Z\"/><path d=\"M5 18V5.5\"/><path d=\"M19 18v3H7.5\"/><path d=\"M9.5 7.5h5.5\"/></svg></span><span class=\"ds-tile\" style=\"--cor:#2f7e78\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"8.5\"/><path d=\"M15 9.2a3.8 3.8 0 1 0 0 5.6\"/><path d=\"M8.5 10.8h4M8.5 13.2h4\"/></svg></span></span>",
+      "css": ".ds-tile { width: 40px; height: 40px; border-radius: 16px; background: color-mix(in oklab, var(--cor) 14%, #fff); color: color-mix(in oklab, var(--cor) 78%, #1c1b20); display: inline-flex; align-items: center; justify-content: center; flex: none; }"
     }
   ],
   "narrative": {
-    "northStar": "A Caderneta",
-    "overview": "The Portuguese school agenda, opened flat. Everything the application provides is printed — day names, rules, dates, the red margin, the role tags, the field labels, the ingredient count beside a dish, the dish a shopping item came from. Everything the household provides is written — each member's own pen, sitting on the rule. Those two registers carry the whole identity, and they never mix. The book is conveyed by the rule pitch, the margin, the gutter and the ribbon, and by nothing else.\n\nThe world has exactly two grounds, and they are the two faces of one object: the saturated navy cover, and the cool blue-grey sheet. Warm parchment, lamplight and sepia are outside this world — the surface is read at 7:40am in a kitchen with sun on the screen. Density is deliberately light: the design refuses the seven-column hour grid and instead rules every day whether or not anything is on it. An empty day is not a void or an illustration; it is clear ruling, waiting — and so is an empty dish book, which reserves four rule pitches of blank page rather than printing an empty-state graphic.\n\nThe book now has three sections behind one cover, reached by thumb tabs on the navy band: the week, the week's dinners with the shopping list under them, and the household's book of dishes. They are sections of one notebook, not three applications: the same ruled page, the same rule pitch, the same row, the same stamp. The book of dishes belongs to no week, so on its tab the week interval and the week navigation come off the cover and the rest stays exactly where it was. Everything that happens before the week happens on one recurring object: a single white name label, glued slightly crooked to the navy cover, carrying the same red margin rule as the pages inside.",
+    "northStar": "Os Módulos",
+    "overview": "The house seen from above. The application is a warm porcelain floor, and resting on it are white modules — one for each area of family life. A module is never a label with an arrow into somewhere else; it is the thing itself, showing its own live data at the size the data deserves. Tonight's dinner is a headline you read from across the kitchen. The list is three real items and a count. Today's schedule is three real lines with real times. A parent should get dinner, the list and the day in about three seconds, and one tap should swell any module into its full page.\n\nThe character is calm, warm and modern-consumer: soft porcelain rather than cold grey, generous 24px corners, true offset shadows that put the modules a few millimetres above the floor, one geometric sans in the full range from 200 to 800, and black ink pills for the actions that matter. Colour is not decoration here — it is the address system. Each of the five areas of the house owns a hue (week iris, menu leaf, list honey, book terracotta, finances tile-green), and every tint that area needs is derived from that one hue by a single formula. Nothing in this system is a pastel someone picked by eye.\n\nWhat it refuses is as fixed as what it does. It refuses the notebook metaphor and every paper simulation that came with it. It refuses the single-list template where five different jobs get the same row. It refuses the card-inside-a-card: once you are inside a module, hierarchy is made of type and space, never of another box. It refuses coloured borders as state — a selected, current or open thing announces itself with light and lift, not with a ring. And it refuses borrowed pictures: every icon is drawn in this repository in a single 1.8 stroke, with no emoji, no icon library and no photography.",
     "keyCharacteristics": [
-      "Two registers that never mix: printed structure versus written content.",
-      "Two grounds, one object: the navy cover and the ruled sheet.",
-      "The rule pitch is the layout unit — one entry is exactly one rule, across all five surfaces.",
-      "No edit mode: every entry and every blank rule is a live field.",
-      "Four type sizes, wide jumps, nothing between.",
-      "Attribution is the ink *and* a printed role tag — never colour alone.",
-      "Completion is a stamp where the ink lands, not a checkbox in a gutter.",
-      "Sections are thumb tabs on the cover, never a sidebar or a bottom bar.",
-      "A destructive act is confirmed in the row itself, on the page, never in a modal.",
-      "Every failure has a named, printed state that says what happened in plain Portuguese.",
-      "One authored motion moment: the stamp press.",
-      "Interface language is Portuguese (pt-PT), and so is the code — class names, custom properties and comments."
+      "Porcelain ground (#f2f0ea) with pure white modules floating on it — one ground, one surface, no third plane.",
+      "One hue per area of the house; all four of its working tints derived from that hue by one color-mix formula.",
+      "Manrope alone, 200–800, in exactly four size steps; the hierarchy is carried by weight and space, not by more sizes.",
+      "8px governs every gap, every padding and every radius.",
+      "Numbers are tabular and right-aligned, everywhere, without exception.",
+      "State is a colour wash plus a raised shadow — never a border colour.",
+      "Drawn-in-house icons: 24×24 box, 1.8 stroke, round caps and joins.",
+      "One expansion gesture per module."
     ],
     "rules": [
       {
-        "name": "The Two Registers Rule",
-        "body": "Printed and written never mix. A colour from the printed group (`impresso-tinta`, `pauta`, `pauta-forte`, `capa`) never carries a household entry, and a pen (`pai`, `mae`, `filha`, `casa`) never draws structure. This holds on the cover screens exactly as it holds on the page, and it held through both new surfaces without amendment: a dish name and an ingredient are written in `casa`; the count beside them, the caption above them and the dish a shopping item came from are printed in `impresso-tinta`. The only sanctioned crossing is recession: a continuation of a multi-day block, a completed task, or a bought shopping item drops from its pen to `impresso-tinta` — it stays readable but stops competing with what has not happened yet.",
+        "name": "The One Formula Rule",
+        "body": "Any element carrying .com-cor declares a single --cor and receives its whole family by derivation: tile at 14% over white, chip at 8% over white, pressed at 20% over white, text at 78% over ink — all mixed in OKLab. No tint in this system is hand-picked. Change the area's hue and every surface, chip, wash and label in that area moves with it. A new pastel typed in by hand is a bug, not a variant.",
         "section": "colors"
       },
       {
-        "name": "The Ink-Plus-Tag Rule",
-        "body": "Inside the week, a member is never identified by colour alone. Every entry carries its author's ink and a printed role tag in that same ink (`PAI`, `MÃE`, `FILHA`, `TODOS`, or an em dash when unassigned). Remove the tag and the attribution is gone, not merely weakened. The rule is confined to the week by construction, not by exception: nothing in the ementa or the dish book has an author, so nothing there is attributed and no tag appears.",
+        "name": "The Legible Pen Rule",
+        "body": "Every member ink and every chip label carries a measured contrast ratio, not an eyeballed one. The pens were deepened until each cleared 4.5:1 at body size on a white module, and the chip label takes more ink than --cor-texto does (42% hue into ink, not 78%) because the lighter mix sat at 3.7:1 on its own chip. If a colour cannot be read at 15px, it does not ship at 15px.",
         "section": "colors"
       },
       {
-        "name": "The One Ribbon Rule",
-        "body": "`fita` answers exactly one question — where are you? — and it is spent on nothing else. On the sheet it now marks six things, and all six are that one question: today's ribbon down the left of the day block (`.fita`) and of today's strip cell (`.fita--tira`), the `HOJE` chip beside today's name, the rule your cursor is in (`.linha:focus-within`), the strip cell you have opened (`.tira-celula[data-aberta]`), and the dish row you have opened (`.linha--prato[data-aberto]`). On the navy cover it is the focus ring, because red does not read on navy, and it marks the household's join code — the one mark in the system that answers a different question, and the only sanctioned exception. It is never a general accent, never a button fill, never a highlight for importance, and never a category colour. This rule was restated, and the restatement gives ground. It was recorded last pass as \"it marks one thing per ground … and it never appears twice on the same ground for two different reasons.\" The build does not obey that clause and cannot: the dish book shows an opened dish row and a focused dish row carrying ochre at the same instant, and the ementa shows today's ribbon beside an opened cell. What survived the two new surfaces is the meaning, not the count. The clause is withdrawn; the meaning is the rule. Ochre arrives in three weights, and the build does not apply them uniformly: a drawn, shadowed ribbon object for today; a 9–12% wash plus a 2px inset edge for a focused rule and for an opened strip cell; and a bare 2px inset edge for an opened dish row. \"Held open\" is therefore drawn two different ways across the two new surfaces. That is what the build does, recorded as fact rather than as a pattern to copy.",
+        "name": "The One Ground Rule",
+        "body": "There is exactly one floor and one surface. Porcelain is the only background of the application; white is the only thing that rests on it. There is no third plane, no tinted section band, no grey card behind a group of cards.",
         "section": "colors"
       },
       {
         "name": "The Four Steps Rule",
-        "body": "There are four sizes — 0.6875 / 1.0625 / 1.5 / 2.5rem, with mobile substitutions — and nothing lives between one step and the next. A new element takes an existing step or it does not ship. Weight, width, tracking and case may differ freely within a step (Headline and Title are the same 1.5rem, set differently); the size may not. No intermediate size, no smooth ramp, no `clamp()` on type. Everything the two new surfaces added — tabs, strip cells, ingredient counts, provenance, captions, confirmations — took an existing step.",
+        "body": "There are four type sizes and nothing between them — 12, 15, 18, 24, plus 34 for display. If a new element seems to need a fifth step, the answer is a weight change or a space change, not a new size. Two of the five steps shrink on mobile; the rest hold, because 15px body at arm's length is already the floor.",
         "section": "typography"
       },
       {
-        "name": "The Fixed Column Rule",
-        "body": "(Recorded last pass as The Fixed Time Column Rule. It generalised, exactly as its own closing sentence anticipated, and is renamed to what it governs.) A value that lives in a fixed-width column is pinned to `--t-escrita` at doubled specificity (`.escrita.escrita--hora`) so it cannot rise with a raised row and overflow its column. Two such columns now exist and both are served by that one pin: the time at `--hora-x` (4.25rem / 3.25rem mobile) and the quantity at `--qtd-x` (5.5rem / 5.25rem mobile). The quantity got its own width because it is free text — \"1 pacote\" and \"3 grandes\" do not fit a column cut for \"08:30\". Any third column-bound value takes the same pin and its own width token. The class name is now narrower than what it holds. `.escrita--hora` sets the time in the week and the quantity in the shopping list, in the ementa's ingredient rows and in the dish book. What the class actually means is column-bound value, right-aligned, tabular, printed ink, pinned to the body step — three of those four columns hold no time at all. Recorded as the build's fact, not as a naming convention to copy forward.",
+        "name": "The One Family Rule",
+        "body": "One family carries the entire product. Emphasis is weight (500 → 700 → 800), never italic, never a second face, never letter-spaced small caps standing in for a heading.",
         "section": "typography"
       },
       {
-        "name": "The One Hand Rule",
-        "body": "Caveat appears on the cover name and nowhere else — not on the label card, whose title is Archivo; not on a dish name, which is Archivo in the household pen. Written content is carried by ink, weight and the baseline on the rule; a script face across the entries is costume, and it costs legibility on the device that matters most.",
+        "name": "The Tabular Number Rule",
+        "body": "Every number the household reads or compares is font-variant-numeric: tabular-nums and right-aligned in its column: quantities, prices, times, totals, dates, the household code. A quantity that shifts sideways as it is typed is a quantity the eye has to re-find.",
         "section": "typography"
       },
       {
-        "name": "The One Rule, One Entry Rule",
-        "body": "An entry occupies exactly one rule pitch, or a whole number of them. Nothing sits between rules, nothing straddles a rule, and no element introduces a height that is not a multiple of `--pauta-passo`. This now covers a caption, an ingredient count, a quantity and an indented ingredient as well as an entry: anything that lands on a ruled page costs a whole rule.",
+        "name": "The Eight Rule",
+        "body": "8px rules every gap, every padding and every radius. A value that is not a multiple of 8 needs a reason written next to it; the only standing exceptions are hairlines, the 2px focus and check rings, and the 6–8px author dot.",
         "section": "layout"
       },
       {
-        "name": "The One Label Rule",
-        "body": "Every screen that is not a signed-in section is the same navy ground with the same white label card on it — sign in, create account, confirm your email, open a household, join a household, missing configuration, missing migration. A new pre-week screen is new copy inside that card, never a new layout. The single exception is the loading phase, which prints one tracked line straight onto the navy and shows no card at all, because a card that appears and is then replaced is a flash, not a state.",
+        "name": "The Unclipped Quantity Rule",
+        "body": "A truncated quantity is a wrong purchase. The quantity column in the shopping list measures itself in ch against the longest value present — with tabular numerals 1ch is one digit — clamped between 48px and 11rem, so it opens for \"500 g + 2 un\" and closes again when the list is all \"2 un\". It is the item name, never the number, that gives up the width.",
         "section": "layout"
       },
       {
-        "name": "The Same Page Rule",
-        "body": "A new section is a tab on the existing cover over the existing opening, and it is built from rows on a ruled page. The ementa and the dish book added no new page object, no card, no panel, no second grid and no second rhythm: what they added were column cuts of `linha` and one new list object, the strip. If a new thing cannot be made of the row grid and the rule pitch, the question is what it is, not what to draw.",
-        "section": "layout"
-      },
-      {
-        "name": "The Override-Last Rule",
-        "body": "In these stylesheets a declaration only counts if nothing at equal specificity overrides it later — and an inline `style` prop in a component beats every one of them. This build shipped four dead rules before they were caught: a token declared above the media query that redefined it, a raised-row rule written before the base row rule that beat it, and two colour rules that could never win against an inline `style`. Three consequences are load-bearing and are commented in place: `.linha`'s base declarations come before `.linha--destaque`; `.escrita.escrita--hora` doubles its specificity on purpose; and text ink is passed as an inline `style` from the component rather than declared in CSS (the row's ink, the row tag, the writing field, and a coloured menu option all take their colour that way). Two orderings in the current build follow from the same rule and are worth knowing before editing: `.impresso` is defined after every component sheet, so any element carrying that class takes printed ink no matter what colour its own class declares; and any element that needs a different colour while printed must win on specificity or state (`:hover`, `:disabled`), not on being written later in its own file. The rule also governs where a new token goes: `--qtd-x` is declared mid-file with its own mobile override immediately after it, because a token separated from the media query that redefines it is how the first dead rule happened. Before adding a rule, check what follows it — and prefer to delete a rule that cannot win over leaving it as decoration.",
-        "section": "layout"
-      },
-      {
-        "name": "The Flat Page Rule",
-        "body": "Nothing in the opening is elevated. A row, a tag, a stamp, a strip cell, a dish, an inline confirmation and a blank rule all sit in the paper. If a new element wants a shadow, it needs a physical justification in the book — an edge, a crease, a glued label, or a thing genuinely lying on top. A 2px `inset` edge is a printed line and is not covered by this prohibition; a drop shadow is.",
+        "name": "The Light-and-Lift Rule",
+        "body": "State is light and elevation, never a border colour. Today's day module raises to the high shadow and takes a soft gradient wash of its own hue from the top edge down to white at 42% — plus a small filled \"hoje\" pill to say the rest in words. An earlier version of this ringed the module in its hue; the ring was removed because a coloured outline reads as an error state and as a card-inside-a-card at the same time. Selection, currency and openness are all expressed the same way: more colour, more lift.",
         "section": "elevation"
       },
       {
-        "name": "The Named State Rule",
-        "body": "Every way this application can fail has a designed state with a Portuguese name printed on it, and that state says what happened and what to do next. There is no spinner standing in for a failure, no raw provider error on screen, and no silent retry: missing configuration prints the two variables to set, a missing migration prints the file to run, a lost connection says which copy you are reading, and a failed save says where what you wrote still lives. Adding a way to fail means adding its strip and its Portuguese sentence.",
-        "section": "components"
+        "name": "The True Shadow Rule",
+        "body": "Shadows are offset and blurred, never a symmetric glow. A box-shadow with a zero y-offset spreading evenly in all directions is a halo, and this world does not have haloes. The only zero-offset shadows in the system are inset rings — the 2px focus ring on a field and the 2px aro of an unchecked check — which are strokes drawn inside the shape, not elevation.",
+        "section": "elevation"
       },
       {
-        "name": "The Ask-On-The-Page Rule",
-        "body": "A destructive act is confirmed on the rule below the thing it would destroy, in the red register, in a sentence that names the thing and states what survives. It is never a modal, never a dialog, never an overlay, and it never dims the page: the question is about something visible, and covering it to ask is the wrong shape. An act that cannot be undone gets this treatment; an act that can be undone gets none.",
+        "name": "The No Card In A Card Rule",
+        "body": "A module never contains another surface. Inside it, hierarchy is made of type, weight, space and — sparingly — one hairline. A grouped set of rows indents by half a tile (24px) to show it belongs to the row above; it does not get a background, a border or a shadow of its own.",
+        "section": "shapes"
+      },
+      {
+        "name": "The One Gesture Rule",
+        "body": "A module has exactly one opening gesture, not a dust of little buttons. On Início the entire module is the button and tapping anywhere in it swells the area into its full page. Inside a page, the same rule holds one level down: a dinner pastille opens the day, a book row opens the dish, a row's overflow menu is the single extra affordance and it lives in one place at the end of the row.",
         "section": "components"
       }
     ],
     "dos": [
-      "Do keep the two registers separate, on the label as on the page. Structure is printed (`impresso-tinta`, tracked Archivo caps at `--t-impresso`); household content is written, in its author's pen — or in the household pen where the thing has no author.",
-      "Do give every entry in the week both its ink and its printed role tag. Colour alone is not attribution.",
-      "Do size everything in whole rule pitches (`--pauta-passo`), and let a long entry wrap onto the next rule rather than stretch its own.",
-      "Do build a new thing out of the row grid and the rule pitch — a new column cut of `linha`, not a new page object — per The Same Page Rule.",
-      "Do render a page's rules whether or not anything is on it, and keep at least one blank, writable rule below the last entry. A page with nothing at all reserves four pitches.",
-      "Do make every entry editable exactly where it sits, and write it to the page before writing it to the network. Batch the write and flush it when the hand stops, and again on unmount.",
-      "Do restyle a row in place when its state changes — struck and rewritten when moved, stamped when done or bought — and keep the old line visible.",
-      "Do put a new section behind a thumb tab on the existing cover, and drop from the cover whatever that section does not have (the week interval and week navigation on the book).",
-      "Do ask before a destructive act on the rule below it, per The Ask-On-The-Page Rule.",
-      "Do put any new pre-week screen inside the label card, in its existing order: printed line, title, fields, error, solid button, text-underline alternatives.",
-      "Do give every failure a printed mark and a Portuguese sentence that names the recovery, per The Named State Rule.",
-      "Do take one of the four type steps, or do not ship the element.",
-      "Do give a new column-bound value its own width token and pin it at doubled specificity, per The Fixed Column Rule.",
-      "Do let the row shrink to make room for the touch action menu (`padding-inline-end`), rather than letting the menu sit over what is written.",
-      "Do check what follows a new rule in the stylesheet — and whether a component passes an inline `style` — before trusting it, per The Override-Last Rule. Keep a new token and its mobile override adjacent.",
-      "Do write new code in the same Portuguese vocabulary the build uses — `linha`, `pauta`, `escrita`, `impresso`, `carimbo`, `fita`, `portada`, `etiqueta`, `recado`, `tira`, `livro`, `prato`, `confirmar`. It is the project's language, not an accident."
+      "Do set a single --cor on a container and let the formula derive tile (14%), chip (8%), pressed (20%) and text (78%). Adding a new area means adding one hex, not five.",
+      "Do keep every gap, padding and radius a multiple of 8px.",
+      "Do make numbers tabular and right-aligned — quantities, prices, times, totals, dates, the household code.",
+      "Do express state as a colour wash plus a raised shadow, and add a word (a \"hoje\" pill, a count) when the wash alone could be ambiguous.",
+      "Do carry hierarchy inside a module with type, weight and space alone.",
+      "Do measure a numeric column against its longest real value in ch when clipping it would change the meaning.",
+      "Do draw new icons in src/componentes/Icones.tsx on the 24×24 box at 1.8 stroke with round caps and joins, matching the existing set.",
+      "Do give every control its rest, hover, active, focus-visible and disabled states — the focus ring is a 2px ink outline at 2px offset, everywhere.",
+      "Do give a module exactly one opening gesture and make the whole surface the target.",
+      "Do write empty states as one sentence inside the module."
     ],
     "donts": [
-      "Don't introduce an edit mode, a save button, a saving indicator, or a modal for editing an entry.",
-      "Don't build an hour grid. The week is ruled lines, not a seven-column timetable.",
-      "Don't put a checkbox in the margin gutter or a checkmark glyph anywhere. Completion and purchase are the `VISTO` stamp, in the column where the ink lands.",
-      "Don't use a pen colour (`pai`, `mae`, `filha`, `casa`) for structure, or printed ink for a live entry — the one sanctioned crossing is recession for continuations, completed tasks and bought items.",
-      "Don't spend `fita` on anything but *where you are* — today, the rule under the cursor, the thing you have opened — plus the join code on the navy, which is the one recorded exception. Never a button fill, an importance highlight or a category colour.",
-      "Don't nest a ruled page inside a ruled page. Ingredients under a dish are indented rows of the same page; two margins and two rhythms on one screen is two books.",
-      "Don't confirm a destructive act in a modal, a dialog, or anything that covers the page.",
-      "Don't scroll the strip sideways on a phone. Seven days stack into seven rules; a strip that scrolls hides days, and the strip exists so all seven are in one glance.",
-      "Don't set household content in Caveat. The hand face belongs to the cover name only.",
-      "Don't give a cover screen its own layout, split panel, illustration or marketing header. It is the label card on the navy ground.",
-      "Don't add a second solid button to a screen. One `botao-capa`; every other action is a text-underline or, for a destructive confirmation, the one outlined red button.",
-      "Don't add a paper photo-texture, a cream or parchment ground, or a warm lamplight cast. This paper is cool and slightly blue.",
-      "Don't add elevation tiers or hover lifts. Nothing in the opening floats except the menu; an `inset` edge is a printed line, a drop shadow is not.",
-      "Don't rotate anything structural. Rotation means a person put it there — the stamp and the glued label, and nothing else.",
-      "Don't add a second motion moment. The stamp press is the one authored animation, and it fires on the act of stamping, not on render.",
-      "Don't introduce a type size between the four steps, or a fluid `clamp()` on type.",
-      "Don't draw an empty-state illustration, a dashed drop zone or a call-to-action panel. An empty page is ruled and waiting, with printed prose on it at most.",
-      "Don't ship English in the interface — including a provider's error text; map it through the error dictionary first.",
-      "Don't write invented household data into a real database. The example week exists, and it is only ever written when someone asks for it."
+      "Don't hand-pick a pastel. Any tint not produced by the formula is a defect.",
+      "Don't put a card, a bordered box, a tinted panel or a second shadow inside a module.",
+      "Don't use a border colour to signal state — no coloured rings on selected, current or open things.",
+      "Don't ship a symmetric glow. Shadows are offset and blurred; zero-offset shadows are reserved for the inset focus and check rings.",
+      "Don't introduce a second font family, an italic, or a fifth type size. Reach for weight or space instead.",
+      "Don't use emoji, an icon library, or photography anywhere in the product.",
+      "Don't put a third plane on the screen — porcelain floor, white module, nothing between.",
+      "Don't scatter small buttons across a module to make it openable; one gesture, whole surface.",
+      "Don't let a quantity, price or dish name that the household typed get clipped by a fixed-width column.",
+      "Don't ship a full-screen empty state where a sentence inside the module will do."
     ]
   }
 }

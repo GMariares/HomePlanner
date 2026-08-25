@@ -3,6 +3,7 @@ import type { Entrada, Genero } from '../dominio/tipos'
 import { DIAS, curto } from '../dominio/semana'
 import { novoId } from '../dominio/estado'
 import { Linha } from './Linha'
+import type { ComParte } from './Semana'
 import { Escrita } from './Escrita'
 import { useRascunho } from '../dominio/rascunho'
 import { IMais } from './Icones'
@@ -26,7 +27,7 @@ export function FilaEmBranco({ rotulo, aoEscrever }: { rotulo: string; aoEscreve
 export function Dia({ indice, data, entradas, hoje, aoAcrescentar, aoAlterar, aoApagar, aoMover }: {
   indice: number
   data: Date
-  entradas: Entrada[]
+  entradas: ComParte[]
   hoje: boolean
   aoAcrescentar: (entrada: Entrada) => void
   aoAlterar: (id: string, mudanca: Partial<Entrada>) => void
@@ -53,14 +54,16 @@ export function Dia({ indice, data, entradas, hoje, aoAcrescentar, aoAlterar, ao
         {hoje && <span className="dia-hoje-marca">hoje</span>}
       </header>
 
-      {entradas.map(e => (
+      {entradas.map(({ entrada, parte, dataDoInicio }) => (
         <Linha
-          key={e.id}
-          entrada={e}
+          key={entrada.id}
+          entrada={entrada}
+          parte={parte}
+          dataDoInicio={dataDoInicio}
           contexto={`${nome}, ${curto(data)}`}
-          aoAlterar={m => aoAlterar(e.id, m)}
-          aoApagar={() => aoApagar(e.id)}
-          aoMover={d => aoMover(e.id, d)}
+          aoAlterar={m => aoAlterar(entrada.id, m)}
+          aoApagar={() => aoApagar(entrada.id)}
+          aoMover={d => aoMover(entrada.id, d)}
         />
       ))}
 

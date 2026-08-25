@@ -4,8 +4,9 @@ import { ICasa } from './Icones'
 import { recado } from '../dominio/recados'
 
 /**
- * A entrada é a capa do caderno: a etiqueta branca que se cola à frente,
- * com o nome escrito à mão. Não é um ecrã de login em cima de outra coisa.
+ * A porta da casa: a marca em tinta, o nome do produto como título e o que
+ * ele faz numa linha. Um módulo pousado no chão de porcelana, como todos os
+ * outros — não um ecrã de login em cima de outra coisa.
  */
 export function Entrar() {
   const [modo, definirModo] = useState<'entrar' | 'criar'>('entrar')

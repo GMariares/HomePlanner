@@ -14,12 +14,26 @@ export interface Entrada {
   genero: Genero
   autor: Autor | null
   texto: string
-  /** "08:30" — sempre em numerais tabulares, alinhada à direita. */
+  /** "08:30" — a que horas começa. Sempre tabular, encostada à direita. */
   hora: string | null
+  /** "12:00" — a que horas acaba. Nulo = não tem fim marcado. */
+  horaFim?: string | null
+  /** "2026-09-03" — o último dia, quando o compromisso passa da meia-noite. */
+  fimData?: string | null
+  /**
+   * "2026-08-31" — a data real em que começa, gerada pela base de dados a
+   * partir da semana e do dia. Uma entrada lida numa semana pode ter começado
+   * na anterior, e sem isto não havia como saber.
+   */
+  inicioData?: string | null
   refeicao?: Refeicao
   /** Tarefa carimbada. */
   feita?: boolean
-  /** Compromisso que atravessa vários dias, como se escreve numa agenda: em cada dia. */
+  /**
+   * Onde este dia cai dentro do período — deduzido do intervalo ao desenhar
+   * a semana, nunca guardado. Linhas antigas ainda o trazem da base de dados;
+   * lêem-se na mesma.
+   */
   extensao?: 'inicio' | 'meio' | 'fim'
   /** Riscada porque foi movida — a agenda guarda o que aconteceu. */
   riscada?: boolean
@@ -121,6 +135,11 @@ export interface EntradaDb {
   autor: Autor | null
   texto: string
   hora: string | null
+  hora_fim?: string | null
+  fim_data?: string | null
+  /** Geradas pela base de dados: a data real em que começa e em que acaba. */
+  inicio_data?: string | null
+  fim_efectivo?: string | null
   refeicao: Refeicao | null
   feita: boolean
   extensao: 'inicio' | 'meio' | 'fim' | null
@@ -136,6 +155,9 @@ export const daBaseDeDados = (l: EntradaDb): Entrada => ({
   autor: l.autor,
   texto: l.texto,
   hora: l.hora,
+  horaFim: l.hora_fim ?? null,
+  fimData: l.fim_data ?? null,
+  inicioData: l.inicio_data ?? null,
   refeicao: l.refeicao ?? undefined,
   feita: l.feita,
   extensao: l.extensao ?? undefined,
@@ -151,9 +173,13 @@ export const paraBaseDeDados = (e: Partial<Entrada>): Record<string, unknown> =>
   if ('autor' in e) l.autor = e.autor ?? null
   if ('texto' in e) l.texto = e.texto
   if ('hora' in e) l.hora = e.hora ?? null
+  if ('horaFim' in e) l.hora_fim = e.horaFim ?? null
+  if ('fimData' in e) l.fim_data = e.fimData ?? null
+  /* `inicio_data` é gerada pela base de dados: escrevê-la seria um erro. */
   if ('refeicao' in e) l.refeicao = e.refeicao ?? null
   if ('feita' in e) l.feita = e.feita ?? false
-  if ('extensao' in e) l.extensao = e.extensao ?? null
+  /* `extensao` não vai daqui para a base de dados: passou a ser deduzida do
+     intervalo. A coluna fica lá para as linhas antigas se lerem. */
   if ('riscada' in e) l.riscada = e.riscada ?? false
   if ('movidaPara' in e) l.movida_para = e.movidaPara ?? null
   if ('pratoId' in e) l.prato_id = e.pratoId ?? null

@@ -41,6 +41,33 @@ export function indiceDeHoje(inicio: Date): number {
   return dif >= 0 && dif <= 6 ? dif : -1
 }
 
-export function chaveDaSemana(inicio: Date): string {
-  return `${inicio.getFullYear()}-${String(inicio.getMonth() + 1).padStart(2, '0')}-${String(inicio.getDate()).padStart(2, '0')}`
+/** "2026-08-31" — como as datas viajam para a base de dados e para a cache. */
+export function chaveDeData(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
+export const chaveDaSemana = chaveDeData
+
+/** O contrário: de "2026-08-31" para uma data local, sem fuso pelo meio. */
+export function dataDeChave(chave: string): Date {
+  const [a, m, d] = chave.split('-').map(Number)
+  return new Date(a, (m ?? 1) - 1, d ?? 1)
+}
+
+export function somarDias(d: Date, n: number): Date {
+  const x = new Date(d)
+  x.setDate(x.getDate() + n)
+  return x
+}
+
+/** Quantos dias vão de uma data à outra. Só conta dias, nunca horas. */
+export function diasEntre(de: Date, ate: Date): number {
+  const a = new Date(de.getFullYear(), de.getMonth(), de.getDate())
+  const b = new Date(ate.getFullYear(), ate.getMonth(), ate.getDate())
+  return Math.round((b.getTime() - a.getTime()) / 86_400_000)
+}
+
+/** "Seg 31/08" — como um dia se apresenta quando é preciso escolhê-lo. */
+export function diaCurto(d: Date): string {
+  return `${DIAS[(d.getDay() + 6) % 7].slice(0, 3)} ${curto(d)}`
 }
