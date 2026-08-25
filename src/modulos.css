@@ -970,3 +970,42 @@
   color: var(--cor-texto, var(--tinta-2));
   min-width: 1.9rem;
 }
+
+/* ---------------- o calendário subscrito ---------------- */
+.calendario {
+  display: grid;
+  gap: calc(var(--u) * 1);
+  justify-items: start;
+  padding-top: calc(var(--u) * 1.5);
+  border-top: 1px solid var(--linha-d);
+}
+.calendario-titulo { display: inline-flex; align-items: center; gap: calc(var(--u) * 0.75); }
+.calendario-adicionar { text-decoration: none; }
+/* O endereço é uma credencial: mostra-se por inteiro, e quebra onde calhar
+   em vez de fingir que cabe. */
+.calendario-endereco {
+  margin: 0;
+  width: 100%;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--tinta-2);
+  overflow-wrap: anywhere;
+  line-height: 1.35;
+  background: color-mix(in oklab, var(--tinta) 5%, #fff);
+  padding: calc(var(--u) * 1);
+  border-radius: calc(var(--u) * 1);
+}
+.calendario-ajuda { width: 100%; font-size: var(--t-etiqueta); color: var(--tinta-2); }
+.calendario-ajuda summary {
+  cursor: pointer;
+  font-weight: 800;
+  color: var(--tinta-2);
+  padding: calc(var(--u) * 0.5) 0;
+  list-style: none;
+}
+.calendario-ajuda summary::-webkit-details-marker { display: none; }
+.calendario-ajuda summary::before { content: "› "; display: inline-block; transition: transform 160ms var(--mola); }
+.calendario-ajuda[open] summary::before { content: "⌄ "; }
+.calendario-ajuda summary:hover { color: var(--tinta); }
+.calendario-ajuda p { margin: calc(var(--u) * 0.5) 0; line-height: 1.5; }
+.conta-painel { max-height: min(80vh, 40rem); overflow-y: auto; }

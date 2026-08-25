@@ -58,6 +58,11 @@ export interface Casa {
   codigo: string
   /** A lista mostra preços? É uma decisão da casa, não do aparelho. */
   mostrar_precos: boolean
+  /**
+   * O endereço secreto do calendário subscrito, ou nulo se a casa não
+   * publica nada. Quem o tiver vê a agenda: trocá-lo corta o acesso.
+   */
+  calendario_token?: string | null
 }
 
 export interface Membro {

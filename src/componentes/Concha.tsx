@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { supabase } from '../dominio/supabase'
 import type { Casa } from '../dominio/tipos'
 import { ICasa, ICalendario, ITalheres, ILivro, IMoeda, IPessoa } from './Icones'
+import { Calendario } from './Calendario'
 
 export type Vista = 'inicio' | 'semana' | 'ementa' | 'livro' | 'financas'
 
@@ -23,11 +24,13 @@ function Conta({ casa, email, aoSair, aoSairDaCasa }: {
   const [aberto, definirAberto] = useState(false)
   const [aConfirmar, definirAConfirmar] = useState(false)
   const [nome, definirNome] = useState(casa.nome)
+  const [token, definirToken] = useState(casa.calendario_token ?? null)
   const caixa = useRef<HTMLDivElement>(null)
   const botao = useRef<HTMLButtonElement>(null)
   const temporizador = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => { definirNome(casa.nome) }, [casa.nome])
+  useEffect(() => { definirToken(casa.calendario_token ?? null) }, [casa.calendario_token])
   useEffect(() => () => { if (temporizador.current) clearTimeout(temporizador.current) }, [])
 
   useEffect(() => {
@@ -86,6 +89,8 @@ function Conta({ casa, email, aoSair, aoSairDaCasa }: {
             <strong>{casa.codigo}</strong>
             <span className="conta-nota">quem o tiver entra nesta casa</span>
           </p>
+          <Calendario token={token} aoMudar={definirToken} />
+
           <p className="conta-email" title={email}>{email}</p>
           {aConfirmar ? (
             <div className="conta-accoes">
