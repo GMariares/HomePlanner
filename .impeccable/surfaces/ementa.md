@@ -27,33 +27,18 @@ area of HomePlanner can claim that, and neither can a standalone list app.
 
 **Success:** the family stops going to the grocery store every day.
 
-## 3. Selected direction — Tira da semana
+## 3. Selected direction — Os Módulos (replaced Tira da semana, 2026-08-25)
 
-The visual world is fixed (A Caderneta, see DESIGN.md). This is a composition decision only;
-no durable system change. Chosen by the user from three dealt structures.
-
-**Composition.** The week is a strip across the top — seven ruled cells, one dinner written
-in each, the whole plan readable in a glance. Below it the shopping list takes the rest of
-the page: ruled at the same pitch, quantity in the right-hand column where the week puts
-times, a stamp field to tick each item off.
-
-**Why this one earns its place:** it is the only dealt structure that is the same object on
-both devices. In the aisle you hold the list with the plan above it.
-
-**Dish book.** The book has its own page, reached by a third thumb tab (*O livro*): every
-dish the house cooks, with its ingredients, renamable in place, removable, and readable
-without planning anything. It is a durable asset of the household, not a per-week object,
-and it was homeless in the first build — reachable only by opening a day and typing, which
-meant a dish you were not cooking this week could not be seen, corrected or deleted at all.
-
-Writing in a day cell still opens the book as an inline menu — the fast path while
-planning — and the chosen dish's ingredients appear as ruled, editable lines beneath the
-strip. Reading and writing are one object in both places.
-
-**Honest risk, named at selection:** seven cells across a 390px phone is about 50px each.
-Resolved by the strip becoming seven stacked rules on a phone rather than scrolling
-sideways — horizontal scroll is the one thing the ruled page avoids everywhere else. The
-strip is therefore *not* pixel-identical across devices; it is the same reading order.
+The page keeps its two-part anatomy but in the **Os Módulos** world: on wide screens a
+2fr/3fr grid — "Os jantares" (leaf hue) beside "A lista" (honey hue) — and stacked in
+work order on the phone. The seven dinners are horizontal pastilles in a scrollable
+strip; the open day swells below with the dish search, the book's suggestions as icon-tile
+rows, and the chosen dish's ingredients as editable rows. The list is rows with a round
+check on the left, name with provenance meta beneath, a quantity column that measures
+itself in ch against the longest quantity (a cut number is the wrong purchase), an
+optional price, and both totals. Bundles are chips. All the hardened behaviors —
+autocomplete with remembered quantity/price, Tab-keeps-the-row, hide-bought, quantity
+merging, coalesced realtime, retry strips — carried over unchanged.
 
 ## 4. Scope and boundaries
 

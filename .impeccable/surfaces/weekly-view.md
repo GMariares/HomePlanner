@@ -39,62 +39,18 @@ still not done — a calendar app cannot show that, because it only holds one of
 the household enters its own; it must be recognizable as sample and never presented as
 real household data.
 
-## 3. Selected direction — A Caderneta
+## 3. Selected direction — Os Módulos (replaced A Caderneta, 2026-08-25)
 
-Chosen by the user over the assigned roll (Ementa da Semana) and over the category
-standard. Its familiarity was disclosed at selection and accepted.
-
-**Visual authority:** the Portuguese school agenda — ruled week-per-opening, printed day
-headers, ballpoint, red margin rule, the teacher's *Visto* stamp, sewn gutter, ribbon
-marker. The world is pinned; its softest rendition is not. Cream, parchment and
-lamplight are out of scope — the caderneta's real paper is cool and slightly blue-grey,
-and its covers are saturated.
-
-**Structural thesis — printed versus written.** The application's structure is *printed*:
-day headers, rules, labels, tabs, all fixed and authoritative. The family's content is
-*ink*: saturated ballpoint ultramarine, sitting on the rule. Two registers that never mix.
-This one rule carries the whole identity and needs no ornament to do it.
-
-**Colour strategy: full palette, four named roles** — printed (cool paper ground and pale
-rules), written (ballpoint ultramarine, carrying every entry and therefore a large share
-of the surface), correction (margin red), acknowledged (stamp violet). A saturated cover
-colour dresses the shell and tabs. Light ground is binding, forced by the 7:40am kitchen:
-the primary register must survive direct sunlight.
-
-**Typography — no handwriting face anywhere.** The written register is carried by ink
-colour, weight and the baseline sitting on the rule, never by a script font; a
-handwriting face here is costume and costs legibility on the one device that matters
-most. Printed register: a sturdy European grotesque or schoolbook serif, set in caps with
-wide tracking for day headers. One contained exception: the household's own name on the
-cover may be set in a real hand, as a name label on a school book is.
-
-**Focal moment:** today. The ribbon marker and today's ruled block lead the phone
-viewport; the rest of the week runs below it.
-
-**Signature interaction:** you write on the line. There is no edit mode — every entry is
-editable exactly where it sits. Moving an item to another day strikes it through and
-rewrites it on the new line, keeping the history visible the way a real agenda does.
-
-**Cross-surface reach** (why this world survives the whole product, not just this screen):
-finance becomes the ruled ledger opening; meals are written into the week; the shopping
-list is the tear-out page; and the personal information holder is the identity page at
-the front of the agenda — which is literally what a school caderneta's first pages carry:
-name, blood type, emergency contacts.
-
-**Raises carried from the directions the roll declined** — disciplines, not clothes,
-carried forward openly rather than silently dropped when the pick won:
-
-- *Scale courage (from Alphabet Storm):* day names and each day's lead entry are set at
-  poster scale, not UI-label scale.
-- *Specimen discipline (from Bitmap Specimen):* four type sizes with wide jumps and
-  nothing in between. No smooth ramp.
-- *One object (from HyperCard):* reading and writing are two modes of the same thing —
-  the origin of the no-edit-mode rule above.
-
-**Honest risk:** the ruled agenda is where nearly every planner app already lives. This
-direction earns its place only through the printed/written split and the no-edit-mode
-rule. Executed as a soft notebook theme with a script font and a paper texture, it
-collapses into the category default and the choice was wasted.
+The notebook world was rejected by the owner. The week now lives in the **Os Módulos**
+world (seed 08e5058a; rules in DESIGN.md): each day is a floating white module on the
+porcelain ground, laid in a responsive grid (`auto-fill, minmax(19rem, 1fr)`), with
+"Esta semana" (undated) as one more module at the end. Today's module carries an inset
+ring in the week's iris hue and an "hoje" pill — light, never a border color change of
+meaning. Entries are rows of type and space (`.fila`): author dot-chip in the member's
+ink, autosized text, tabular time on the right, a round check (`Visto`) for tasks, a
+kebab menu for move/delete. A blank row with a plus glyph closes every module — writing
+in it creates the entry, exactly the old behavior. Page header: display title, week
+interval, and the pill week navigator.
 
 ## 4. Scope and boundaries
 
