@@ -1,20 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { Cabecalho } from './Cabecalho'
+import { useMemo, useState } from 'react'
 import { Dia } from './Dia'
 import { ListaSemana } from './ListaSemana'
 import { useSemana } from '../dominio/estado'
-import { chaveDaSemana, diaDaSemana, indiceDeHoje, inicioDaSemana } from '../dominio/semana'
+import { chaveDaSemana, diaDaSemana, indiceDeHoje, inicioDaSemana, intervalo } from '../dominio/semana'
 import type { Casa, Entrada } from '../dominio/tipos'
+import { ISetaEsq, ISetaDir } from './Icones'
 
 const ORDEM = { evento: 0, tarefa: 1, refeicao: 2 } as const
 
-export function Semana({ casa, email, aoSair, aoSairDaCasa, aoTrocarDeVista }: {
-  casa: Casa
-  email: string
-  aoSair: () => void
-  aoSairDaCasa: () => void | Promise<void>
-  aoTrocarDeVista: (v: 'semana' | 'ementa' | 'livro') => void
-}) {
+export function Semana({ casa }: { casa: Casa }) {
   const [inicio, definirInicio] = useState(() => inicioDaSemana())
   const chave = chaveDaSemana(inicio)
   const {
@@ -39,17 +33,6 @@ export function Semana({ casa, email, aoSair, aoSairDaCasa, aoTrocarDeVista }: {
 
   const semData = useMemo(() => entradas.filter(e => e.dia === null), [entradas])
 
-  const jaAbriu = useRef(false)
-  useEffect(() => {
-    if (jaAbriu.current || hoje < 2 || estado !== 'pronto') return
-    jaAbriu.current = true
-    if (!window.matchMedia('(max-width: 63.99rem)').matches) return
-    document.getElementById(`dia-${hoje}`)?.closest('.dia')?.scrollIntoView({
-      block: 'start',
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-    })
-  }, [estado, hoje])
-
   const mover7 = (d: Date, n: number) => {
     const novo = new Date(d)
     novo.setDate(novo.getDate() + n * 7)
@@ -68,75 +51,68 @@ export function Semana({ casa, email, aoSair, aoSairDaCasa, aoTrocarDeVista }: {
   })
 
   return (
-    <div className="caderneta">
-      <Cabecalho
-        casa={casa}
-        email={email}
-        inicio={inicio}
-        aoRecuar={() => definirInicio(d => mover7(d, -1))}
-        aoAvancar={() => definirInicio(d => mover7(d, 1))}
-        aoHoje={() => definirInicio(inicioDaSemana())}
-        naSemanaCorrente={hoje >= 0}
-        aoSair={aoSair}
-        aoSairDaCasa={aoSairDaCasa}
-        vista="semana"
-        aoTrocarDeVista={aoTrocarDeVista}
-      />
+    <main className="pagina">
+      <header className="pagina-cabeca">
+        <div>
+          <h2 className="pagina-titulo">A semana</h2>
+          <p className="pagina-sub">{intervalo(inicio)}</p>
+        </div>
+        <nav className="semana-nav" aria-label="Semanas">
+          <button type="button" className="semana-nav-botao" onClick={() => definirInicio(d => mover7(d, -1))}>
+            <ISetaEsq lado={16} />
+            <span className="sr-only">Semana anterior</span>
+          </button>
+          <button type="button" className="semana-nav-botao" onClick={() => definirInicio(inicioDaSemana())} disabled={hoje >= 0}>
+            Esta semana
+          </button>
+          <button type="button" className="semana-nav-botao" onClick={() => definirInicio(d => mover7(d, 1))}>
+            <ISetaDir lado={16} />
+            <span className="sr-only">Semana seguinte</span>
+          </button>
+        </nav>
+      </header>
 
       {estado === 'sem-migracao' && (
-        <p className="falha" role="status">
-          <span className="falha-marca impresso">Sem tabelas</span>
+        <p className="faixa" role="status">
+          <span className="faixa-marca">Sem tabelas</span>
           <span>
-            A base de dados ainda não tem a caderneta. Corra
+            A base de dados ainda não tem a casa. Corra
             <code> supabase/migrations/20260824120000_caderneta.sql </code>
             no SQL Editor do projecto e recarregue.
           </span>
         </p>
       )}
-
       {estado === 'sem-rede' && (
-        <p className="falha" role="status">
-          <span className="falha-marca impresso">Sem ligação</span>
+        <p className="faixa" role="status">
+          <span className="faixa-marca">Sem ligação</span>
           <span>A mostrar a última versão guardada neste aparelho. O que escrever agora pode não chegar aos outros.</span>
         </p>
       )}
-
       {falhouAoGuardar && estado !== 'sem-rede' && (
-        <p className="falha" role="status">
-          <span className="falha-marca impresso">Não guardado</span>
-          <span>Alguma coisa não chegou ao servidor. O que está escrito continua aqui, mas pode não estar na caderneta dos outros.</span>
+        <p className="faixa" role="status">
+          <span className="faixa-marca">Não guardado</span>
+          <span>Alguma coisa não chegou ao servidor. O que está escrito continua aqui.</span>
         </p>
       )}
-
       {estado === 'pronto' && vazia && (
-        <p className="aviso" role="note">
-          <span>Caderneta em branco. As pautas estão à espera.</span>
-          <button type="button" className="aviso-repor impresso" onClick={escreverExemplo}>
+        <p className="faixa faixa--calma" role="note">
+          <span>Uma semana em branco.</span>
+          <button type="button" className="botao-texto" onClick={escreverExemplo}>
             Escrever uma semana de exemplo
           </button>
         </p>
       )}
 
-      <main className="abertura-envelope">
-        <div className="abertura">
-          <div className="pagina pagina--esquerda">
-            {[0, 1, 2, 3].map(i => <Dia key={i} {...diaProps(i)} />)}
-          </div>
-
-          <div className="lombada" aria-hidden="true" />
-
-          <div className="pagina pagina--direita">
-            {[4, 5, 6].map(i => <Dia key={i} {...diaProps(i)} />)}
-            <ListaSemana
-              entradas={semData}
-              aoAcrescentar={acrescentar}
-              aoAlterar={alterar}
-              aoApagar={apagar}
-              aoMover={mover}
-            />
-          </div>
-        </div>
-      </main>
-    </div>
+      <div className="dias">
+        {[0, 1, 2, 3, 4, 5, 6].map(i => <Dia key={i} {...diaProps(i)} />)}
+        <ListaSemana
+          entradas={semData}
+          aoAcrescentar={acrescentar}
+          aoAlterar={alterar}
+          aoApagar={apagar}
+          aoMover={mover}
+        />
+      </div>
+    </main>
   )
 }

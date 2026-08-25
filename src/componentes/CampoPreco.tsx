@@ -21,7 +21,7 @@ export function CampoPreco({ valor, rotulo, aoMudar }: {
 
   return (
     <input
-      className="escrita escrita--hora"
+      className="escrita escrita--num escrita--preco"
       value={texto}
       placeholder="€"
       inputMode="decimal"

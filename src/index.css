@@ -1,137 +1,95 @@
 @import "tailwindcss";
 @import "./fonts.css";
-@import "./caderneta.css";
+@import "./modulos.css";
 
 @theme {
-  --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
-  --font-mao: "Caveat", ui-sans-serif, cursive;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
 }
 
+/* ------------------------------------------------------------------
+   Os Módulos — a casa vista de cima: um chão de porcelana quente e,
+   pousados nele, módulos brancos. Cada área da vida da casa tem uma
+   cor própria, e TODOS os seus tons saem de uma fórmula só:
+     azulejo  = cor a 14% sobre branco
+     chip     = cor a 8% sobre branco
+     premido  = cor a 20% sobre branco
+     texto    = cor a 78% sobre a tinta
+   Nada é pastel escolhido à mão; muda-se a cor, muda tudo com ela.
+   ------------------------------------------------------------------ */
 :root {
-  /* ---- o impresso: what the book arrives with ---- */
-  --papel: #eef1f6;        /* cool stock the opening sits on */
-  --folha: #f8fafc;        /* the sheet itself */
-  --pauta: #c7d2e0;        /* printed rules */
-  --pauta-forte: #a5b6cc;  /* day divider */
-  --impresso-tinta: #5a6b85; /* printed labels */
-  --margem: #c0392b;       /* margin rule and corrections */
-  --capa: #16224a;         /* cover */
-  --capa-funda: #0e1730;
-  --fita: #c8912b;         /* today's ribbon */
-  --carimbo: #6b3fa8;      /* Visto stamp */
+  --fundo: #f2f0ea;         /* porcelana: o único chão da aplicação */
+  --modulo: #ffffff;        /* um módulo pousado no chão */
+  --tinta: #1c1b20;         /* a tinta que escreve e as pílulas que agem */
+  --tinta-2: #75705f;       /* secundária, tingida do chão — nunca cinzento puro */
+  --tinta-3: #a29c8a;       /* terciária: metadados, placeholders */
+  --linha-d: #e7e4da;       /* divisórias dentro de um módulo, raras */
+  --perigo: #b4432c;
 
-  /* ---- as canetas: one pen per member. Attribution is the ink. ---- */
-  --pai: #2440b0;          /* esferográfica azul */
-  --mae: #157a52;          /* esferográfica verde */
-  --filha: #4a5568;        /* lápis */
-  --casa: #1a1f2e;         /* esferográfica preta */
+  /* as cores dos módulos — o valor a 100% é a acção */
+  --c-semana: #5561b8;      /* íris */
+  --c-ementa: #467a52;      /* folha */
+  --c-lista: #b9862c;       /* mel */
+  --c-livro: #bd5f3a;       /* terracota */
+  --c-financas: #2f7e78;    /* azulejo-verde */
 
-  /* the rule pitch is the layout unit: one entry is exactly one rule */
-  --pauta-passo: 2.125rem;
-  --margem-x: 3.25rem;     /* where the red rule falls */
-  --hora-x: 4.25rem;       /* fixed right-hand time column */
+  /* as canetas: cada membro escreve com a sua cor */
+  --pai: #4a67c7;
+  --mae: #3e8560;
+  --filha: #8a63c0;
+  --casa: #1c1b20;
+
+  /* a unidade: 8px rege todos os vãos, raios e azulejos */
+  --u: 0.5rem;
+  --raio-modulo: 1.5rem;    /* 24 */
+  --raio-tile: 1rem;        /* 16 */
+  --raio-campo: 0.75rem;    /* 12 */
+
+  /* sombra a sério: deslocada e desfocada, nunca um halo */
+  --sombra-modulo: 0 10px 30px -18px rgb(28 27 32 / 0.22), 0 1px 2px rgb(28 27 32 / 0.05);
+  --sombra-alta: 0 18px 44px -20px rgb(28 27 32 / 0.30), 0 2px 4px rgb(28 27 32 / 0.06);
+
+  /* os degraus de letra — saltos óbvios, nada entre degraus */
+  --t-etiqueta: 0.75rem;    /* rótulos e metadados */
+  --t-corpo: 0.9375rem;     /* o corpo de tudo */
+  --t-forte: 1.125rem;      /* o que se lê primeiro numa linha */
+  --t-titulo: 1.5rem;       /* título de página e de módulo aberto */
+  --t-grande: 2.125rem;     /* a saudação, o jantar de hoje */
+
+  --mola: cubic-bezier(0.16, 1, 0.3, 1);
 
   color-scheme: light;
 }
 
 @media (max-width: 47.99rem) {
-  :root {
-    --pauta-passo: 2.375rem;
-    --margem-x: 2.5rem;
-    --hora-x: 3.25rem;
-  }
+  :root { --t-grande: 1.75rem; --t-titulo: 1.375rem; --raio-modulo: 1.25rem; }
 }
 
-/* ---- browser surfaces: the parts we did not draw still carry the design ---- */
-::selection { background: color-mix(in srgb, var(--pai) 22%, transparent); color: var(--capa-funda); }
-html { scrollbar-color: var(--pauta-forte) var(--papel); }
+/* ---- as superfícies do browser também são desenhadas ---- */
+::selection { background: color-mix(in oklab, var(--c-lista) 30%, transparent); color: var(--tinta); }
+html { scrollbar-color: color-mix(in oklab, var(--tinta) 22%, var(--fundo)) var(--fundo); }
 ::-webkit-scrollbar { width: 12px; height: 12px; }
-::-webkit-scrollbar-track { background: var(--papel); }
-::-webkit-scrollbar-thumb { background: var(--pauta-forte); border: 3px solid var(--papel); border-radius: 999px; }
-::-webkit-scrollbar-thumb:hover { background: var(--impresso-tinta); }
-
-:focus-visible {
-  outline: 2px solid var(--margem);
-  outline-offset: 2px;
-  border-radius: 1px;
+::-webkit-scrollbar-track { background: var(--fundo); }
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--tinta) 22%, var(--fundo));
+  border: 3px solid var(--fundo);
+  border-radius: 999px;
 }
+::-webkit-scrollbar-thumb:hover { background: color-mix(in oklab, var(--tinta) 38%, var(--fundo)); }
+
+:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; border-radius: 4px; }
 
 html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
-  background: var(--papel);
-  color: var(--casa);
+  background: var(--fundo);
+  color: var(--tinta);
   font-family: var(--font-sans);
-  font-variant-numeric: tabular-nums;
-  font-synthesis-weight: none;
+  font-size: var(--t-corpo);
+  font-weight: 500;
+  line-height: 1.45;
+  caret-color: var(--tinta);
   -webkit-font-smoothing: antialiased;
-  caret-color: var(--pai);
 }
 
-
-/* ---- a pauta: every day renders its rules, full or empty ---- */
-.pauta {
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent calc(var(--pauta-passo) - 1px),
-    var(--pauta) calc(var(--pauta-passo) - 1px),
-    var(--pauta) var(--pauta-passo)
-  );
-}
-
-/* the red margin rule, drawn where a school book prints it */
-.margem::before {
-  content: "";
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: var(--margem-x);
-  width: 1px;
-  background: color-mix(in srgb, var(--margem) 55%, transparent);
-  pointer-events: none;
-}
-
-/* a written line: sits ON the rule, in its author's ink.
-   A long entry runs onto the next rule instead of being clipped. */
-.linha {
-  min-height: var(--pauta-passo);
-  line-height: var(--pauta-passo);
-}
-
-/* what you write in is the page, not a widget on it */
-.escrita {
-  appearance: none;
-  background: transparent;
-  border: 0;
-  padding: 0;
-  margin: 0;
-  font: inherit;
-  font-family: inherit;
-  font-size: inherit;
-  font-stretch: inherit;
-  letter-spacing: inherit;
-  line-height: var(--pauta-passo);
-  color: inherit;
-  width: 100%;
-  display: block;
-  box-sizing: border-box;
-  border-radius: 1px;
-  resize: none;
-  overflow: hidden;
-  overflow-wrap: break-word;
-}
-/* A subordinação da continuação vem da tinta que o componente passa, não daqui:
-   o `style` em linha ganharia sempre a esta regra. */
-.escrita::placeholder { color: transparent; }
-.escrita:hover::placeholder,
-.escrita:focus::placeholder { color: var(--impresso-tinta); }
-.escrita:focus { outline: none; }
-.linha:focus-within {
-  background: color-mix(in srgb, var(--fita) 9%, transparent);
-  box-shadow: inset 2px 0 0 var(--fita);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
-}
+input, textarea, button, select { font-family: inherit; }

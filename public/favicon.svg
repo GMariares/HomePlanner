@@ -1,14 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="HomePlanner">
-  <!-- a capa -->
-  <rect width="64" height="64" rx="9" fill="#16224A"/>
-  <!-- a folha -->
-  <rect x="12" y="9" width="40" height="46" rx="2" fill="#F8FAFC"/>
-  <!-- a pauta -->
-  <g stroke="#C7D2E0" stroke-width="2.6" stroke-linecap="round">
-    <path d="M20 25h25"/><path d="M20 34h25"/><path d="M20 43h25"/>
-  </g>
-  <!-- a margem -->
-  <path d="M17 13v38" stroke="#C0392B" stroke-width="2.2" stroke-linecap="round"/>
-  <!-- a fita: hoje -->
-  <path d="M38 5h9v20l-4.5-4L38 25z" fill="#C8912B"/>
+  <!-- o chão de porcelana -->
+  <rect width="64" height="64" rx="14" fill="#F2F0EA"/>
+  <!-- quatro módulos, cada um na sua cor -->
+  <rect x="10" y="10" width="21" height="21" rx="7" fill="#5561B8"/>
+  <rect x="33" y="10" width="21" height="21" rx="7" fill="#467A52"/>
+  <rect x="10" y="33" width="21" height="21" rx="7" fill="#B9862C"/>
+  <rect x="33" y="33" width="21" height="21" rx="7" fill="#BD5F3A"/>
+  <!-- a casa, no módulo que lidera -->
+  <path d="M15.5 20.5 20.5 16l5 4.5" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M17 20v5.5h7V20" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState, type KeyboardEvent } from 'react'
 import { chaveDeNome } from '../dominio/adiar'
 import type { Artigo } from '../dominio/tipos'
+import { IMais } from './Icones'
 
 const TETO = 6
 
@@ -13,12 +14,12 @@ export function lerPreco(t: string): number | null {
 }
 
 /**
- * A linha em branco no fundo da lista.
+ * A fila em branco no fundo da lista.
  *
  * Escrever a lista é o trabalho todo, por isso é aqui que se ganha ou se
- * perde tempo. O que esta linha promete:
- *   — Tab passa à quantidade e ao preço, e não fecha a linha a meio;
- *   — Enter fecha a linha e deixa o cursor pronto para a seguinte;
+ * perde tempo. O que esta fila promete:
+ *   — Tab passa à quantidade e ao preço, e não fecha a fila a meio;
+ *   — Enter fecha a fila e deixa o cursor pronto para a seguinte;
  *   — o que a casa já comprou aparece à medida que se escreve, com a
  *     quantidade e o preço do costume já lá.
  */
@@ -42,7 +43,7 @@ export function LinhaNova({ artigos, mostrarPreco, aoAcrescentar }: {
       .slice(0, TETO)
   }, [artigos, chave])
 
-  /** O artigo exactamente igual ao que está escrito: é ele que empresta o que falta. */
+  /** O artigo exactamente igual ao que está escrito: empresta o que falta. */
   const sabido = useMemo(() => artigos.find(a => a.chave === chave) ?? null, [artigos, chave])
 
   const limpar = () => { definirNome(''); definirQtd(''); definirPreco(''); definirActiva(-1) }
@@ -79,7 +80,7 @@ export function LinhaNova({ artigos, mostrarPreco, aoAcrescentar }: {
     }
   }
 
-  /** Só fecha a linha quando se sai dela de vez — nunca ao passar para a quantidade. */
+  /** Só fecha quando se sai de vez — nunca ao passar para a quantidade. */
   const saiuDaLinha = (e: React.FocusEvent<HTMLDivElement>) => {
     if (linha.current?.contains(e.relatedTarget as Node | null)) return
     definirActiva(-1)
@@ -88,16 +89,16 @@ export function LinhaNova({ artigos, mostrarPreco, aoAcrescentar }: {
 
   return (
     <div className="linha-nova" ref={linha} onBlur={saiuDaLinha}>
-      <div className="linha linha--compra linha--branco" data-com-preco={mostrarPreco || undefined}>
-        <span className="linha-goteira" />
-        <span className="linha-corpo">
+      <div className="fila fila--branca">
+        <span className="fila-mais" aria-hidden="true"><IMais lado={16} /></span>
+        <span className="fila-corpo">
           <input
             ref={caixaNome}
             className="escrita"
             value={nome}
             onChange={e => { definirNome(e.target.value); definirActiva(-1) }}
             onKeyDown={teclas}
-            placeholder="escrever…"
+            placeholder="acrescentar à lista…"
             aria-label="Escrever uma coisa para comprar"
             aria-autocomplete="list"
             aria-expanded={sugestoes.length > 0}
@@ -108,33 +109,27 @@ export function LinhaNova({ artigos, mostrarPreco, aoAcrescentar }: {
             autoComplete="off"
           />
         </span>
-        <span className="linha-hora">
-          <input
-            className="escrita escrita--hora"
-            value={qtd}
-            onChange={e => definirQtd(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); fechar() } }}
-            placeholder={sabido?.quantidade ?? 'qt.'}
-            aria-label={sabido?.quantidade ? `Quantidade — do costume, ${sabido.quantidade}` : 'Quantidade'}
-            maxLength={24}
-          />
-        </span>
+        <input
+          className="escrita escrita--num escrita--qtd"
+          value={qtd}
+          onChange={e => definirQtd(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); fechar() } }}
+          placeholder={sabido?.quantidade ?? 'qt.'}
+          aria-label={sabido?.quantidade ? `Quantidade — do costume, ${sabido.quantidade}` : 'Quantidade'}
+          maxLength={24}
+        />
         {mostrarPreco && (
-          <span className="linha-preco">
-            <input
-              className="escrita escrita--hora"
-              value={preco}
-              onChange={e => definirPreco(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); fechar() } }}
-              placeholder={sabido?.preco != null ? sabido.preco.toFixed(2).replace('.', ',') : '€'}
-              inputMode="decimal"
-              aria-label="Preço, opcional"
-              maxLength={10}
-            />
-          </span>
+          <input
+            className="escrita escrita--num escrita--preco"
+            value={preco}
+            onChange={e => definirPreco(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); fechar() } }}
+            placeholder={sabido?.preco != null ? sabido.preco.toFixed(2).replace('.', ',') : '€'}
+            inputMode="decimal"
+            aria-label="Preço, opcional"
+            maxLength={10}
+          />
         )}
-        <span className="linha-carimbo" />
-        <span className="linha-accoes" />
       </div>
 
       {sugestoes.length > 0 && (
@@ -152,7 +147,7 @@ export function LinhaNova({ artigos, mostrarPreco, aoAcrescentar }: {
                 onClick={() => fechar(a)}
               >
                 <span className="sugestao-nome">{a.nome}</span>
-                <span className="sugestao-costume impresso">
+                <span className="sugestao-costume">
                   {[a.quantidade, a.preco != null ? `${a.preco.toFixed(2).replace('.', ',')} €` : null]
                     .filter(Boolean).join(' · ') || 'sem quantidade guardada'}
                 </span>

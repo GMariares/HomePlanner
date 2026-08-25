@@ -1,0 +1,836 @@
+/* =====================================================================
+   OS MÓDULOS — a folha de estilos do mundo.
+
+   Regras herdadas da mão que este mundo venceu (cada uma tem dono):
+   — identidade paramétrica: os tons de um módulo derivam TODOS de --cor;
+   — cracktro: dentro de um módulo a hierarquia é tipo e espaço,
+     nunca caixa dentro de caixa;
+   — osciloscópio: 8px rege cada vão e raio; números sempre tabulares,
+     encostados à direita;
+   — tensegridade: cada controlo tem os cinco estados desenhados;
+   — capa de cordão: cada módulo tem UM gesto de abertura, não uma
+     poeira de botõezinhos;
+   — consola: um chão só; o estado é luz e elevação, nunca uma borda.
+   ===================================================================== */
+
+/* ---------------- a fórmula ----------------
+   Quem define --cor recebe a família inteira. */
+.com-cor {
+  --cor-tile: color-mix(in oklab, var(--cor) 14%, #fff);
+  --cor-chip: color-mix(in oklab, var(--cor) 8%, #fff);
+  --cor-premido: color-mix(in oklab, var(--cor) 20%, #fff);
+  --cor-texto: color-mix(in oklab, var(--cor) 78%, var(--tinta));
+}
+
+/* ---------------- a concha ---------------- */
+.concha { min-height: 100dvh; display: flex; flex-direction: column; }
+
+.topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--u) * 2);
+  padding: calc(var(--u) * 2) calc(var(--u) * 3);
+  max-width: 75rem;
+  width: 100%;
+  margin-inline: auto;
+  box-sizing: border-box;
+}
+.topo-casa {
+  margin: 0;
+  font-size: var(--t-forte);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* navegação: pílulas no topo em ecrã largo, barra de polegar em baixo no telemóvel */
+.nav {
+  display: flex;
+  gap: calc(var(--u) / 2);
+  align-items: center;
+}
+.nav-item {
+  appearance: none;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.75);
+  padding: calc(var(--u) * 1) calc(var(--u) * 1.75);
+  border-radius: 999px;
+  font-size: var(--t-corpo);
+  font-weight: 700;
+  color: var(--tinta-2);
+  transition: background-color 160ms var(--mola), color 160ms var(--mola), transform 160ms var(--mola);
+}
+.nav-item:hover { background: color-mix(in oklab, var(--tinta) 6%, transparent); color: var(--tinta); }
+.nav-item:active { transform: scale(0.97); }
+.nav-item[aria-current="page"] { background: var(--tinta); color: var(--modulo); }
+.nav-item[aria-current="page"] .nav-icone { color: color-mix(in oklab, var(--modulo) 88%, var(--tinta)); }
+.nav-icone { display: inline-flex; }
+.nav-item:disabled { color: var(--tinta-3); cursor: default; background: none; }
+
+@media (max-width: 47.99rem) {
+  /* o que rola para a vista não pode parar debaixo da barra do polegar */
+  html { scroll-padding-bottom: calc(var(--u) * 12); }
+  .topo { padding: calc(var(--u) * 1.5) calc(var(--u) * 2); }
+  .nav--topo { display: none; }
+  .concha { padding-bottom: calc(var(--u) * 10 + env(safe-area-inset-bottom)); }
+  .nav--fundo {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 30;
+    background: color-mix(in srgb, var(--modulo) 92%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-top: 1px solid var(--linha-d);
+    padding: calc(var(--u) * 0.75) calc(var(--u) * 1) calc(var(--u) * 0.75 + env(safe-area-inset-bottom));
+    display: flex;
+    justify-content: space-around;
+    gap: 0;
+  }
+  .nav--fundo .nav-item {
+    flex-direction: column;
+    gap: 2px;
+    padding: calc(var(--u) * 0.5) calc(var(--u) * 1.25);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    border-radius: var(--raio-campo);
+  }
+  .nav--fundo .nav-item[aria-current="page"] { background: var(--tinta); color: var(--modulo); }
+}
+@media (min-width: 48rem) {
+  .nav--fundo { display: none; }
+}
+
+/* ---------------- a página ---------------- */
+.pagina {
+  width: 100%;
+  max-width: 75rem;
+  margin-inline: auto;
+  box-sizing: border-box;
+  padding: calc(var(--u) * 1) calc(var(--u) * 3) calc(var(--u) * 6);
+  animation: chegar 360ms var(--mola) both;
+}
+@media (max-width: 47.99rem) { .pagina { padding-inline: calc(var(--u) * 2); } }
+@keyframes chegar {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pagina { animation: none; }
+  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+
+.pagina-cabeca {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: calc(var(--u) * 1) calc(var(--u) * 2);
+  margin: calc(var(--u) * 2) 0 calc(var(--u) * 2.5);
+}
+.pagina-titulo {
+  margin: 0;
+  font-size: var(--t-grande);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+.pagina-sub { margin: calc(var(--u) * 0.75) 0 0; color: var(--tinta-2); font-size: var(--t-corpo); }
+
+/* navegação de semana: um grupo de pílula */
+.semana-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--modulo);
+  border-radius: 999px;
+  padding: 4px;
+  box-shadow: var(--sombra-modulo);
+}
+.semana-nav-botao {
+  appearance: none;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: calc(var(--u) * 4.5);
+  height: calc(var(--u) * 4.5);
+  padding: 0 calc(var(--u) * 1.5);
+  border-radius: 999px;
+  font-size: var(--t-etiqueta);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: var(--tinta);
+  transition: background-color 140ms var(--mola), transform 140ms var(--mola);
+}
+.semana-nav-botao:hover { background: color-mix(in oklab, var(--tinta) 7%, transparent); }
+.semana-nav-botao:active { transform: scale(0.95); }
+.semana-nav-botao:disabled { color: var(--tinta-3); background: none; cursor: default; }
+
+/* ---------------- módulos ---------------- */
+.modulo {
+  background: var(--modulo);
+  border-radius: var(--raio-modulo);
+  box-shadow: var(--sombra-modulo);
+  padding: calc(var(--u) * 2.5);
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+/* a grelha bento do Início */
+.bento {
+  display: grid;
+  gap: calc(var(--u) * 2);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (min-width: 64rem) { .bento { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.bento > * { min-width: 0; }
+.bento-2 { grid-column: span 2; }
+
+/* um módulo do Início é um botão inteiro: UM gesto, abrir */
+.modulo--tocavel {
+  appearance: none;
+  border: 0;
+  text-align: start;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 1.5);
+  transition: transform 200ms var(--mola), box-shadow 200ms var(--mola);
+}
+.modulo--tocavel:hover { box-shadow: var(--sombra-alta); transform: translateY(-2px); }
+.modulo--tocavel:active { transform: scale(0.985); box-shadow: var(--sombra-modulo); }
+.modulo--mudo { cursor: default; }
+.modulo--mudo:hover { box-shadow: var(--sombra-modulo); transform: none; }
+
+.modulo-cabeca {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 1.25);
+  width: 100%;
+}
+.modulo-titulo { margin: 0; font-size: var(--t-corpo); font-weight: 800; letter-spacing: -0.01em; }
+.modulo-meta { margin-inline-start: auto; color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 700; white-space: nowrap; }
+
+/* o azulejo do módulo: o desenho na cor da casa */
+.tile {
+  width: calc(var(--u) * 5);
+  height: calc(var(--u) * 5);
+  border-radius: var(--raio-tile);
+  background: var(--cor-tile);
+  color: var(--cor-texto);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.tile--grande { width: calc(var(--u) * 7); height: calc(var(--u) * 7); border-radius: calc(var(--u) * 2.5); }
+
+.modulo-destaque {
+  margin: 0;
+  font-size: var(--t-grande);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.modulo-nota { margin: 0; color: var(--tinta-2); font-size: var(--t-corpo); }
+.modulo-numero { font-variant-numeric: tabular-nums; }
+
+/* linhas de amostra dentro dum módulo do Início: tipo e espaço, sem caixas */
+.amostra { list-style: none; margin: 0; padding: 0; display: grid; gap: calc(var(--u) * 0.75); width: 100%; }
+.amostra li {
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--u) * 1);
+  min-width: 0;
+}
+.amostra-texto { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.amostra-hora { margin-inline-start: auto; color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 700; font-variant-numeric: tabular-nums; }
+.amostra-ponto { width: 8px; height: 8px; border-radius: 999px; flex: none; align-self: center; }
+
+/* ---------------- chips ---------------- */
+.chip {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.75);
+  padding: calc(var(--u) * 0.875) calc(var(--u) * 1.5);
+  border-radius: 999px;
+  background: var(--cor-chip, color-mix(in oklab, var(--tinta) 6%, #fff));
+  color: var(--cor-texto, var(--tinta));
+  font-size: var(--t-etiqueta);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  transition: background-color 140ms var(--mola), transform 140ms var(--mola);
+  white-space: nowrap;
+}
+.chip:hover { background: var(--cor-premido, color-mix(in oklab, var(--tinta) 10%, #fff)); }
+.chip:active { transform: scale(0.96); }
+.chip:disabled { color: var(--tinta-3); background: color-mix(in oklab, var(--tinta) 4%, #fff); cursor: default; }
+.chip-conta { font-weight: 700; color: color-mix(in oklab, var(--cor-texto, var(--tinta)) 60%, transparent); }
+.chips { display: flex; flex-wrap: wrap; gap: calc(var(--u) * 1); margin: 0; padding: 0; }
+
+/* ---------------- botões ---------------- */
+.pilula {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--u) * 1);
+  padding: calc(var(--u) * 1.5) calc(var(--u) * 3);
+  border-radius: 999px;
+  background: var(--tinta);
+  color: var(--modulo);
+  font-size: var(--t-corpo);
+  font-weight: 800;
+  letter-spacing: 0;
+  transition: transform 160ms var(--mola), background-color 160ms var(--mola), opacity 160ms var(--mola);
+}
+.pilula:hover { background: color-mix(in oklab, var(--tinta) 86%, #fff); }
+.pilula:active { transform: scale(0.97); }
+.pilula:disabled { opacity: 0.45; cursor: default; transform: none; }
+
+.botao-texto {
+  appearance: none;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  padding: calc(var(--u) * 0.5) calc(var(--u) * 0.75);
+  margin: calc(var(--u) * -0.5) calc(var(--u) * -0.75);
+  border-radius: var(--raio-campo);
+  font-size: var(--t-etiqueta);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: var(--tinta-2);
+  transition: background-color 140ms var(--mola), color 140ms var(--mola);
+}
+.botao-texto:hover { background: color-mix(in oklab, var(--tinta) 6%, transparent); color: var(--tinta); }
+.botao-texto:disabled { color: var(--tinta-3); background: none; cursor: default; }
+.botao-texto--perigo { color: var(--perigo); }
+.botao-texto--perigo:hover { background: color-mix(in oklab, var(--perigo) 8%, transparent); color: var(--perigo); }
+
+.botao-gelo {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--u) * 4);
+  height: calc(var(--u) * 4);
+  border-radius: var(--raio-campo);
+  background: none;
+  color: var(--tinta-3);
+  transition: background-color 140ms var(--mola), color 140ms var(--mola), transform 140ms var(--mola);
+}
+.botao-gelo:hover { background: color-mix(in oklab, var(--tinta) 7%, transparent); color: var(--tinta); }
+.botao-gelo:active { transform: scale(0.94); }
+
+/* ---------------- o visto ---------------- */
+.visto {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  width: calc(var(--u) * 3.5);
+  height: calc(var(--u) * 3.5);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--cor, var(--tinta)) 38%, #fff);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex: none;
+  position: relative;
+  transition: background-color 180ms var(--mola), box-shadow 180ms var(--mola), transform 180ms var(--mola);
+}
+.visto::before { content: ""; position: absolute; inset: calc(var(--u) * -1); }
+.visto:hover { box-shadow: inset 0 0 0 2px var(--cor, var(--tinta)); }
+.visto:active { transform: scale(0.9); }
+.visto[aria-checked="true"] {
+  background: var(--cor, var(--tinta));
+  box-shadow: inset 0 0 0 2px var(--cor, var(--tinta));
+}
+.visto svg { opacity: 0; transform: scale(0.5); transition: opacity 140ms var(--mola), transform 220ms var(--mola); }
+.visto[aria-checked="true"] svg { opacity: 1; transform: none; }
+@keyframes vistopop { 40% { transform: scale(1.12); } }
+.visto[data-acabado] { animation: vistopop 320ms var(--mola); }
+
+/* ---------------- campos ---------------- */
+.campo { display: grid; gap: calc(var(--u) * 0.75); }
+.campo > .campo-nome { font-size: var(--t-etiqueta); font-weight: 800; letter-spacing: 0.01em; color: var(--tinta-2); }
+.campo-escrita {
+  appearance: none;
+  border: 0;
+  background: color-mix(in oklab, var(--tinta) 5%, #fff);
+  border-radius: var(--raio-campo);
+  padding: calc(var(--u) * 1.5) calc(var(--u) * 2);
+  font-size: var(--t-corpo);
+  font-weight: 600;
+  color: var(--tinta);
+  transition: background-color 140ms var(--mola), box-shadow 140ms var(--mola);
+  width: 100%;
+  box-sizing: border-box;
+}
+.campo-escrita::placeholder { color: var(--tinta-3); font-weight: 500; }
+.campo-escrita:hover { background: color-mix(in oklab, var(--tinta) 7%, #fff); }
+.campo-escrita:focus { outline: none; background: #fff; box-shadow: inset 0 0 0 2px var(--tinta); }
+.campo-escrita[aria-invalid="true"] { box-shadow: inset 0 0 0 2px var(--perigo); }
+.campo-escrita--codigo { letter-spacing: 0.35em; text-transform: uppercase; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+.procura { position: relative; }
+.procura .campo-escrita { padding-inline-start: calc(var(--u) * 5.5); }
+.procura-icone {
+  position: absolute;
+  inset-inline-start: calc(var(--u) * 2);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--tinta-3);
+  pointer-events: none;
+  display: inline-flex;
+}
+
+/* ---------------- linhas de lista dentro de um módulo ----------------
+   Sem caixa dentro de caixa: uma linha é tipo, espaço e uma divisória fina. */
+.fila {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 1.5);
+  padding: calc(var(--u) * 1.25) 0;
+  min-height: calc(var(--u) * 5);
+  box-sizing: border-box;
+  position: relative;
+}
+.fila + .fila, .fila + .fila-grupo, .fila-grupo + .fila { border-top: 1px solid var(--linha-d); }
+.fila-corpo { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.fila-nome { font-size: var(--t-corpo); font-weight: 700; min-width: 0; overflow-wrap: anywhere; }
+.fila-meta { color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 700; display: flex; gap: calc(var(--u) * 1); flex-wrap: wrap; }
+.fila-numero {
+  margin-inline-start: auto;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--tinta-2);
+  font-size: var(--t-corpo);
+  flex: none;
+}
+.fila[data-feita] .fila-nome, .fila[data-feita] .fila-numero { color: var(--tinta-3); }
+.fila[data-feita] .fila-nome { text-decoration: line-through; text-decoration-color: color-mix(in oklab, var(--cor, var(--tinta)) 55%, transparent); }
+/* o que a família escreve vive em campos: o risco tem de os apanhar também */
+.fila[data-feita] .escrita {
+  color: var(--tinta-3);
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in oklab, var(--cor, var(--tinta)) 55%, transparent);
+}
+.fila[data-feita] .escrita:placeholder-shown { text-decoration: none; }
+
+/* escrita em linha: os campos são invisíveis até se lhes tocar */
+.escrita {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: calc(var(--u) * 0.5) calc(var(--u) * 0.75);
+  margin: calc(var(--u) * -0.5) calc(var(--u) * -0.75);
+  border-radius: calc(var(--u) * 1);
+  font: inherit;
+  color: inherit;
+  /* border-box, sempre: a medição do auto-tamanho (height = scrollHeight)
+     em content-box soma o próprio padding a cada passagem e cresce sem fim. */
+  width: calc(100% + var(--u) * 1.5);
+  box-sizing: border-box;
+  resize: none;
+  overflow: hidden;
+  display: block;
+  line-height: 1.35;
+  transition: background-color 140ms var(--mola);
+}
+.escrita::placeholder { color: var(--tinta-3); font-weight: 500; }
+.escrita:hover { background: color-mix(in oklab, var(--tinta) 5%, transparent); }
+.escrita:focus { outline: none; background: color-mix(in oklab, var(--tinta) 7%, transparent); }
+
+.escrita--num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--tinta-2);
+  width: calc(var(--u) * 9);
+  flex: none;
+  margin: 0;
+  padding: calc(var(--u) * 0.5) calc(var(--u) * 0.75);
+}
+.escrita--num::placeholder { font-weight: 600; }
+
+/* ---------------- avisos ---------------- */
+.faixa {
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--u) * 1.5);
+  flex-wrap: wrap;
+  max-width: 75rem;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: calc(var(--u) * 1.25) calc(var(--u) * 3);
+  font-size: var(--t-corpo);
+  color: var(--tinta-2);
+}
+@media (max-width: 47.99rem) { .faixa { padding-inline: calc(var(--u) * 2); } }
+.faixa-marca { font-weight: 800; color: var(--perigo); font-size: var(--t-etiqueta); letter-spacing: 0.02em; text-transform: uppercase; }
+.faixa--calma .faixa-marca { color: var(--tinta-2); }
+.faixa code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85em; background: color-mix(in oklab, var(--tinta) 6%, transparent); padding: 1px 5px; border-radius: 6px; }
+
+/* ---------------- menu flutuante ---------------- */
+.menu-raiz { position: relative; display: inline-flex; }
+.menu {
+  position: absolute;
+  top: calc(100% + var(--u));
+  inset-inline-start: 0;
+  z-index: 40;
+  min-width: 13rem;
+  background: var(--modulo);
+  border-radius: var(--raio-tile);
+  box-shadow: var(--sombra-alta);
+  padding: calc(var(--u) * 0.75);
+  animation: chegar 200ms var(--mola) both;
+}
+.menu--direita { inset-inline-start: auto; inset-inline-end: 0; }
+.menu-titulo {
+  margin: 0;
+  padding: calc(var(--u) * 0.75) calc(var(--u) * 1.25) calc(var(--u) * 0.5);
+  font-size: var(--t-etiqueta);
+  font-weight: 800;
+  color: var(--tinta-3);
+}
+.menu-item {
+  appearance: none;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: calc(var(--u) * 1);
+  padding: calc(var(--u) * 1) calc(var(--u) * 1.25);
+  border-radius: calc(var(--u) * 1);
+  font-size: var(--t-corpo);
+  font-weight: 700;
+  color: var(--tinta);
+  text-align: start;
+  transition: background-color 120ms var(--mola);
+}
+.menu-item:hover { background: color-mix(in oklab, var(--tinta) 6%, transparent); }
+.menu-item[aria-current] { background: color-mix(in oklab, var(--tinta) 8%, transparent); }
+
+/* ---------------- sugestões (lista de compras) ---------------- */
+.linha-nova { position: relative; }
+.sugestoes {
+  list-style: none;
+  margin: 0;
+  padding: calc(var(--u) * 0.75);
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  z-index: 40;
+  background: var(--modulo);
+  border-radius: var(--raio-tile);
+  box-shadow: var(--sombra-alta);
+  display: grid;
+  gap: 2px;
+}
+.sugestao {
+  appearance: none;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  width: 100%;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: calc(var(--u) * 1.5);
+  padding: calc(var(--u) * 1) calc(var(--u) * 1.25);
+  border-radius: calc(var(--u) * 1);
+  font-size: var(--t-corpo);
+  text-align: start;
+  transition: background-color 100ms var(--mola);
+}
+.sugestao[data-activa] { background: color-mix(in oklab, var(--tinta) 7%, transparent); }
+.sugestao-nome { font-weight: 700; }
+.sugestao-costume { color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 700; white-space: nowrap; }
+
+/* ---------------- confirmação em linha ---------------- */
+.confirmar {
+  margin: calc(var(--u) * 1) 0;
+  padding: calc(var(--u) * 1.5) calc(var(--u) * 2);
+  border-radius: var(--raio-tile);
+  background: color-mix(in oklab, var(--perigo) 7%, #fff);
+  color: var(--tinta);
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--u) * 1.5);
+  flex-wrap: wrap;
+  font-size: var(--t-corpo);
+}
+
+/* ---------------- portada (entrar / casa) ---------------- */
+.portada {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: calc(var(--u) * 3);
+  box-sizing: border-box;
+}
+.cartao-portada {
+  width: 100%;
+  max-width: 26rem;
+  background: var(--modulo);
+  border-radius: var(--raio-modulo);
+  box-shadow: var(--sombra-alta);
+  padding: calc(var(--u) * 4);
+  box-sizing: border-box;
+  display: grid;
+  gap: calc(var(--u) * 2.5);
+}
+.portada-titulo { margin: 0; font-size: var(--t-titulo); font-weight: 800; letter-spacing: -0.02em; text-wrap: balance; }
+.portada-texto { margin: 0; color: var(--tinta-2); }
+.portada-espera { color: var(--tinta-2); font-weight: 700; }
+.recado-erro {
+  margin: 0;
+  color: var(--perigo);
+  font-weight: 700;
+  font-size: var(--t-corpo);
+}
+
+/* a fila de azulejos que apresenta a casa na portada e nas Finanças */
+.trio { display: flex; gap: calc(var(--u) * 1.5); }
+
+/* ---------------- específicos de páginas ---------------- */
+
+/* Início */
+.saudacao { margin: calc(var(--u) * 3) 0 calc(var(--u) * 0.5); font-size: var(--t-grande); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; text-wrap: balance; }
+.saudacao-dia { margin: 0 0 calc(var(--u) * 3); color: var(--tinta-2); }
+.saudacao-dia::first-letter { text-transform: uppercase; }
+
+/* Semana: um módulo por dia */
+.dias { display: grid; gap: calc(var(--u) * 2); grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); align-items: start; }
+.dia-modulo[data-hoje] { box-shadow: var(--sombra-alta), inset 0 0 0 2px var(--c-semana); }
+.dia-cabeca { display: flex; align-items: baseline; gap: calc(var(--u) * 1.25); margin-bottom: calc(var(--u) * 0.5); }
+.dia-nome { margin: 0; font-size: var(--t-forte); font-weight: 800; letter-spacing: -0.01em; }
+.dia-data { color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 800; font-variant-numeric: tabular-nums; }
+.dia-hoje-marca {
+  margin-inline-start: auto;
+  background: var(--c-semana);
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+
+/* a etiqueta de autor: um ponto com nome, tocável */
+.autor {
+  appearance: none;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  margin-inline-start: -8px;
+  border-radius: 999px;
+  font-size: var(--t-etiqueta);
+  font-weight: 800;
+  color: var(--tinta-2);
+  transition: background-color 120ms var(--mola);
+}
+.autor:hover { background: color-mix(in oklab, var(--tinta) 6%, transparent); }
+.autor-ponto { width: 8px; height: 8px; border-radius: 999px; background: currentColor; }
+
+.fila--riscada .fila-nome { color: var(--tinta-3); text-decoration: line-through; }
+.fila-mudanca { display: inline-flex; align-items: center; gap: 4px; color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 700; }
+
+/* Ementa: a tira de dias é uma fila de pastilhas horizontais */
+.tira {
+  list-style: none;
+  margin: 0 calc(var(--u) * -2.5);
+  padding: calc(var(--u) * 0.5) calc(var(--u) * 2.5) calc(var(--u) * 1);
+  display: flex;
+  gap: calc(var(--u) * 1);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tira::-webkit-scrollbar { display: none; }
+.tira-celula {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  flex: none;
+  width: calc(var(--u) * 12);
+  border-radius: var(--raio-tile);
+  background: color-mix(in oklab, var(--tinta) 4%, #fff);
+  padding: calc(var(--u) * 1.25);
+  display: grid;
+  gap: 2px;
+  text-align: start;
+  transition: background-color 160ms var(--mola), box-shadow 160ms var(--mola), transform 160ms var(--mola);
+}
+.tira-celula:hover { background: var(--cor-chip); }
+.tira-celula:active { transform: scale(0.97); }
+.tira-celula[data-aberta] { background: var(--cor-tile); box-shadow: inset 0 0 0 2px var(--cor, var(--tinta)); }
+.tira-celula[data-hoje]:not([data-aberta]) { box-shadow: inset 0 0 0 1.5px color-mix(in oklab, var(--cor) 45%, transparent); }
+.tira-dia { font-size: var(--t-etiqueta); font-weight: 800; color: var(--cor-texto); }
+.tira-data { color: var(--tinta-3); font-variant-numeric: tabular-nums; }
+.tira-prato {
+  font-size: var(--t-corpo);
+  font-weight: 700;
+  color: var(--tinta);
+  min-height: 2.6em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.tira-prato[data-vazio] { color: var(--tinta-3); font-weight: 600; }
+
+.ementa-grelha { display: grid; gap: calc(var(--u) * 2); align-items: start; }
+@media (min-width: 64rem) { .ementa-grelha { grid-template-columns: 2fr 3fr; } }
+
+.livro-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.livro-linha {
+  appearance: none;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: calc(var(--u) * 1.5);
+  padding: calc(var(--u) * 1) calc(var(--u) * 1.25);
+  border-radius: var(--raio-campo);
+  font-size: var(--t-corpo);
+  text-align: start;
+  transition: background-color 120ms var(--mola);
+}
+.livro-linha:hover { background: color-mix(in oklab, var(--tinta) 5%, transparent); }
+.livro-linha-nome { font-weight: 700; min-width: 0; overflow-wrap: anywhere; }
+.livro-linha-meta { margin-inline-start: auto; color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 700; white-space: nowrap; }
+
+.total-fila {
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--u) * 1.25);
+  flex-wrap: wrap;
+  margin-top: calc(var(--u) * 2);
+  padding-top: calc(var(--u) * 1.5);
+  border-top: 1px solid var(--linha-d);
+}
+.total-nome { color: var(--tinta-2); font-size: var(--t-etiqueta); font-weight: 800; }
+.total-valor { font-size: var(--t-titulo); font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.total-valor--cesto { font-size: var(--t-corpo); color: var(--tinta-2); }
+.total-nota { color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 600; width: 100%; }
+
+/* vazio de módulo: uma frase, não um ecrã */
+.vazio { margin: calc(var(--u) * 1) 0; color: var(--tinta-2); max-width: 46ch; }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------------- o painel da conta ---------------- */
+.conta-painel { min-width: 17rem; display: grid; gap: calc(var(--u) * 1.75); padding: calc(var(--u) * 2); }
+.conta-codigo { margin: 0; display: grid; gap: 2px; }
+.conta-codigo strong { font-size: var(--t-forte); font-weight: 800; letter-spacing: 0.3em; font-variant-numeric: tabular-nums; }
+.conta-nota { color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 600; }
+.conta-email { margin: 0; color: var(--tinta-2); font-size: var(--t-etiqueta); font-weight: 700; overflow: hidden; text-overflow: ellipsis; }
+.conta-accoes { display: flex; gap: calc(var(--u) * 2); flex-wrap: wrap; }
+
+/* ---------------- Finanças, em obras ---------------- */
+.financas-breve { max-width: 34rem; display: grid; gap: calc(var(--u) * 2.5); padding: calc(var(--u) * 4); }
+
+/* a fila em branco no fundo de um dia */
+.fila--branca { color: var(--tinta-3); }
+.fila-mais { display: inline-flex; color: var(--tinta-3); flex: none; }
+.escrita--hora { width: calc(var(--u) * 7); }
+
+/* ---------------- o prato do dia ---------------- */
+.prato-do-dia { display: grid; gap: calc(var(--u) * 1.5); margin-top: calc(var(--u) * 1.5); }
+.prato-do-dia .dia-cabeca { margin-bottom: 0; }
+.prato-nome-grande { font-size: var(--t-forte); }
+.livro-mais { padding: calc(var(--u) * 1) calc(var(--u) * 1.25); color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 700; }
+.livro-linha--novo .livro-linha-nome { color: var(--cor-texto); }
+.ingredientes { display: grid; }
+.ingredientes-titulo { margin: 0 0 calc(var(--u) * 0.5); color: var(--tinta-2); font-size: var(--t-etiqueta); font-weight: 800; }
+
+/* ---------------- a lista ---------------- */
+.dia-cabeca--lista { flex-wrap: wrap; row-gap: calc(var(--u) * 0.5); }
+.lista-accoes { margin-inline-start: auto; display: inline-flex; gap: calc(var(--u) * 2); flex-wrap: wrap; }
+.lista-conjuntos { margin-bottom: calc(var(--u) * 1.5); }
+.lista-recado { margin: 0 0 calc(var(--u) * 1); color: var(--cor-texto); font-size: var(--t-etiqueta); font-weight: 800; }
+.lista-filas { display: grid; }
+.fila-origem, .fila-atrasada { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 16rem; }
+.fila-atrasada { color: var(--cor-texto); }
+/* Uma quantidade cortada é uma compra errada: a coluna mede-se em ch — com
+   numerais tabulares, 1ch é um dígito — e por isso encolhe sozinha quando a
+   letra encolhe no telemóvel. */
+.escrita--qtd { width: clamp(calc(var(--u) * 6), calc((var(--qtd-ch, 4) * 0.78 + 2.5) * 1ch), 11rem); }
+.escrita--preco { width: calc(var(--u) * 7.5); }
+@media (max-width: 47.99rem) {
+  .fila-origem { max-width: 9rem; }
+  .lista-filas .fila { gap: calc(var(--u) * 1); }
+  .lista-filas .escrita--num { font-size: var(--t-etiqueta); }
+  .escrita--preco { width: calc(var(--u) * 6); }
+  /* No telemóvel o menu da fila não rouba a largura aos números: sai da
+     grelha e só aparece quando se está dentro da fila. */
+  .lista-filas .fila > .botao-gelo {
+    position: absolute;
+    inset-inline-end: 0;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--modulo);
+    box-shadow: var(--sombra-modulo);
+  }
+  .lista-filas .fila:focus-within > .botao-gelo { opacity: 1; pointer-events: auto; }
+}
+
+/* ---------------- o livro ---------------- */
+.livro-grelha { display: grid; gap: calc(var(--u) * 2); align-items: start; }
+@media (min-width: 64rem) { .livro-grelha { grid-template-columns: 3fr 2fr; } }
+.livro-procura { margin-bottom: calc(var(--u) * 1); }
+.fila-grupo { padding: 0; }
+/* as filas de dentro recuam meio azulejo: pertencem à de cima */
+.dentro { padding-inline-start: calc(var(--u) * 3); padding-bottom: calc(var(--u) * 1); }
+.dentro .ingredientes-titulo { margin-top: calc(var(--u) * 0.5); }
+.dentro .fila { min-height: calc(var(--u) * 4.5); padding-block: calc(var(--u) * 0.75); }
+.portada-marca { margin: 0; color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 800; letter-spacing: 0.02em; overflow: hidden; text-overflow: ellipsis; }

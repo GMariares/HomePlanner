@@ -1,13 +1,13 @@
 {
   "name": "HomePlanner — A semana da família",
-  "short_name": "A Semana",
+  "short_name": "A Casa",
   "lang": "pt-PT",
   "dir": "ltr",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#EEF1F6",
-  "theme_color": "#16224A",
-  "description": "A semana da família — a caderneta partilhada de casa.",
+  "background_color": "#F2F0EA",
+  "theme_color": "#F2F0EA",
+  "description": "A casa numa passagem de olhos — jantares, compras, semana e, em breve, as contas.",
   "icons": [
     {
       "src": "/favicon.svg",

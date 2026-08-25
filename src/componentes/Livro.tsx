@@ -1,157 +1,68 @@
-import { useMemo, useState } from 'react'
-import { Cabecalho } from './Cabecalho'
+import { useMemo, useState, type CSSProperties } from 'react'
 import { Escrita } from './Escrita'
 import { useRascunho } from '../dominio/rascunho'
-import { Reticencias } from './Icones'
+import { ILupa, IPontos, iconeDePrato } from './Icones'
 import { Menu } from './Menu'
 import { useLivro } from '../dominio/livro'
 import { chaveDeNome } from '../dominio/adiar'
-import { inicioDaSemana } from '../dominio/semana'
 import type { Casa, Conjunto, ItemDeConjunto, Prato } from '../dominio/tipos'
 
-function Ingredientes({ prato, aoAcrescentar, aoAlterar, aoApagar }: {
-  prato: Prato
-  aoAcrescentar: (pratoId: string, nome: string, quantidade: string | null) => void
-  aoAlterar: (id: string, mudanca: { nome?: string; quantidade?: string | null }) => void
-  aoApagar: (id: string) => void
+/** As filas de dentro: o que um prato leva, o que um conjunto leva. */
+function Dentro({ nomes, filas, rotuloNovo, aoGuardar, aoAlterarNome, aoAlterarQtd, aoApagar }: {
+  nomes: { vazio: string; cheio: string }
+  filas: { id: string; nome: string; quantidade: string | null }[]
+  rotuloNovo: string
+  aoGuardar: (nome: string, quantidade: string | null) => void
+  aoAlterarNome: (id: string, nome: string) => void
+  aoAlterarQtd: (id: string, quantidade: string) => void
+  aoApagar: (id: string, nome: string) => void
 }) {
   const [nome, definirNome] = useState('')
   const [qtd, definirQtd] = useState('')
   const guardar = () => {
     if (!nome.trim()) return
-    aoAcrescentar(prato.id, nome.trim(), qtd.trim() || null)
+    aoGuardar(nome.trim(), qtd.trim() || null)
     definirNome(''); definirQtd('')
   }
   const { linha, aoPerderFoco } = useRascunho(guardar)
 
   return (
-    <>
-      <div className="linha linha--legenda">
-        <span className="linha-goteira" />
-        <span className="linha-corpo impresso">
-          {prato.ingredientes.length === 0
-            ? 'Sem ingredientes — assim, marcar este prato não põe nada na lista.'
-            : 'O que este prato leva'}
-        </span>
-        <span className="linha-hora" />
-        <span className="linha-accoes" />
-      </div>
-      {prato.ingredientes.map(i => (
-          <div className="linha linha--ingrediente linha--dentro" key={i.id}>
-            <span className="linha-goteira" />
-            <span className="linha-corpo">
-              <Escrita
-                valor={i.nome}
-                rotulo={`Ingrediente de ${prato.nome}`}
-                aoMudar={n => aoAlterar(i.id, { nome: n })}
-              />
-            </span>
-            <span className="linha-hora">
-              <input
-                className="escrita escrita--hora"
-                value={i.quantidade ?? ''}
-                placeholder="qt."
-                maxLength={24}
-                aria-label={`Quantidade de ${i.nome}`}
-                onChange={e => aoAlterar(i.id, { quantidade: e.target.value })}
-              />
-            </span>
-            <span className="linha-accoes">
-              <button type="button" className="botao-nu" onClick={() => aoApagar(i.id)}>
-                <span className="sr-only">Apagar {i.nome} de {prato.nome}</span>
-                <Reticencias />
-              </button>
-            </span>
-          </div>
-        ))}
-
-      <div className="linha linha--ingrediente linha--dentro linha--branco" ref={linha} onBlur={aoPerderFoco}>
-          <span className="linha-goteira" />
-          <span className="linha-corpo">
-            <Escrita
-              valor={nome}
-              rotulo={`Escrever um ingrediente de ${prato.nome}`}
-              aoMudar={definirNome}
-              aoConfirmar={guardar}
-            />
+    <div className="dentro">
+      <p className="ingredientes-titulo">{filas.length === 0 ? nomes.vazio : nomes.cheio}</p>
+      {filas.map(i => (
+        <div className="fila" key={i.id}>
+          <span className="fila-corpo">
+            <Escrita valor={i.nome} rotulo={rotuloNovo} aoMudar={n => aoAlterarNome(i.id, n)} />
           </span>
-          <span className="linha-hora">
-            <input
-              className="escrita escrita--hora"
-              value={qtd}
-              placeholder="qt."
-              maxLength={24}
-              aria-label="Quantidade do ingrediente novo"
-              onChange={e => definirQtd(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); guardar() } }}
-            />
-          </span>
-          <span className="linha-accoes" />
-      </div>
-    </>
-  )
-}
-
-function ItensDoConjunto({ conjunto, aoAcrescentar, aoAlterar, aoApagar }: {
-  conjunto: Conjunto
-  aoAcrescentar: (conjuntoId: string, nome: string, quantidade: string | null) => void
-  aoAlterar: (id: string, mudanca: Partial<ItemDeConjunto>) => void
-  aoApagar: (id: string) => void
-}) {
-  const [nome, definirNome] = useState('')
-  const [qtd, definirQtd] = useState('')
-  const guardar = () => {
-    if (!nome.trim()) return
-    aoAcrescentar(conjunto.id, nome.trim(), qtd.trim() || null)
-    definirNome(''); definirQtd('')
-  }
-  const { linha, aoPerderFoco } = useRascunho(guardar)
-  return (
-    <>
-      <div className="linha linha--legenda">
-        <span className="linha-goteira" />
-        <span className="linha-corpo impresso">
-          {conjunto.itens.length === 0
-            ? 'Sem nada — assim, este conjunto não põe nada na lista.'
-            : 'O que este conjunto leva'}
-        </span>
-        <span className="linha-hora" />
-        <span className="linha-accoes" />
-      </div>
-      {conjunto.itens.map(i => (
-        <div className="linha linha--ingrediente linha--dentro" key={i.id}>
-          <span className="linha-goteira" />
-          <span className="linha-corpo">
-            <Escrita valor={i.nome} rotulo={`Coisa de ${conjunto.nome}`}
-              aoMudar={n => aoAlterar(i.id, { nome: n })} />
-          </span>
-          <span className="linha-hora">
-            <input className="escrita escrita--hora" value={i.quantidade ?? ''} placeholder="qt."
-              maxLength={24} aria-label={`Quantidade de ${i.nome}`}
-              onChange={e => aoAlterar(i.id, { quantidade: e.target.value })} />
-          </span>
-          <span className="linha-accoes">
-            <button type="button" className="botao-nu" onClick={() => aoApagar(i.id)}>
-              <span className="sr-only">Tirar {i.nome} de {conjunto.nome}</span>
-              <Reticencias />
-            </button>
-          </span>
+          <input
+            className="escrita escrita--num"
+            value={i.quantidade ?? ''}
+            placeholder="qt."
+            maxLength={24}
+            aria-label={`Quantidade de ${i.nome}`}
+            onChange={e => aoAlterarQtd(i.id, e.target.value)}
+          />
+          <button type="button" className="botao-gelo" onClick={() => aoApagar(i.id, i.nome)}>
+            <span className="sr-only">Tirar {i.nome}</span>
+            <IPontos />
+          </button>
         </div>
       ))}
-      <div className="linha linha--ingrediente linha--dentro linha--branco" ref={linha} onBlur={aoPerderFoco}>
-        <span className="linha-goteira" />
-        <span className="linha-corpo">
-          <Escrita valor={nome} rotulo={`Escrever uma coisa em ${conjunto.nome}`}
-            aoMudar={definirNome} aoConfirmar={guardar} />
+      <div className="fila fila--branca" ref={linha} onBlur={aoPerderFoco}>
+        <span className="fila-corpo">
+          <Escrita valor={nome} rotulo={rotuloNovo} aoMudar={definirNome} aoConfirmar={guardar} />
         </span>
-        <span className="linha-hora">
-          <input className="escrita escrita--hora" value={qtd} placeholder="qt." maxLength={24}
-            aria-label="Quantidade" onChange={e => definirQtd(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); guardar() } }} />
-        </span>
-        <span className="linha-accoes" />
+        <input
+          className="escrita escrita--num"
+          value={qtd}
+          placeholder="qt."
+          maxLength={24}
+          aria-label="Quantidade"
+          onChange={e => definirQtd(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); guardar() } }}
+        />
       </div>
-    </>
+    </div>
   )
 }
 
@@ -213,281 +124,252 @@ export function PaginaDoLivro({ l }: { l: AccoesDoLivro }) {
   }
 
   return (
-    <>
+    <main className="pagina">
+      <header className="pagina-cabeca">
+        <div>
+          <h2 className="pagina-titulo">O livro da casa</h2>
+          <p className="pagina-sub">Os pratos que se repetem, com o que cada um leva.</p>
+        </div>
+      </header>
+
       {l.estado === 'sem-migracao' && (
-        <p className="falha" role="status">
-          <span className="falha-marca impresso">Sem tabelas</span>
+        <p className="faixa" role="status">
+          <span className="faixa-marca">Sem tabelas</span>
           <span>Falta correr <code>supabase/migrations/20260824130000_ementa.sql</code>.</span>
         </p>
       )}
       {l.estado === 'sem-rede' && (
-        <p className="falha" role="status">
-          <span className="falha-marca impresso">Sem ligação</span>
+        <p className="faixa" role="status">
+          <span className="faixa-marca">Sem ligação</span>
           <span>Não foi possível ler o livro. Verifique a rede.</span>
         </p>
       )}
       {l.recado && (
-        <p className="falha" role="status">
-          <span className="falha-marca impresso">Atenção</span>
+        <p className="faixa" role="status">
+          <span className="faixa-marca">Atenção</span>
           <span>{l.recado}</span>
-          <button type="button" className="aviso-repor impresso" onClick={l.limparRecado}>Fechar</button>
+          <button type="button" className="botao-texto" onClick={l.limparRecado}>Fechar</button>
         </p>
       )}
 
-      <main className="abertura-envelope">
-        <div className="abertura abertura--ementa">
-          <div className="pagina">
-            <section aria-labelledby="livro-titulo">
-              <header className="dia-cabecalho">
-                <h2 id="livro-titulo" className="dia-nome">O livro</h2>
-                <span className="dia-data impresso">
-                  {l.pratos.length === 0 ? 'ainda em branco'
-                    : l.pratos.length === 1 ? '1 prato'
-                    : `${l.pratos.length} pratos`}
-                </span>
-              </header>
+      <div className="livro-grelha">
+        <section className="modulo com-cor" style={{ '--cor': 'var(--c-livro)' } as CSSProperties} aria-labelledby="livro-titulo">
+          <header className="dia-cabeca">
+            <h3 id="livro-titulo" className="dia-nome">Os pratos</h3>
+            <span className="dia-data modulo-numero">
+              {l.pratos.length === 0 ? 'ainda em branco'
+                : l.pratos.length === 1 ? '1 prato'
+                : `${l.pratos.length} pratos`}
+            </span>
+          </header>
 
-              {l.pratos.length > 6 && (
-                <label className="campo campo--procura">
-                  <span className="impresso">Procurar</span>
-                  <input
-                    className="campo-escrita"
-                    value={procura}
-                    onChange={e => definirProcura(e.target.value)}
-                    placeholder="o nome do prato"
+          {l.pratos.length > 6 && (
+            <label className="campo procura livro-procura">
+              <span className="sr-only">Procurar um prato</span>
+              <span className="procura-icone"><ILupa lado={18} /></span>
+              <input
+                className="campo-escrita"
+                value={procura}
+                onChange={e => definirProcura(e.target.value)}
+                placeholder="procurar um prato…"
+              />
+            </label>
+          )}
+
+          {l.estado === 'pronto' && l.pratos.length === 0 && (
+            <p className="vazio">
+              O livro é o que esta casa cozinha. Escreva os pratos que fazem várias
+              vezes, com o que cada um leva — depois é só marcá-los num dia e a
+              lista de compras faz-se sozinha.
+            </p>
+          )}
+
+          {encontrados.map(p => {
+            const IconeP = iconeDePrato(p.nome)
+            return (
+              <div key={p.id} className="fila-grupo">
+                <div className="fila">
+                  <span className="tile" aria-hidden="true"><IconeP /></span>
+                  <span className="fila-corpo">
+                    <Escrita valor={p.nome} rotulo="Nome do prato" aoMudar={nome => l.renomearPrato(p.id, nome)} />
+                  </span>
+                  <button
+                    type="button"
+                    className="botao-texto modulo-numero"
+                    aria-expanded={aberto === p.id}
+                    onClick={() => definirAberto(aberto === p.id ? null : p.id)}
+                  >
+                    {p.ingredientes.length === 0 ? 'sem nada'
+                      : p.ingredientes.length === 1 ? '1 coisa'
+                      : `${p.ingredientes.length} coisas`}
+                  </button>
+                  <Menu
+                    titulo={p.nome}
+                    alinhar="direita"
+                    opcoes={[
+                      {
+                        id: 'ver',
+                        rotulo: aberto === p.id ? 'Fechar os ingredientes' : 'Ver os ingredientes',
+                        aoEscolher: () => definirAberto(aberto === p.id ? null : p.id),
+                      },
+                      {
+                        id: 'apagar',
+                        rotulo: 'Tirar do livro',
+                        tinta: 'var(--perigo)',
+                        aoEscolher: () => definirAConfirmar(p.id),
+                      },
+                    ]}
+                    gatilho={({ abrir, refs, controla, aberto: menuAberto }) => (
+                      <button type="button" ref={refs} onClick={abrir} aria-haspopup="menu"
+                        aria-expanded={menuAberto} aria-controls={controla} className="botao-gelo">
+                        <span className="sr-only">O que fazer a {p.nome}</span>
+                        <IPontos />
+                      </button>
+                    )}
                   />
-                </label>
-              )}
+                </div>
 
-              {l.estado === 'pronto' && l.pratos.length === 0 && (
-                <p className="livro-vazio">
-                  O livro é o que esta casa cozinha. Escreva aqui os pratos que fazem
-                  várias vezes, com o que cada um leva — depois é só marcá-los num dia e
-                  a lista de compras faz-se sozinha.
-                </p>
-              )}
-
-              <div className="dia-corpo pauta margem" data-vazio={l.pratos.length === 0 || undefined}>
-                {encontrados.map(p => (
-                  <div key={p.id}>
-                    <div className="linha linha--prato" data-aberto={aberto === p.id || undefined}>
-                      <span className="linha-goteira" />
-                      <span className="linha-corpo">
-                        <Escrita
-                          valor={p.nome}
-                          rotulo="Nome do prato"
-                          aoMudar={nome => l.renomearPrato(p.id, nome)}
-                        />
-                      </span>
-                      <span className="linha-hora">
-                        <button
-                          type="button"
-                          className="prato-conta impresso"
-                          aria-expanded={aberto === p.id}
-                          onClick={() => definirAberto(aberto === p.id ? null : p.id)}
-                        >
-                          {p.ingredientes.length === 0 ? 'sem nada'
-                            : p.ingredientes.length === 1 ? '1 coisa'
-                            : `${p.ingredientes.length} coisas`}
-                        </button>
-                      </span>
-                      <span className="linha-accoes">
-                        <Menu
-                          titulo={p.nome}
-                          alinhar="direita"
-                          opcoes={[
-                            {
-                              id: 'ver',
-                              rotulo: aberto === p.id ? 'Fechar os ingredientes' : 'Ver os ingredientes',
-                              aoEscolher: () => definirAberto(aberto === p.id ? null : p.id),
-                            },
-                            {
-                              id: 'apagar',
-                              rotulo: 'Tirar do livro',
-                              tinta: 'var(--margem)',
-                              aoEscolher: () => definirAConfirmar(p.id),
-                            },
-                          ]}
-                          gatilho={({ abrir, refs, controla, aberto: menuAberto }) => (
-                            <button type="button" ref={refs} onClick={abrir} aria-haspopup="menu"
-                              aria-expanded={menuAberto} aria-controls={controla} className="botao-nu">
-                              <span className="sr-only">O que fazer a {p.nome}</span>
-                              <Reticencias />
-                            </button>
-                          )}
-                        />
-                      </span>
-                    </div>
-
-                    {aConfirmar === p.id && (
-                      <p className="confirmar" role="alert">
-                        <span>
-                          Tirar <strong>{p.nome}</strong> do livro? Os jantares já marcados
-                          ficam escritos como estão — só o prato sai.
-                        </span>
-                        <button type="button" className="confirmar-sim impresso"
-                          onClick={() => { l.apagarPrato(p.id); definirAConfirmar(null) }}>
-                          Tirar do livro
-                        </button>
-                        <button type="button" className="botao-linha impresso"
-                          onClick={() => definirAConfirmar(null)}>
-                          Deixar ficar
-                        </button>
-                      </p>
-                    )}
-
-                    {aberto === p.id && (
-                      <Ingredientes
-                        prato={p}
-                        aoAcrescentar={l.acrescentarIngrediente}
-                        aoAlterar={l.alterarIngrediente}
-                        aoApagar={l.apagarIngrediente}
-                      />
-                    )}
-                  </div>
-                ))}
-
-                {procura && encontrados.length === 0 && (
-                  <div className="linha linha--prato">
-                    <span className="linha-goteira" />
-                    <span className="linha-corpo impresso">Nenhum prato com esse nome.</span>
-                    <span className="linha-hora" />
-                    <span className="linha-accoes" />
-                  </div>
+                {aConfirmar === p.id && (
+                  <p className="confirmar" role="alert">
+                    <span>
+                      Tirar <strong>{p.nome}</strong> do livro? Os jantares já marcados
+                      ficam escritos como estão — só o prato sai.
+                    </span>
+                    <button type="button" className="botao-texto botao-texto--perigo"
+                      onClick={() => { l.apagarPrato(p.id); definirAConfirmar(null) }}>
+                      Tirar do livro
+                    </button>
+                    <button type="button" className="botao-texto"
+                      onClick={() => definirAConfirmar(null)}>
+                      Deixar ficar
+                    </button>
+                  </p>
                 )}
 
-                <div className="linha linha--prato linha--branco" ref={linhaPrato} onBlur={aoPerderFocoPrato}>
-                  <span className="linha-goteira" />
-                  <span className="linha-corpo">
-                    <Escrita
-                      valor={novo}
-                      rotulo="Escrever um prato novo no livro"
-                      aoMudar={definirNovo}
-                      aoConfirmar={escreverPrato}
-                    />
-                  </span>
-                  <span className="linha-hora" />
-                  <span className="linha-accoes" />
-                </div>
+                {aberto === p.id && (
+                  <Dentro
+                    nomes={{
+                      vazio: 'Sem ingredientes — assim, marcar este prato não põe nada na lista.',
+                      cheio: 'O que este prato leva',
+                    }}
+                    filas={p.ingredientes}
+                    rotuloNovo={`Ingrediente de ${p.nome}`}
+                    aoGuardar={(nome, qtd) => l.acrescentarIngrediente(p.id, nome, qtd)}
+                    aoAlterarNome={(id, nome) => l.alterarIngrediente(id, { nome })}
+                    aoAlterarQtd={(id, quantidade) => l.alterarIngrediente(id, { quantidade })}
+                    aoApagar={id => l.apagarIngrediente(id)}
+                  />
+                )}
               </div>
-            </section>
+            )
+          })}
 
-            <section className="seccao-conjuntos" aria-labelledby="conjuntos-titulo">
-              <header className="dia-cabecalho">
-                <h2 id="conjuntos-titulo" className="dia-nome">Os conjuntos</h2>
-                <span className="dia-data impresso">
-                  {l.conjuntos.length === 0 ? 'ainda nenhum'
-                    : l.conjuntos.length === 1 ? '1 conjunto' : `${l.conjuntos.length} conjuntos`}
+          {procura && encontrados.length === 0 && (
+            <p className="vazio">Nenhum prato com esse nome.</p>
+          )}
+
+          <div className="fila fila--branca" ref={linhaPrato} onBlur={aoPerderFocoPrato}>
+            <span className="fila-corpo">
+              <Escrita
+                valor={novo}
+                rotulo="Escrever um prato novo no livro"
+                aoMudar={definirNovo}
+                aoConfirmar={escreverPrato}
+              />
+            </span>
+          </div>
+        </section>
+
+        <section className="modulo com-cor" style={{ '--cor': 'var(--c-lista)' } as CSSProperties} aria-labelledby="conjuntos-titulo">
+          <header className="dia-cabeca">
+            <h3 id="conjuntos-titulo" className="dia-nome">Os conjuntos</h3>
+            <span className="dia-data modulo-numero">
+              {l.conjuntos.length === 0 ? 'ainda nenhum'
+                : l.conjuntos.length === 1 ? '1 conjunto' : `${l.conjuntos.length} conjuntos`}
+            </span>
+          </header>
+
+          {l.estado === 'pronto' && l.conjuntos.length === 0 && (
+            <p className="vazio">
+              Coisas que se compram sempre juntas — “Pequeno-almoço”, “Limpeza”. Depois
+              entram na lista de uma vez, sem se escrever item a item.
+            </p>
+          )}
+
+          {l.conjuntos.map(c => (
+            <div key={c.id} className="fila-grupo">
+              <div className="fila">
+                <span className="fila-corpo">
+                  <Escrita valor={c.nome} rotulo="Nome do conjunto"
+                    aoMudar={nome => l.renomearConjunto(c.id, nome)} />
                 </span>
-              </header>
+                <button type="button" className="botao-texto modulo-numero"
+                  aria-expanded={abertoConjunto === c.id}
+                  onClick={() => definirAbertoConjunto(abertoConjunto === c.id ? null : c.id)}>
+                  {c.itens.length === 0 ? 'sem nada' : c.itens.length === 1 ? '1 coisa' : `${c.itens.length} coisas`}
+                </button>
+                <Menu
+                  titulo={c.nome}
+                  alinhar="direita"
+                  opcoes={[
+                    { id: 'ver', rotulo: abertoConjunto === c.id ? 'Fechar' : 'Ver o que leva',
+                      aoEscolher: () => definirAbertoConjunto(abertoConjunto === c.id ? null : c.id) },
+                    { id: 'apagar', rotulo: 'Apagar o conjunto', tinta: 'var(--perigo)',
+                      aoEscolher: () => definirConjuntoAConfirmar(c.id) },
+                  ]}
+                  gatilho={({ abrir, refs, controla, aberto: m }) => (
+                    <button type="button" ref={refs} onClick={abrir} aria-haspopup="menu"
+                      aria-expanded={m} aria-controls={controla} className="botao-gelo">
+                      <span className="sr-only">O que fazer a {c.nome}</span>
+                      <IPontos />
+                    </button>
+                  )}
+                />
+              </div>
 
-              {l.estado === 'pronto' && l.conjuntos.length === 0 && (
-                <p className="livro-vazio">
-                  Coisas que se compram sempre juntas — “Pequeno-almoço”, “Limpeza”. Depois
-                  entram na lista de uma vez, sem se escrever item a item.
+              {conjuntoAConfirmar === c.id && (
+                <p className="confirmar" role="alert">
+                  <span>Apagar <strong>{c.nome}</strong>? O que já está na lista fica.</span>
+                  <button type="button" className="botao-texto botao-texto--perigo"
+                    onClick={() => { l.apagarConjunto(c.id); definirConjuntoAConfirmar(null) }}>
+                    Apagar
+                  </button>
+                  <button type="button" className="botao-texto"
+                    onClick={() => definirConjuntoAConfirmar(null)}>Deixar ficar</button>
                 </p>
               )}
 
-              <div className="dia-corpo pauta margem" data-vazio={l.conjuntos.length === 0 || undefined}>
-                {l.conjuntos.map(c => (
-                  <div key={c.id}>
-                    <div className="linha linha--prato" data-aberto={abertoConjunto === c.id || undefined}>
-                      <span className="linha-goteira" />
-                      <span className="linha-corpo">
-                        <Escrita valor={c.nome} rotulo="Nome do conjunto"
-                          aoMudar={nome => l.renomearConjunto(c.id, nome)} />
-                      </span>
-                      <span className="linha-hora">
-                        <button type="button" className="prato-conta impresso"
-                          aria-expanded={abertoConjunto === c.id}
-                          onClick={() => definirAbertoConjunto(abertoConjunto === c.id ? null : c.id)}>
-                          {c.itens.length === 0 ? 'sem nada' : c.itens.length === 1 ? '1 coisa' : `${c.itens.length} coisas`}
-                        </button>
-                      </span>
-                      <span className="linha-accoes">
-                        <Menu
-                          titulo={c.nome}
-                          alinhar="direita"
-                          opcoes={[
-                            { id: 'ver', rotulo: abertoConjunto === c.id ? 'Fechar' : 'Ver o que leva',
-                              aoEscolher: () => definirAbertoConjunto(abertoConjunto === c.id ? null : c.id) },
-                            { id: 'apagar', rotulo: 'Apagar o conjunto', tinta: 'var(--margem)',
-                              aoEscolher: () => definirConjuntoAConfirmar(c.id) },
-                          ]}
-                          gatilho={({ abrir, refs, controla, aberto: m }) => (
-                            <button type="button" ref={refs} onClick={abrir} aria-haspopup="menu"
-                              aria-expanded={m} aria-controls={controla} className="botao-nu">
-                              <span className="sr-only">O que fazer a {c.nome}</span>
-                              <Reticencias />
-                            </button>
-                          )}
-                        />
-                      </span>
-                    </div>
+              {abertoConjunto === c.id && (
+                <Dentro
+                  nomes={{
+                    vazio: 'Sem nada — assim, este conjunto não põe nada na lista.',
+                    cheio: 'O que este conjunto leva',
+                  }}
+                  filas={c.itens}
+                  rotuloNovo={`Coisa de ${c.nome}`}
+                  aoGuardar={(nome, qtd) => l.acrescentarItem(c.id, nome, qtd)}
+                  aoAlterarNome={(id, nome) => l.alterarItem(id, { nome })}
+                  aoAlterarQtd={(id, quantidade) => l.alterarItem(id, { quantidade })}
+                  aoApagar={id => l.apagarItem(id)}
+                />
+              )}
+            </div>
+          ))}
 
-                    {conjuntoAConfirmar === c.id && (
-                      <p className="confirmar" role="alert">
-                        <span>Apagar <strong>{c.nome}</strong>? O que já está na lista fica.</span>
-                        <button type="button" className="confirmar-sim impresso"
-                          onClick={() => { l.apagarConjunto(c.id); definirConjuntoAConfirmar(null) }}>
-                          Apagar
-                        </button>
-                        <button type="button" className="botao-linha impresso"
-                          onClick={() => definirConjuntoAConfirmar(null)}>Deixar ficar</button>
-                      </p>
-                    )}
-
-                    {abertoConjunto === c.id && (
-                      <ItensDoConjunto conjunto={c} aoAcrescentar={l.acrescentarItem}
-                        aoAlterar={l.alterarItem} aoApagar={l.apagarItem} />
-                    )}
-                  </div>
-                ))}
-
-                <div className="linha linha--prato linha--branco" ref={linhaConjunto} onBlur={aoPerderFocoConjunto}>
-                  <span className="linha-goteira" />
-                  <span className="linha-corpo">
-                    <Escrita valor={novoConjunto} rotulo="Escrever um conjunto novo"
-                      aoMudar={definirNovoConjunto} aoConfirmar={escreverConjunto} />
-                  </span>
-                  <span className="linha-hora" />
-                  <span className="linha-accoes" />
-                </div>
-              </div>
-            </section>
+          <div className="fila fila--branca" ref={linhaConjunto} onBlur={aoPerderFocoConjunto}>
+            <span className="fila-corpo">
+              <Escrita valor={novoConjunto} rotulo="Escrever um conjunto novo"
+                aoMudar={definirNovoConjunto} aoConfirmar={escreverConjunto} />
+            </span>
           </div>
-        </div>
-      </main>
-    </>
+        </section>
+      </div>
+    </main>
   )
 }
 
 /** O contentor: liga a página ao livro que está no servidor. */
-export function Livro({ casa, email, aoSair, aoSairDaCasa, aoTrocarDeVista }: {
-  casa: Casa
-  email: string
-  aoSair: () => void
-  aoSairDaCasa: () => void | Promise<void>
-  aoTrocarDeVista: (v: 'semana' | 'ementa' | 'livro') => void
-}) {
+export function Livro({ casa }: { casa: Casa }) {
   const l = useLivro(casa.id)
-  return (
-    <div className="caderneta">
-      <Cabecalho
-        casa={casa}
-        email={email}
-        inicio={inicioDaSemana()}
-        aoRecuar={() => {}}
-        aoAvancar={() => {}}
-        aoHoje={() => {}}
-        naSemanaCorrente
-        aoSair={aoSair}
-        aoSairDaCasa={aoSairDaCasa}
-        vista="livro"
-        aoTrocarDeVista={aoTrocarDeVista}
-        semSemana
-      />
-      <PaginaDoLivro l={l} />
-    </div>
-  )
+  return <PaginaDoLivro l={l} />
 }

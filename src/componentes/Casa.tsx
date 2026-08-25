@@ -39,16 +39,16 @@ export function Casa({ email, aoEntrar, aoSair, aoSairDaCasa }: {
 
   return (
     <main className="portada">
-      <form className="etiqueta-capa" onSubmit={submeter}>
-        <p className="etiqueta-marca impresso">{email}</p>
-        <h1 className="etiqueta-titulo">
+      <form className="cartao-portada" onSubmit={submeter}>
+        <p className="portada-marca">{email}</p>
+        <h1 className="portada-titulo">
           {modo === 'criar' ? 'Abrir uma caderneta' : 'Entrar numa caderneta'}
         </h1>
 
         {modo === 'criar' ? (
           <>
             <label className="campo">
-              <span className="impresso">Nome da família</span>
+              <span className="campo-nome">Nome da família</span>
               <input
                 className="campo-escrita"
                 value={nome}
@@ -57,14 +57,14 @@ export function Casa({ email, aoEntrar, aoSair, aoSairDaCasa }: {
                 maxLength={32}
               />
             </label>
-            <p className="etiqueta-texto">
+            <p className="portada-texto">
               Fica com um código de seis letras. Quem o tiver entra na mesma caderneta.
             </p>
           </>
         ) : (
           <>
             <label className="campo">
-              <span className="impresso">Código da casa</span>
+              <span className="campo-nome">Código da casa</span>
               <input
                 className="campo-escrita campo-escrita--codigo"
                 value={codigo}
@@ -74,25 +74,25 @@ export function Casa({ email, aoEntrar, aoSair, aoSairDaCasa }: {
                 required
               />
             </label>
-            <p className="etiqueta-texto">Peça o código a quem já tem a caderneta aberta.</p>
+            <p className="portada-texto">Peça o código a quem já tem a caderneta aberta.</p>
           </>
         )}
 
         {erro && <p className="recado-erro" role="alert">{erro}</p>}
 
-        <button type="submit" className="botao-capa" disabled={aTratar}>
+        <button type="submit" className="pilula" disabled={aTratar}>
           {aTratar ? 'Um momento…' : modo === 'criar' ? 'Abrir a caderneta' : 'Entrar'}
         </button>
 
-        <button type="button" className="botao-linha impresso"
+        <button type="button" className="botao-texto"
           onClick={() => { definirModo(m => (m === 'criar' ? 'juntar' : 'criar')); definirErro(null) }}>
           {modo === 'criar' ? 'Já existe uma caderneta cá em casa' : 'Quero abrir uma caderneta nova'}
         </button>
 
-        <button type="button" className="botao-linha impresso" onClick={() => aoSairDaCasa()}>
+        <button type="button" className="botao-texto" onClick={() => aoSairDaCasa()}>
           Estou preso a uma casa antiga — sair dela
         </button>
-        <button type="button" className="botao-linha impresso" onClick={aoSair}>Sair desta conta</button>
+        <button type="button" className="botao-texto" onClick={aoSair}>Sair desta conta</button>
       </form>
     </main>
   )

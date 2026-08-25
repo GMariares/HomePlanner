@@ -101,8 +101,15 @@ quantities or only items.
 
 ## Brand Commitments
 
-The name **HomePlanner**. Nothing else is committed — no logo, no existing assets, no
-defined voice, no prior identity to preserve.
+The name **HomePlanner**. The visual world is **Os Módulos** (chosen 2026-08-25,
+replacing the earlier notebook world "A Caderneta", which the household owner
+rejected): a soft modern consumer-app language — porcelain ground, floating white
+modules, one hue per area of the house with every tint derived from it, Manrope,
+drawn icon tiles, ink pill actions. Its craft bar is the class of current recipe
+apps, Revolut/N26, and Airbnb. Icons are drawn in-house; no photography, no emoji.
+Navigation is designed for five areas from day one — Início, Semana, Ementa, Livro,
+Finanças — with Finanças present as a designed "em breve" until it is built.
+DESIGN.md carries the system's rules; it wins on any visual question.
 
 ## Evidence on Hand
 

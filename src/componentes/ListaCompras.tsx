@@ -1,9 +1,8 @@
-import { useState } from 'react'
-import type { CSSProperties } from 'react'
+import { useState, type CSSProperties } from 'react'
 import type { Compra, Artigo, Conjunto } from '../dominio/tipos'
-import { CampoDeCarimbo } from './Carimbo'
+import { Visto } from './Marcar'
 import { Escrita } from './Escrita'
-import { Reticencias } from './Icones'
+import { IPontos } from './Icones'
 import { LinhaNova } from './LinhaNova'
 import { CampoPreco } from './CampoPreco'
 
@@ -33,17 +32,18 @@ export function ListaCompras({
   const [esconderFeitas, definirEsconderFeitas] = useState(false)
 
   const feitas = compras.filter(c => c.comprado)
-  /* No corredor a lista só cresce, e o que já está no cesto rouba o lugar ao
-     que falta. Esconder o que está comprado é a diferença entre ler cinquenta
-     linhas e ler as doze que interessam. */
+  /* No corredor a lista só cresce: esconder o que está no cesto é a
+     diferença entre ler cinquenta linhas e ler as doze que faltam. */
   const visiveis = esconderFeitas ? compras.filter(c => !c.comprado) : compras
   const gasto = feitas.reduce((soma, c) => soma + (c.preco ?? 0), 0)
 
-  /* Uma quantidade cortada é uma compra errada. Quando dois pratos pedem
-     unidades que não se somam — "500 g + 2 un" — a coluna dos números abre-se
-     ao que lá está escrito, e é o nome que cede a medida, não o número. */
+  /* Uma quantidade cortada é uma compra errada: a coluna dos números
+     abre-se ao que lá está escrito, e é o nome que cede a medida. */
   const maiorQtd = compras.reduce((n, c) => Math.max(n, (c.quantidade ?? '').length), 0)
-  const medida = { '--qtd-conteudo': `${(maiorQtd * 0.52 + 0.65).toFixed(2)}rem` } as CSSProperties
+  const medida = {
+    '--cor': 'var(--c-lista)',
+    '--qtd-ch': maiorQtd,
+  } as CSSProperties
 
   const juntar = async (c: Conjunto) => {
     const quantas = await aoAplicarConjunto(c)
@@ -57,22 +57,22 @@ export function ListaCompras({
   }
 
   return (
-    <section className="lista-compras" aria-labelledby="compras-titulo">
-      <header className="dia-cabecalho">
-        <h2 id="compras-titulo" className="dia-nome">A lista</h2>
-        <span className="dia-data impresso lista-conta">
-          <span>
-            {compras.length === 0 ? 'ainda sem nada'
-              : porComprar === 0 ? 'está tudo comprado'
-              : `${porComprar} por comprar`}
-          </span>
+    <section className="modulo com-cor" style={medida} aria-labelledby="compras-titulo">
+      <header className="dia-cabeca dia-cabeca--lista">
+        <h3 id="compras-titulo" className="dia-nome">A lista</h3>
+        <span className="dia-data modulo-numero">
+          {compras.length === 0 ? 'ainda sem nada'
+            : porComprar === 0 ? 'está tudo comprado'
+            : `${porComprar} por comprar`}
+        </span>
+        <span className="lista-accoes">
           {podePrecos && (
-            <button type="button" className="aviso-repor impresso" onClick={() => aoMostrarPrecos(!mostrarPrecos)}>
+            <button type="button" className="botao-texto" onClick={() => aoMostrarPrecos(!mostrarPrecos)}>
               {mostrarPrecos ? 'esconder preços' : 'pôr preços'}
             </button>
           )}
           {feitas.length > 0 && (
-            <button type="button" className="aviso-repor impresso"
+            <button type="button" className="botao-texto"
               aria-pressed={esconderFeitas}
               onClick={() => definirEsconderFeitas(v => !v)}>
               {esconderFeitas
@@ -84,86 +84,66 @@ export function ListaCompras({
       </header>
 
       {conjuntos.length > 0 && (
-        <p className="conjuntos-atalho">
-          <span className="impresso">Conjuntos</span>
+        <div className="chips lista-conjuntos">
           {conjuntos.map(c => (
-            <button key={c.id} type="button" className="conjunto-chip" onClick={() => juntar(c)}>
+            <button key={c.id} type="button" className="chip" onClick={() => juntar(c)}>
               {c.nome}
-              <span className="impresso conjunto-conta">
-                {c.itens.length === 1 ? '1 coisa' : `${c.itens.length} coisas`}
-              </span>
+              <span className="chip-conta">{c.itens.length}</span>
             </button>
           ))}
+        </div>
+      )}
+
+      {recado && <p className="lista-recado" role="status">{recado}</p>}
+
+      {compras.length === 0 && (
+        <p className="vazio">
+          Escreva na linha — ou marque um jantar, e os ingredientes vêm sozinhos.
         </p>
       )}
 
-      {recado && <p className="conjunto-recado impresso" role="status">{recado}</p>}
-
-      <div className="dia-corpo pauta margem" style={medida}>
-        {mostrarPrecos && (
-          <div className="linha linha--compra linha--legenda" data-com-preco aria-hidden="true">
-            <span className="linha-goteira" />
-            <span className="linha-corpo" />
-            <span className="linha-hora impresso">qt.</span>
-            <span className="linha-preco impresso">€</span>
-            <span className="linha-carimbo" />
-            <span className="linha-accoes" />
-          </div>
-        )}
-        {compras.length === 0 && (
-          <p className="impresso lista-vazia">
-            Escreva na linha — ou marque um jantar, e os ingredientes vêm sozinhos.
-          </p>
-        )}
+      <div className="lista-filas">
         {visiveis.map(c => {
           const doutraSemana = !c.comprado && c.semana !== semana
           return (
-            <div className="linha linha--compra" key={c.id}
-              data-feita={c.comprado || undefined} data-com-preco={mostrarPrecos || undefined}>
-              <span className="linha-goteira" />
-              <span className="linha-corpo">
+            <div className="fila" key={c.id} data-feita={c.comprado || undefined}>
+              <Visto
+                feita={c.comprado}
+                aoAlternar={() => aoAlternar(c)}
+                rotulo={`Marcar ${c.nome} como comprado`}
+              />
+              <span className="fila-corpo">
                 <Escrita
                   valor={c.nome}
                   rotulo="O que é preciso comprar"
-                  cor={c.comprado ? 'var(--impresso-tinta)' : 'var(--casa)'}
                   aoMudar={nome => aoAlterar(c, { nome })}
                 />
-                {c.prato_nome && <span className="compra-origem impresso">{c.prato_nome}</span>}
-                {doutraSemana && <span className="compra-atrasada impresso">de trás</span>}
+                {(c.prato_nome || doutraSemana) && (
+                  <span className="fila-meta">
+                    {c.prato_nome && <span className="fila-origem">{c.prato_nome}</span>}
+                    {doutraSemana && <span className="fila-atrasada">da semana passada</span>}
+                  </span>
+                )}
               </span>
-              <span className="linha-hora">
-                <input
-                  className="escrita escrita--hora"
-                  value={c.quantidade ?? ''}
-                  placeholder="qt."
-                  maxLength={24}
-                  aria-label={`Quantidade de ${c.nome}`}
-                  onChange={e => aoAlterar(c, { quantidade: e.target.value })}
-                />
-              </span>
+              <input
+                className="escrita escrita--num escrita--qtd"
+                value={c.quantidade ?? ''}
+                placeholder="qt."
+                maxLength={24}
+                aria-label={`Quantidade de ${c.nome}`}
+                onChange={e => aoAlterar(c, { quantidade: e.target.value })}
+              />
               {mostrarPrecos && (
-                <span className="linha-preco">
-                  <CampoPreco
-                    valor={c.preco}
-                    rotulo={`Preço de ${c.nome}`}
-                    aoMudar={preco => aoAlterar(c, { preco })}
-                  />
-                </span>
-              )}
-              <span className="linha-carimbo">
-                <CampoDeCarimbo
-                  feita={c.comprado}
-                  aoAlternar={() => aoAlternar(c)}
-                  rotulo={`Marcar ${c.nome} como comprado`}
-                  palavra="COMPRADO"
+                <CampoPreco
+                  valor={c.preco}
+                  rotulo={`Preço de ${c.nome}`}
+                  aoMudar={preco => aoAlterar(c, { preco })}
                 />
-              </span>
-              <span className="linha-accoes">
-                <button type="button" className="botao-nu" onClick={() => aoApagar(c.id)}>
-                  <span className="sr-only">Apagar {c.nome} da lista</span>
-                  <Reticencias />
-                </button>
-              </span>
+              )}
+              <button type="button" className="botao-gelo" onClick={() => aoApagar(c.id)}>
+                <span className="sr-only">Apagar {c.nome} da lista</span>
+                <IPontos />
+              </button>
             </div>
           )
         })}
@@ -172,16 +152,16 @@ export function ListaCompras({
       </div>
 
       {mostrarPrecos && (total > 0 || gasto > 0) && (
-        <p className="lista-total">
-          <span className="impresso">Por comprar</span>
-          <strong>{EUROS.format(total)}</strong>
+        <p className="total-fila">
+          <span className="total-nome">Por comprar</span>
+          <strong className="total-valor">{EUROS.format(total)}</strong>
           {gasto > 0 && (
             <>
-              <span className="impresso">No cesto</span>
-              <strong className="lista-total--cesto">{EUROS.format(gasto)}</strong>
+              <span className="total-nome">No cesto</span>
+              <strong className="total-valor total-valor--cesto">{EUROS.format(gasto)}</strong>
             </>
           )}
-          <span className="impresso lista-total-nota">só conta o que tem preço escrito</span>
+          <span className="total-nota">só conta o que tem preço escrito</span>
         </p>
       )}
     </section>

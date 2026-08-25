@@ -51,13 +51,13 @@ export function Entrar() {
   if (porConfirmar) {
     return (
       <main className="portada">
-        <div className="etiqueta-capa">
-          <h1 className="etiqueta-titulo">Falta confirmar o email</h1>
-          <p className="etiqueta-texto">
+        <div className="cartao-portada">
+          <h1 className="portada-titulo">Falta confirmar o email</h1>
+          <p className="portada-texto">
             Foi enviada uma mensagem para <strong>{email}</strong>. Abra o link que vem lá
             e volte aqui para entrar.
           </p>
-          <p className="etiqueta-texto">
+          <p className="portada-texto">
             Se não chegou em poucos minutos, veja o spam. O serviço de email que vem de
             origem com o Supabase é limitado e nem sempre entrega — quem gere o projecto
             pode desligar a confirmação, ou ligar um SMTP próprio.
@@ -65,19 +65,19 @@ export function Entrar() {
 
           {erro && <p className="recado-erro" role="alert">{erro}</p>}
           {reenviado === 'enviado' && (
-            <p className="etiqueta-texto" role="status">Mensagem reenviada.</p>
+            <p className="portada-texto" role="status">Mensagem reenviada.</p>
           )}
 
           <button
             type="button"
-            className="botao-capa"
+            className="pilula"
             onClick={reenviar}
             disabled={reenviado === 'a-enviar'}
           >
             {reenviado === 'a-enviar' ? 'A reenviar…' : 'Enviar outra vez'}
           </button>
 
-          <button type="button" className="botao-linha impresso" onClick={() => { definirPorConfirmar(false); definirModo('entrar'); definirErro(null) }}>
+          <button type="button" className="botao-texto" onClick={() => { definirPorConfirmar(false); definirModo('entrar'); definirErro(null) }}>
             Voltar
           </button>
         </div>
@@ -87,12 +87,12 @@ export function Entrar() {
 
   return (
     <main className="portada">
-      <form className="etiqueta-capa" onSubmit={submeter}>
-        <p className="etiqueta-marca impresso">HomePlanner</p>
-        <h1 className="etiqueta-titulo">A semana da família</h1>
+      <form className="cartao-portada" onSubmit={submeter}>
+        <p className="portada-marca">HomePlanner</p>
+        <h1 className="portada-titulo">A semana da família</h1>
 
         <label className="campo">
-          <span className="impresso">Email</span>
+          <span className="campo-nome">Email</span>
           <input
             type="email"
             className="campo-escrita"
@@ -104,7 +104,7 @@ export function Entrar() {
         </label>
 
         <label className="campo">
-          <span className="impresso">Palavra-passe</span>
+          <span className="campo-nome">Palavra-passe</span>
           <input
             type="password"
             className="campo-escrita"
@@ -118,13 +118,13 @@ export function Entrar() {
 
         {erro && <p className="recado-erro" role="alert">{erro}</p>}
 
-        <button type="submit" className="botao-capa" disabled={aTratar}>
+        <button type="submit" className="pilula" disabled={aTratar}>
           {aTratar ? 'Um momento…' : modo === 'entrar' ? 'Entrar' : 'Criar conta'}
         </button>
 
         <button
           type="button"
-          className="botao-linha impresso"
+          className="botao-texto"
           onClick={() => { definirModo(m => (m === 'entrar' ? 'criar' : 'entrar')); definirErro(null) }}
         >
           {modo === 'entrar' ? 'Ainda não tenho conta' : 'Já tenho conta'}
