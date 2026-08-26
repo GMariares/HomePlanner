@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "layout-transition",
+        "value": "*",
+        "files": [
+          "src/modulos.css"
+        ],
+        "createdAt": "2026-08-26T11:44:57.001Z",
+        "reason": "Claude: one-shot width settle on 6px round-capped progress fills (pista, envelopes); scaleX would squash the 999px caps into ellipses — worse craft than a contained layout anim on two tiny strips"
+      }
+    ]
+  }
+}
