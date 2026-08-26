@@ -227,7 +227,14 @@ function Fila({ e, aberto, aoAbrir, movimentosDaArvore, aoRenomear, aoCriarFilha
           {e.filhos.map(f => (
             <div className="fila envelope-filha" key={f.categoria.id}>
               <span className="fila-corpo">
-                <span className="fila-nome">{f.categoria.nome}</span>
+                {/* O nome de uma parte edita-se onde se lê, como tudo o que
+                    a família escreveu: só a mãe tinha campo de nome e as
+                    partes ficavam presas ao nome com que nasceram. */}
+                <Escrita
+                  valor={f.categoria.nome}
+                  rotulo={`Nome de ${f.categoria.nome}`}
+                  aoMudar={nome => adiar(f.categoria.id, { nome })}
+                />
                 <span className="fila-meta">
                   <Tecto
                     id={f.categoria.id}
@@ -435,12 +442,36 @@ export function Comprometido({ compromissos, pagamentos, categorias, comprometid
  * Fechado por omissão: é o arquivo do mês, não a sua pergunta. Quem o
  * quer, abre-o; quem não o quer, não o tem a empurrar o resto para baixo.
  */
-export function Livro({ movimentos, categorias, aoApagar, aoMudarMes }: {
+export function Livro({ movimentos, categorias, aoApagar, aoApagarVarios, aoMudarMes }: {
   movimentos: Movimento[]
   categorias: Map<string, Categoria>
   aoApagar: (id: string) => void
+  aoApagarVarios?: (ids: string[]) => void
   aoMudarMes: (m: Movimento) => void
 }) {
+  /* Escolher e apagar em bloco: depois de um extracto trazer noventa
+     linhas, apagar uma a uma pelo menu de cada uma não é trabalho que se
+     peça a ninguém. */
+  const [aEscolher, definirAEscolher] = useState(false)
+  const [escolhidos, definirEscolhidos] = useState<Set<string>>(new Set())
+  const [aConfirmar, definirAConfirmar] = useState(false)
+
+  const sair = () => { definirAEscolher(false); definirEscolhidos(new Set()); definirAConfirmar(false) }
+  const alternar = (id: string) => {
+    definirAConfirmar(false)
+    definirEscolhidos(e => {
+      const n = new Set(e)
+      if (n.has(id)) n.delete(id); else n.add(id)
+      return n
+    })
+  }
+  const apagarEscolhidos = () => {
+    const ids = [...escolhidos]
+    if (aoApagarVarios) aoApagarVarios(ids)
+    else ids.forEach(aoApagar)
+    sair()
+  }
+
   return (
     <Dobra
       id="livro"
@@ -451,6 +482,24 @@ export function Livro({ movimentos, categorias, aoApagar, aoMudarMes }: {
         <p className="vazio">Registe um gasto na linha de cima, ou traga um extracto do banco.</p>
       )}
 
+      {movimentos.length > 0 && (
+        <p className="livro-barra">
+          <button type="button" className="botao-texto" onClick={() => (aEscolher ? sair() : definirAEscolher(true))}>
+            {aEscolher ? 'terminar' : 'escolher para apagar'}
+          </button>
+          {aEscolher && (
+            <button
+              type="button"
+              className="botao-texto"
+              onClick={() => definirEscolhidos(e =>
+                e.size === movimentos.length ? new Set() : new Set(movimentos.map(m => m.id)))}
+            >
+              {escolhidos.size === movimentos.length ? 'nenhum' : 'todos'}
+            </button>
+          )}
+        </p>
+      )}
+
       {movimentos
         .slice()
         .sort((a, b) => b.data.localeCompare(a.data))
@@ -459,9 +508,18 @@ export function Livro({ movimentos, categorias, aoApagar, aoMudarMes }: {
           const entrada = m.valor_cents > 0
           const noutroMes = Boolean(m.mes_conta_manual)
           const naoConta = cat?.natureza === 'transferencia'
+          const escolhido = escolhidos.has(m.id)
           return (
-            <div className="fila com-cor" key={m.id}
-              style={{ '--cor': cat?.cor ?? 'var(--c-financas)' } as CSSProperties}>
+            <div className={aEscolher ? 'fila com-cor fila--escolha' : 'fila com-cor'} key={m.id}
+              style={{ '--cor': cat?.cor ?? 'var(--c-financas)' } as CSSProperties}
+              data-escolhido={escolhido || undefined}>
+              {aEscolher && (
+                <Visto
+                  feita={escolhido}
+                  aoAlternar={() => alternar(m.id)}
+                  rotulo={`Escolher ${m.descricao || 'este movimento'} para apagar`}
+                />
+              )}
               <span className="fila-corpo">
                 <span className="fila-nome">{m.descricao || 'sem descrição'}</span>
                 <span className="fila-meta">
@@ -475,7 +533,7 @@ export function Livro({ movimentos, categorias, aoApagar, aoMudarMes }: {
               <span className="fila-numero" data-entrada={entrada || undefined} data-neutro={naoConta || undefined}>
                 {entrada ? '+' : ''}{escreverEuros(m.valor_cents)}
               </span>
-              <Menu
+              {!aEscolher && <Menu
                 titulo={m.descricao || 'este movimento'}
                 alinhar="direita"
                 opcoes={[
@@ -493,10 +551,41 @@ export function Livro({ movimentos, categorias, aoApagar, aoMudarMes }: {
                     <IPontos />
                   </button>
                 )}
-              />
+              />}
             </div>
           )
         })}
+
+      {aEscolher && (
+        <p className="total-fila livro-apagar">
+          <span className="total-nome">
+            {escolhidos.size === 0 ? 'nenhum escolhido'
+              : escolhidos.size === 1 ? '1 escolhido' : `${escolhidos.size} escolhidos`}
+          </span>
+          {/* Apagar não tem volta nesta casa: pergunta-se uma vez, na linha,
+              sem tirar o ecrã a ninguém. */}
+          {aConfirmar ? (
+            <>
+              <button type="button" className="pilula livro-confirmar" onClick={apagarEscolhidos}>
+                Apagar {escolhidos.size}
+              </button>
+              <button type="button" className="botao-texto" onClick={() => definirAConfirmar(false)}>
+                deixar estar
+              </button>
+              <span className="total-nota">não há volta a dar depois de apagar</span>
+            </>
+          ) : (
+            <button
+              type="button"
+              className="botao-texto botao-texto--perigo"
+              disabled={escolhidos.size === 0}
+              onClick={() => definirAConfirmar(true)}
+            >
+              Apagar escolhidos
+            </button>
+          )}
+        </p>
+      )}
     </Dobra>
   )
 }

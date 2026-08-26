@@ -605,6 +605,10 @@ strike is applied to the field itself, skipping fields still showing their place
 - **Mobile:** The overflow button leaves the flow entirely, absolutely positioned at the
   end of the row and revealed only on `:focus-within`, so it never takes width away from a
   quantity or a price.
+- **Chosen:** Where rows can be picked in bulk, the check drops the row's own hue and
+  wears the danger colour — choosing what to delete is one action, not one per category —
+  and the row takes a 6% danger wash. The per-row overflow menu withdraws while choosing,
+  so there is only one way to act at a time.
 
 ### The Tira (signature)
 
@@ -741,6 +745,9 @@ the floor.
   stops being confirmed loses information, not decoration.
 - **Do** give a module exactly one opening gesture and make the whole surface the target.
 - **Do** write empty states as one sentence inside the module.
+- **Do** ask once, in the line, before a destructive bulk action: the button becomes
+  "Apagar 12" beside a "deixar estar" and a plain sentence saying there is no way back. No
+  modal — the task needs a second thought, not a protected screen.
 - **Do** run a hue through the 78% derivation before it becomes text. Raw honey on white is
   3.2:1; the derived tint is 4.7:1.
 - **Do** let a module decide its own column count from its own width with a container

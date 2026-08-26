@@ -165,16 +165,6 @@ export function Financas({ casa }: { casa: Casa }) {
             }
           />
 
-          <div className="financas-topo">
-            <PistaDoMes ritmo={f.ritmo} />
-            <RegistoRapido
-              categorias={f.categorias}
-              fornecedores={f.fornecedores}
-              aoRegistar={f.registar}
-              aoGuardarFornecedor={f.semFornecedores ? undefined : f.guardarFornecedor}
-            />
-          </div>
-
           {aImportar && (
             <Importar
               categorias={f.categorias}
@@ -187,26 +177,40 @@ export function Financas({ casa }: { casa: Casa }) {
             />
           )}
 
+          {/* Uma grelha só, de duas colunas que correm cada uma à sua
+              altura. Em duas grelhas separadas, a pista e o registo
+              partilhavam linha: o registo com quinze categorias ficava
+              duas cabeças mais alto e debaixo da pista abria-se um buraco
+              de porcelana até aos envelopes. */}
           <div className="financas-grelha">
-            <Envelopes
-              envelopes={f.envelopes}
-              movimentos={f.movimentos}
-              raizDe={f.raizDe}
-              aoDefinirLimite={f.definirLimiteDoMes}
-              aoRenomear={(id, nome) => f.guardarCategoria({ id, nome })}
-              aoCriarFilha={(mae, nome) => f.guardarCategoria({
-                nome, natureza: mae.natureza, cor: mae.cor, icone: mae.icone,
-                mae_id: mae.id, ordem: mae.ordem,
-              })}
-              aoCriarRaiz={nome => f.guardarCategoria({
-                nome, natureza: 'despesa',
-                cor: CORES_NOVAS[f.categorias.length % CORES_NOVAS.length],
-                icone: 'saco',
-                ordem: 150 + f.categorias.length,
-              })}
-              aoApagarMovimento={f.apagarMovimento}
-            />
+            <div className="financas-coluna financas-coluna--larga">
+              <PistaDoMes ritmo={f.ritmo} />
+              <Envelopes
+                envelopes={f.envelopes}
+                movimentos={f.movimentos}
+                raizDe={f.raizDe}
+                aoDefinirLimite={f.definirLimiteDoMes}
+                aoRenomear={(id, nome) => f.guardarCategoria({ id, nome })}
+                aoCriarFilha={(mae, nome) => f.guardarCategoria({
+                  nome, natureza: mae.natureza, cor: mae.cor, icone: mae.icone,
+                  mae_id: mae.id, ordem: mae.ordem,
+                })}
+                aoCriarRaiz={nome => f.guardarCategoria({
+                  nome, natureza: 'despesa',
+                  cor: CORES_NOVAS[f.categorias.length % CORES_NOVAS.length],
+                  icone: 'saco',
+                  ordem: 150 + f.categorias.length,
+                })}
+                aoApagarMovimento={f.apagarMovimento}
+              />
+            </div>
             <div className="financas-coluna">
+              <RegistoRapido
+                categorias={f.categorias}
+                fornecedores={f.fornecedores}
+                aoRegistar={f.registar}
+                aoGuardarFornecedor={f.semFornecedores ? undefined : f.guardarFornecedor}
+              />
               <Envelopes
                 envelopes={f.entradas}
                 movimentos={f.movimentos}
@@ -261,6 +265,7 @@ export function Financas({ casa }: { casa: Casa }) {
             movimentos={f.movimentos}
             categorias={f.porCategoria}
             aoApagar={f.apagarMovimento}
+            aoApagarVarios={f.apagarMovimentos}
             aoMudarMes={mudarMes}
           />
 

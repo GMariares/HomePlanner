@@ -358,7 +358,20 @@ export function useFinancas(casaId: string | null, mes: string) {
     definirMovimentos(ms => ms.filter(m => m.id !== id))
     const { error } = await supabase.from('movimentos').delete().eq('id', id)
     definirFalhou(Boolean(error))
-  }, [])
+    if (error) buscar()
+  }, [buscar])
+
+  /** Apagar vários de uma vez: uma chamada, não vinte. */
+  const apagarMovimentos = useCallback(async (ids: string[]) => {
+    if (ids.length === 0) return
+    const conjunto = new Set(ids)
+    definirMovimentos(ms => ms.filter(m => !conjunto.has(m.id)))
+    const { error } = await supabase.from('movimentos').delete().in('id', ids)
+    definirFalhou(Boolean(error))
+    /* Falhou: o que se tirou do ecrã tem de voltar, senão a casa julga que
+       apagou vinte linhas que continuam lá. */
+    if (error) buscar()
+  }, [buscar])
 
   const guardarCategoria = useCallback(async (c: Partial<Categoria> & { id?: string }) => {
     if (!casaId) return
@@ -417,7 +430,7 @@ export function useFinancas(casaId: string | null, mes: string) {
     categorias, compromissos, movimentos, envelopes, entradas, ritmo, entrou, resumo,
     comprometido, porPagar, pagamentos, orcamentoTotal, limiteDe, porCategoria,
     raizDe, fornecedores, semFornecedores,
-    registar, alterarMovimento, apagarMovimento, guardarFornecedor, apagarFornecedor,
+    registar, alterarMovimento, apagarMovimento, apagarMovimentos, guardarFornecedor, apagarFornecedor,
     guardarCategoria, definirLimiteDoMes, guardarCompromisso, semear,
   }
 }

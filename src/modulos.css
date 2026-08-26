@@ -1229,9 +1229,7 @@
 /* ---------------- Finanças: a página ---------------- */
 .pagina-sub--mes::first-letter { text-transform: uppercase; }
 .financas { display: grid; grid-template-columns: minmax(0, 1fr); gap: calc(var(--u) * 2); }
-.financas > *, .financas-topo > *, .financas-grelha > * { min-width: 0; }
-.financas-topo { display: grid; gap: calc(var(--u) * 2); }
-@media (min-width: 64rem) { .financas-topo { grid-template-columns: 3fr 2fr; align-items: start; } }
+.financas > *, .financas-grelha > *, .financas-coluna > * { min-width: 0; }
 .financas-grelha { display: grid; gap: calc(var(--u) * 2); align-items: start; }
 @media (min-width: 64rem) { .financas-grelha { grid-template-columns: 3fr 2fr; } }
 .financas-resumo { margin: 0; display: flex; align-items: baseline; gap: calc(var(--u) * 1.25); flex-wrap: wrap; padding-inline: calc(var(--u) * 0.5); }
@@ -1607,12 +1605,46 @@ span.envelope-tecto { cursor: default; }
 .envelope-somado strong { color: var(--tinta-2); font-variant-numeric: tabular-nums; }
 .envelope-filha .fila-corpo { gap: calc(var(--u) * 0.5); }
 
+/* ---------------- o livro: escolher e apagar em bloco ---------------- */
+.livro-barra {
+  margin: 0 0 calc(var(--u) * 0.5);
+  display: flex;
+  gap: calc(var(--u) * 2);
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+/* Escolher para apagar é UMA acção, não quinze: o visto larga a cor da
+   categoria e veste a do perigo, senão a lista pede-se em quinze cores
+   diferentes e nenhuma delas quer dizer "apagar". */
+.fila--escolha .visto { --cor: var(--perigo); }
+/* A linha escolhida ganha o mesmo lavado de cor com que tudo nesta casa
+   diz "este": luz, nunca uma borda. */
+.fila[data-escolhido] {
+  background: color-mix(in oklab, var(--perigo) 6%, transparent);
+  box-shadow: 0 0 0 calc(var(--u) * 1) color-mix(in oklab, var(--perigo) 6%, transparent);
+  border-radius: calc(var(--u) * 0.5);
+}
+.livro-apagar { margin-top: calc(var(--u) * 1.5); }
+.livro-confirmar { background: var(--perigo); padding: calc(var(--u) * 1) calc(var(--u) * 2); }
+.livro-confirmar:hover { background: color-mix(in oklab, var(--perigo) 88%, #000); }
+
 /* o que não conta para nada: está no livro, e cala-se */
 .movimento-neutro { color: var(--tinta-3); font-weight: 800; }
 .fila-numero[data-neutro] { color: var(--tinta-3); }
 
 /* ---------------- a coluna da direita, e o lado do registo ---------------- */
 .financas-coluna { display: grid; gap: calc(var(--u) * 2); align-content: start; min-width: 0; }
+/* Num telemóvel as colunas deixam de ser caixas e os módulos voltam a ser
+   filhos directos da grelha, para se poder mandar na ordem: a pista, o
+   registo, e só depois os envelopes — a ordem por que a casa lê o mês no
+   polegar. Tem de vir DEPOIS da regra de cima: a mesma especificidade,
+   quem manda é quem chega ao fim. */
+@media (max-width: 63.99rem) {
+  .financas-coluna { display: contents; }
+  .financas-grelha > .financas-coluna > * { order: 3; }
+  .financas-grelha .pista { order: 1; }
+  .financas-grelha .registo { order: 2; }
+}
 .financas-resumo:empty { display: none; }
 /* Dentro de um módulo branco a pílula do mundo não pode trazer sombra —
    seria uma caixa dentro de uma caixa. Assenta no gelo dos campos. */
