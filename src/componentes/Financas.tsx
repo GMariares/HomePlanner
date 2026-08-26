@@ -28,6 +28,9 @@ export function Financas({ casa }: { casa: Casa }) {
   const [ano, definirAno] = useState(() => new Date().getFullYear())
   const f = useFinancas(casa.id, mes)
   const dadosDoAno = useAno(vista === 'ano' ? casa.id : null, ano, f.categorias)
+  /* Sem categoria nenhuma não há mês nem ano para ver: a navegação só
+     apareceria para levar a duas páginas vazias. */
+  const primeiraVez = f.estado === 'pronto' && f.categorias.length === 0
   const esteMes = mes === chaveDoMes(new Date())
   const esteAno = ano === new Date().getFullYear()
 
@@ -65,7 +68,7 @@ export function Financas({ casa }: { casa: Casa }) {
             {vista === 'mes' ? nomeDoMes(mesDeChave(mes)) : `o ano de ${ano}`}
           </p>
         </div>
-        <div className="financas-navegacao">
+        {!primeiraVez && <div className="financas-navegacao">
           <nav className="semana-nav" aria-label="Mês ou ano">
             <button type="button" className="semana-nav-botao" aria-pressed={vista === 'mes'}
               data-activa={vista === 'mes' || undefined} onClick={() => definirVista('mes')}>
@@ -105,7 +108,7 @@ export function Financas({ casa }: { casa: Casa }) {
               </button>
             </nav>
           )}
-        </div>
+        </div>}
       </header>
 
       {f.estado === 'a-carregar' && (
@@ -142,8 +145,10 @@ export function Financas({ casa }: { casa: Casa }) {
         <section className="modulo financas-primeiro">
           <h3 className="portada-titulo">Ainda não há contas nesta casa</h3>
           <p className="portada-texto">
-            Começa-se com uma dúzia de categorias — mercado, casa, contas,
-            transportes — que pode mudar, apagar ou acrescentar a qualquer altura.
+            Começa-se com quinze: mercado, casa, contas, transportes e o resto
+            da despesa, o ordenado do lado das entradas, e uma para as
+            transferências entre contas suas. Muda-se, apaga-se e acrescenta-se
+            a qualquer altura.
           </p>
           <button type="button" className="pilula" onClick={() => f.semear()}>
             Começar com as categorias propostas

@@ -81,6 +81,15 @@ export interface Resumo {
   previstoSaida: number
   sobra: number
   sobraPrevista: number
+  /**
+   * Há tecto posto em alguma categoria de despesa.
+   *
+   * Sem isto, o "previsto" da despesa é só a soma dos compromissos — e
+   * julgar o mês contra os compromissos sozinhos dizia a uma casa acabada
+   * de abrir que estava mil euros acima do previsto. Um alarme que se
+   * engana no primeiro mês nunca mais é lido.
+   */
+  temTectos: boolean
   /** Quantos movimentos ainda podem mudar estes números. */
   porAlocar: number
   /** Quantas transferências entre contas ficaram de fora das contas. */
@@ -321,6 +330,7 @@ export function useFinancas(casaId: string | null, mes: string) {
       entrou, previstoEntrada, saiu, previstoSaida,
       sobra: entrou - saiu,
       sobraPrevista: previstoEntrada - previstoSaida,
+      temTectos: orcamentoTotal > 0,
       porAlocar: comNatureza.filter(m => !m.categoria_id).length,
       transferencias: comNatureza.filter(eTransferencia).length,
     }
@@ -420,6 +430,15 @@ export interface LinhaDoAno {
   /** 12 posições, cêntimos gastos (ou entrados) por mês em que conta. */
   meses: number[]
   total: number
+  /**
+   * Em quantos meses esta linha teve movimento.
+   *
+   * É por aqui que se divide a média, e não pelos meses do calendário:
+   * uma casa que começou em Agosto tem quatro meses de Casa a 847 € e a
+   * média sobre "os meses decorridos" dizia 424 — metade, com ar de
+   * resposta certa.
+   */
+  mesesComMovimento: number
   filhos?: LinhaDoAno[]
 }
 
@@ -431,8 +450,6 @@ export interface Ano {
   totalEntrada: number[]
   /** Transferências entre contas do ano: contadas, nunca somadas. */
   transferencias: number
-  /** Sobre quantos meses faz sentido tirar a média este ano. */
-  mesesDecorridos: number
   recarregar: () => void
 }
 
@@ -490,9 +507,14 @@ export function useAno(casaId: string | null, ano: number, categorias: Categoria
     }
 
     const somar = (a: number[], b: number[]) => a.map((v, i) => v + b[i])
+    const comMovimento = (meses: number[]) => meses.filter(v => v !== 0).length
     const linhaDe = (c: Categoria): LinhaDoAno => {
       const meses = porCategoria.get(c.id) ?? Array(12).fill(0)
-      return { categoria: c, meses, total: meses.reduce((s, v) => s + v, 0) }
+      return {
+        categoria: c, meses,
+        total: meses.reduce((s, v) => s + v, 0),
+        mesesComMovimento: comMovimento(meses),
+      }
     }
 
     const arvore = (nat: 'despesa' | 'entrada'): LinhaDoAno[] =>
@@ -510,6 +532,7 @@ export function useAno(casaId: string | null, ano: number, categorias: Categoria
             categoria: raiz,
             meses,
             total: meses.reduce((s, v) => s + v, 0),
+            mesesComMovimento: comMovimento(meses),
             filhos: filhos.length ? filhos : undefined,
           }
         })
@@ -522,33 +545,26 @@ export function useAno(casaId: string | null, ano: number, categorias: Categoria
       const meses = semCategoria.despesa
       despesas.push({
         categoria: { id: 'sem', nome: 'Sem categoria', natureza: 'despesa', cor: '#75705f', icone: 'saco', limite_cents: null, ordem: 999, arquivada: false },
-        meses, total: meses.reduce((s, v) => s + v, 0),
+        meses, total: meses.reduce((s, v) => s + v, 0), mesesComMovimento: comMovimento(meses),
       })
     }
     if (semCategoria.entrada.some(v => v !== 0)) {
       const meses = semCategoria.entrada
       entradas.push({
         categoria: { id: 'sem-e', nome: 'Sem categoria', natureza: 'entrada', cor: '#75705f', icone: 'moeda', limite_cents: null, ordem: 999, arquivada: false },
-        meses, total: meses.reduce((s, v) => s + v, 0),
+        meses, total: meses.reduce((s, v) => s + v, 0), mesesComMovimento: comMovimento(meses),
       })
     }
 
     const totalDe = (linhas: LinhaDoAno[]) =>
       linhas.reduce((acc, l) => somar(acc, l.meses), Array(12).fill(0) as number[])
 
-    const agora = new Date()
-    const mesesDecorridos =
-      ano < agora.getFullYear() ? 12
-      : ano > agora.getFullYear() ? 1
-      : Math.max(1, agora.getMonth() + 1)
-
     return {
       estado, despesas, entradas,
       totalDespesa: totalDe(despesas),
       totalEntrada: totalDe(entradas),
       transferencias,
-      mesesDecorridos,
       recarregar: buscar,
     }
-  }, [movimentos, categorias, estado, ano, buscar])
+  }, [movimentos, categorias, estado, buscar])
 }

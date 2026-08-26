@@ -11,12 +11,17 @@ const EUROS_REDONDOS = new Intl.NumberFormat('pt-PT', {
   style: 'currency', currency: 'EUR', maximumFractionDigits: 0,
 })
 
+/* O Intl devolve o hífen do teclado; o menos de verdade é outro sinal
+   (−, U+2212) e é o que o registo já escreve. Na mesma página havia dois
+   menos diferentes — um erro de composição, não de contas. */
+const menos = (texto: string) => texto.replace('-', '−')
+
 /** "12,50 €". O sinal é do chamador — mas o zero negativo do IEEE não é
  *  sinal nenhum, e "-0,00 €" no ecrã é um erro a fingir de número. */
-export const escreverEuros = (cents: number) => EUROS.format(cents === 0 ? 0 : cents / 100)
+export const escreverEuros = (cents: number) => menos(EUROS.format(cents === 0 ? 0 : cents / 100))
 
 /** "1 250 €" — para números grandes onde os cêntimos são ruído. */
-export const escreverRedondo = (cents: number) => EUROS_REDONDOS.format(Math.round(cents / 100))
+export const escreverRedondo = (cents: number) => menos(EUROS_REDONDOS.format(Math.round(cents / 100)))
 
 /**
  * "12,50" · "12.50" · "1 234,56" · "-12,50" · "1.234,56" → cêntimos.
@@ -25,7 +30,7 @@ export const escreverRedondo = (cents: number) => EUROS_REDONDOS.format(Math.rou
 export function lerCents(texto: string): number | null {
   const cru = (texto ?? '').trim()
   if (!cru) return null
-  const negativo = /^-/.test(cru) || /\(.*\)/.test(cru)
+  const negativo = /^[-−]/.test(cru) || /\(.*\)/.test(cru)
   let limpo = cru.replace(/[^\d.,]/g, '')
   if (!limpo) return null
 

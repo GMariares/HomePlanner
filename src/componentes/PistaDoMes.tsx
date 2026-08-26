@@ -42,16 +42,20 @@ export function PistaDoMes({ ritmo }: { ritmo: Ritmo }) {
       </p>
 
       {/* A barra é decoração de uma verdade que já está escrita acima e
-          abaixo: quem não distingue as cores lê na mesma. */}
-      <div className="pista-barra" aria-hidden="true">
-        {!semOrcamento && dia > 0 && (
-          <span
-            className="pista-corredor"
-            style={{ insetInlineStart: `${inicioCorredor}%`, width: `${larguraCorredor}%` }}
-          />
-        )}
-        <span className="pista-gasta" style={{ width: `${gastoPct}%` }} data-excedeu={excedeu || undefined} />
-      </div>
+          abaixo: quem não distingue as cores lê na mesma. Sem orçamento
+          não há nada para medir — e um medidor vazio é um controlo a
+          fingir que tem dados. */}
+      {!semOrcamento && (
+        <div className="pista-barra" aria-hidden="true">
+          {dia > 0 && (
+            <span
+              className="pista-corredor"
+              style={{ insetInlineStart: `${inicioCorredor}%`, width: `${larguraCorredor}%` }}
+            />
+          )}
+          <span className="pista-gasta" style={{ width: `${gastoPct}%` }} data-excedeu={excedeu || undefined} />
+        </div>
+      )}
 
       <p className="pista-leitura">
         <span className="pista-selo" data-estado={estado}>{palavras}</span>

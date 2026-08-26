@@ -1300,6 +1300,8 @@ span.ano-abrir { cursor: default; }
 .ano-total { font-weight: 800; border-inline-start: 1px solid var(--linha-d); }
 .ano-media { color: var(--tinta-2); }
 .ano-nota { margin: calc(var(--u) * 1) 0 0; color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 600; }
+/* Quinze colunas não cabem num telemóvel: lá a tabela dá lugar às faixas. */
+.ano-lista { display: none; }
 /* Num telemóvel o Total prende-se à direita: o nome e a resposta ficam
    sempre à vista, e os meses rolam entre os dois. Sem isto a tabela abria
    só com nomes e nem um número no ecrã. A média fica para o ecrã largo. */
@@ -1313,7 +1315,51 @@ span.ano-abrir { cursor: default; }
     border-inline-start: 1px solid var(--linha-d);
   }
   .ano-nome-texto { max-width: 7.5rem; }
+  .ano-rolo { display: none; }
+  .ano-lista { display: block; }
 }
+
+/* ---------------- o ano, num telemóvel: doze barras ---------------- */
+.anol-seccao { margin: calc(var(--u) * 2) 0 calc(var(--u) * 0.5); }
+.anol-seccao:first-child { margin-top: calc(var(--u) * 1); }
+.anol-linha + .anol-linha { border-top: 1px solid var(--linha-d); }
+.anol-linha[data-funda] { padding-inline-start: calc(var(--u) * 2); }
+.anol-linha[data-soma] { border-top: 1.5px solid color-mix(in oklab, var(--tinta) 25%, transparent); }
+.anol-linha[data-soma] .anol-nome { font-weight: 800; }
+.anol-botao {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: calc(var(--u) * 1.25) 0;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  width: 100%;
+  display: grid;
+  gap: calc(var(--u) * 0.75);
+  min-width: 0;
+}
+button.anol-botao { cursor: pointer; }
+.anol-cabeca { display: flex; align-items: center; gap: calc(var(--u) * 1); min-width: 0; }
+.anol-nome { font-weight: 700; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.anol-total { margin-inline-start: auto; font-weight: 800; font-variant-numeric: tabular-nums; flex: none; }
+/* Doze meses, doze barras: a forma do ano lê-se de uma vez, e o número
+   exacto de um mês vai-se buscar à vista do mês. */
+.anol-meses { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 3px; align-items: end; }
+.anol-mes { display: grid; gap: 3px; justify-items: center; min-width: 0; }
+.anol-tubo {
+  width: 100%;
+  height: calc(var(--u) * 4);
+  display: flex;
+  align-items: flex-end;
+  background: color-mix(in oklab, var(--tinta) 5%, #fff);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.anol-barra { width: 100%; background: var(--cor); border-radius: 3px; transition: height 420ms var(--mola); }
+.anol-barra[data-negativo] { background: var(--perigo); }
+.anol-inicial { font-size: 0.625rem; font-weight: 700; color: var(--tinta-3); font-variant-numeric: tabular-nums; }
+.anol-media { font-size: var(--t-etiqueta); font-weight: 600; color: var(--tinta-3); font-variant-numeric: tabular-nums; }
 .financas-navegacao { display: flex; gap: calc(var(--u) * 1); flex-wrap: wrap; }
 .semana-nav-botao[data-activa] { background: var(--tinta); color: var(--modulo); }
 
@@ -1351,7 +1397,7 @@ span.ano-abrir { cursor: default; }
 .alocar-arrumar { padding-block: calc(var(--u) * 1); padding-inline: calc(var(--u) * 2); }
 .fornecedor-chave { font-weight: 800; }
 .fornecedor-novo { border-top: 1px solid var(--linha-d); padding-top: calc(var(--u) * 1.5); padding-inline-start: 0; }
-.importar-alocar { color: var(--c-lista); font-weight: 800; }
+.importar-alocar { color: color-mix(in oklab, var(--c-lista) 78%, var(--tinta)); font-weight: 800; }
 /* O selector herda width:100% de .campo-escrita; numa .fila sem quebra isso
    vira flex-basis da fila inteira e esmaga o nome a uma letra por linha.
    Aqui a base é dita à mão e o nome respira. */
@@ -1448,7 +1494,10 @@ span.ano-abrir { cursor: default; }
   flex-wrap: wrap;
   gap: 0 calc(var(--u) * 1.5);
 }
-.balanco-aviso { color: var(--c-lista); font-weight: 800; }
+/* A cor crua de um módulo não é cor de texto: #b9862c sobre branco dá
+   3,2:1. O mundo já tem a fórmula para a versão que se lê. */
+.balanco-aviso { color: color-mix(in oklab, var(--c-lista) 78%, var(--tinta)); font-weight: 800; }
+.balanco-mudo { color: var(--tinta-3); font-weight: 600; }
 @media (max-width: 47.99rem) {
   /* Empilhados, o fio passa a ser em cima: três colunas de 2,1rem num
      telemóvel davam três números partidos ao meio. */
