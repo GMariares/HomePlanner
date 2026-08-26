@@ -11,8 +11,9 @@ const EUROS_REDONDOS = new Intl.NumberFormat('pt-PT', {
   style: 'currency', currency: 'EUR', maximumFractionDigits: 0,
 })
 
-/** "12,50 €". O sinal é do chamador: aqui o valor mostra-se como está. */
-export const escreverEuros = (cents: number) => EUROS.format(cents / 100)
+/** "12,50 €". O sinal é do chamador — mas o zero negativo do IEEE não é
+ *  sinal nenhum, e "-0,00 €" no ecrã é um erro a fingir de número. */
+export const escreverEuros = (cents: number) => EUROS.format(cents === 0 ? 0 : cents / 100)
 
 /** "1 250 €" — para números grandes onde os cêntimos são ruído. */
 export const escreverRedondo = (cents: number) => EUROS_REDONDOS.format(Math.round(cents / 100))

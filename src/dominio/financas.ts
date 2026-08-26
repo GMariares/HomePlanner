@@ -5,6 +5,8 @@ import { calcularRitmo, entradaDe, gastoDe, pressaoDe, type Ritmo } from './dinh
 export interface Categoria {
   id: string
   nome: string
+  /** A categoria de que esta é parte. Nula = categoria de raiz. */
+  mae_id?: string | null
   natureza: 'despesa' | 'entrada'
   cor: string
   icone: string
@@ -39,10 +41,13 @@ export interface Movimento {
 
 export interface Envelope {
   categoria: Categoria
+  /** O gasto da árvore inteira: a categoria e as suas subcategorias. */
   gasto: number
   limite: number | null
   pressao: number
   quantos: number
+  /** As subcategorias, cada uma com o seu gasto do mês. */
+  filhos: { categoria: Categoria; gasto: number; quantos: number }[]
 }
 
 export type EstadoFinancas = 'a-carregar' | 'pronto' | 'sem-rede' | 'sem-migracao'
@@ -138,19 +143,36 @@ export function useFinancas(casaId: string | null, mes: string) {
     [movimentos, porCategoria],
   )
 
+  /** De qualquer categoria para a sua raiz: é por aqui que a árvore soma. */
+  const raizDe = useMemo(() => {
+    const mapa = new Map<string, string>()
+    for (const c of categorias) mapa.set(c.id, c.mae_id ?? c.id)
+    return mapa
+  }, [categorias])
+
   const envelopes: Envelope[] = useMemo(() => {
-    const despesas = categorias.filter(c => c.natureza === 'despesa' && !c.arquivada)
-    return despesas
+    const raizes = categorias.filter(c => c.natureza === 'despesa' && !c.arquivada && !c.mae_id)
+    return raizes
       .map(categoria => {
-        const seus = comNatureza.filter(m => m.categoria_id === categoria.id && !m.compromisso_id)
-        const gasto = gastoDe(seus)
+        /* O envelope é a árvore: um gasto na subcategoria "Renda" é um gasto
+           de "Casa". É assim que a folha de cálculo da família somava. */
+        const daArvore = comNatureza.filter(m =>
+          m.categoria_id != null && raizDe.get(m.categoria_id) === categoria.id && !m.compromisso_id)
+        const gasto = gastoDe(daArvore)
         const limite = limiteDe(categoria)
-        return { categoria, gasto, limite, pressao: pressaoDe(gasto, limite), quantos: seus.length }
+        const filhos = categorias
+          .filter(c => c.mae_id === categoria.id && !c.arquivada)
+          .map(filha => {
+            const seus = daArvore.filter(m => m.categoria_id === filha.id)
+            return { categoria: filha, gasto: gastoDe(seus), quantos: seus.length }
+          })
+          .sort((a, b) => b.gasto - a.gasto)
+        return { categoria, gasto, limite, pressao: pressaoDe(gasto, limite), quantos: daArvore.length, filhos }
       })
       /* Por pressão: o que está mais perto de rebentar lê-se primeiro. Uma
          lista alfabética faz o leitor procurar o problema; esta entrega-lho. */
       .sort((a, b) => b.pressao - a.pressao || a.categoria.ordem - b.categoria.ordem)
-  }, [categorias, comNatureza, limiteDe])
+  }, [categorias, comNatureza, limiteDe, raizDe])
 
   /** O corredor mede só o variável: os compromissos ficam de fora. */
   const variaveis = useMemo(() => comNatureza.filter(m => !m.compromisso_id), [comNatureza])
@@ -248,7 +270,142 @@ export function useFinancas(casaId: string | null, mes: string) {
     estado, falhou, limparFalha: () => definirFalhou(false), recarregar: buscar,
     categorias, compromissos, movimentos, envelopes, ritmo, entrou,
     comprometido, porPagar, pagamentos, orcamentoTotal, limiteDe, porCategoria,
+    raizDe,
     registar, alterarMovimento, apagarMovimento,
     guardarCategoria, definirLimiteDoMes, guardarCompromisso, semear,
   }
+}
+
+
+/* ------------------------------------------------------------------ */
+
+export interface LinhaDoAno {
+  categoria: Categoria
+  /** 12 posições, cêntimos gastos (ou entrados) por mês em que conta. */
+  meses: number[]
+  total: number
+  filhos?: LinhaDoAno[]
+}
+
+export interface Ano {
+  estado: EstadoFinancas
+  despesas: LinhaDoAno[]
+  entradas: LinhaDoAno[]
+  totalDespesa: number[]
+  totalEntrada: number[]
+  /** Sobre quantos meses faz sentido tirar a média este ano. */
+  mesesDecorridos: number
+  recarregar: () => void
+}
+
+/**
+ * O ano inteiro, categoria a mês — a folha que a família já tinha, com as
+ * contas feitas por nós. Aqui entram TODOS os movimentos, os dos
+ * compromissos incluídos: isto é o relatório do que aconteceu, não o
+ * corredor do que ainda se decide. A renda pertence ao ano de "Casa".
+ */
+export function useAno(casaId: string | null, ano: number, categorias: Categoria[]): Ano {
+  const [movimentos, definirMovimentos] = useState<Pick<Movimento, 'valor_cents' | 'categoria_id' | 'mes_conta'>[]>([])
+  const [estado, definirEstado] = useState<EstadoFinancas>('a-carregar')
+
+  const buscar = useCallback(async () => {
+    if (!casaId) return
+    const { data, error } = await supabase
+      .from('movimentos')
+      .select('valor_cents, categoria_id, mes_conta')
+      .eq('casa_id', casaId)
+      .gte('mes_conta', `${ano}-01-01`)
+      .lte('mes_conta', `${ano}-12-01`)
+    if (error) {
+      definirEstado(esquemaAtrasado(error) ? 'sem-migracao' : 'sem-rede')
+      return
+    }
+    definirMovimentos(data ?? [])
+    definirEstado('pronto')
+  }, [casaId, ano])
+
+  useEffect(() => { definirEstado('a-carregar'); buscar() }, [buscar])
+
+  return useMemo(() => {
+    const porCategoria = new Map<string, number[]>()
+    const semCategoria = { despesa: Array(12).fill(0) as number[], entrada: Array(12).fill(0) as number[] }
+    const natureza = new Map(categorias.map(c => [c.id, c.natureza]))
+
+    for (const m of movimentos) {
+      const mes = Number(m.mes_conta.slice(5, 7)) - 1
+      if (mes < 0 || mes > 11) continue
+      const nat = m.categoria_id ? natureza.get(m.categoria_id) : undefined
+      /* Um positivo numa despesa é um estorno: desconta. Um movimento sem
+         categoria conta na natureza do seu sinal — não desaparece do ano. */
+      if (!m.categoria_id || !nat) {
+        if (m.valor_cents < 0) semCategoria.despesa[mes] += -m.valor_cents
+        else semCategoria.entrada[mes] += m.valor_cents
+        continue
+      }
+      const linha = porCategoria.get(m.categoria_id) ?? Array(12).fill(0)
+      linha[mes] += nat === 'despesa' ? -m.valor_cents : m.valor_cents
+      porCategoria.set(m.categoria_id, linha)
+    }
+
+    const somar = (a: number[], b: number[]) => a.map((v, i) => v + b[i])
+    const linhaDe = (c: Categoria): LinhaDoAno => {
+      const meses = porCategoria.get(c.id) ?? Array(12).fill(0)
+      return { categoria: c, meses, total: meses.reduce((s, v) => s + v, 0) }
+    }
+
+    const arvore = (nat: 'despesa' | 'entrada'): LinhaDoAno[] =>
+      categorias
+        .filter(c => c.natureza === nat && !c.mae_id && !c.arquivada)
+        .map(raiz => {
+          const filhos = categorias
+            .filter(c => c.mae_id === raiz.id && !c.arquivada)
+            .map(linhaDe)
+            .filter(f => f.total !== 0)
+            .sort((a, b) => b.total - a.total)
+          const propria = linhaDe(raiz)
+          const meses = filhos.reduce((acc, f) => somar(acc, f.meses), propria.meses)
+          return {
+            categoria: raiz,
+            meses,
+            total: meses.reduce((s, v) => s + v, 0),
+            filhos: filhos.length ? filhos : undefined,
+          }
+        })
+        .filter(l => l.total !== 0)
+        .sort((a, b) => b.total - a.total)
+
+    const despesas = arvore('despesa')
+    const entradas = arvore('entrada')
+    if (semCategoria.despesa.some(v => v !== 0)) {
+      const meses = semCategoria.despesa
+      despesas.push({
+        categoria: { id: 'sem', nome: 'Sem categoria', natureza: 'despesa', cor: '#75705f', icone: 'saco', limite_cents: null, ordem: 999, arquivada: false },
+        meses, total: meses.reduce((s, v) => s + v, 0),
+      })
+    }
+    if (semCategoria.entrada.some(v => v !== 0)) {
+      const meses = semCategoria.entrada
+      entradas.push({
+        categoria: { id: 'sem-e', nome: 'Sem categoria', natureza: 'entrada', cor: '#75705f', icone: 'moeda', limite_cents: null, ordem: 999, arquivada: false },
+        meses, total: meses.reduce((s, v) => s + v, 0),
+      })
+    }
+
+    const totalDe = (linhas: LinhaDoAno[]) =>
+      linhas.reduce((acc, l) => somar(acc, l.meses), Array(12).fill(0) as number[])
+
+    const agora = new Date()
+    const mesesDecorridos =
+      ano < agora.getFullYear() ? 12
+      : ano > agora.getFullYear() ? 1
+      : Math.max(1, agora.getMonth() + 1)
+
+    return {
+      estado, despesas, entradas,
+      totalDespesa: totalDe(despesas),
+      totalEntrada: totalDe(entradas),
+      mesesDecorridos,
+      recarregar: buscar,
+    }
+  }, [movimentos, categorias, estado, ano, buscar])
 }

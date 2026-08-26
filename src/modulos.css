@@ -1071,8 +1071,20 @@
 
 /* ---------------- Finanças: envelopes ---------------- */
 .envelopes { display: grid; gap: calc(var(--u) * 0.5); }
-@media (min-width: 64rem) { .envelopes { grid-template-columns: 1fr 1fr; gap: calc(var(--u) * 0.5) calc(var(--u) * 3); } }
-.envelope { display: flex; align-items: flex-start; gap: calc(var(--u) * 1.5); padding: calc(var(--u) * 1.25) 0; min-width: 0; }
+@media (min-width: 64rem) {
+  .envelopes { grid-template-columns: 1fr 1fr; gap: calc(var(--u) * 0.5) calc(var(--u) * 3); }
+  /* aberto, o envelope toma a largura toda: é ali que se está a trabalhar */
+  .envelope[data-aberto] { grid-column: 1 / -1; }
+}
+/* Uma pilha: o topo é a linha de sempre, o aberto desce por baixo dela.
+   Em flex os dois ficavam lado a lado e o painel esmagava-se numa coluna
+   de letras — visto na captura, não imaginado. */
+.envelope {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding: calc(var(--u) * 1.25) 0;
+  min-width: 0;
+}
 .envelope + .envelope { border-top: 1px solid var(--linha-d); }
 @media (min-width: 64rem) { .envelope:nth-child(2) { border-top: 0; } }
 .envelope-tile { width: calc(var(--u) * 4.5); height: calc(var(--u) * 4.5); border-radius: calc(var(--u) * 1.5); }
@@ -1176,3 +1188,117 @@
 .importar-conta { margin: 0; font-weight: 800; font-size: var(--t-etiqueta); color: var(--tinta-2); }
 .importar-categoria { max-width: 22rem; }
 .importar-lista { display: grid; max-height: 22rem; overflow-y: auto; }
+
+/* ---------------- Finanças: envelope aberto ---------------- */
+.envelope-topo {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: calc(var(--u) * 1.5);
+  width: 100%;
+  min-width: 0;
+  border-radius: calc(var(--u) * 1);
+}
+.envelope-topo:hover .envelope-nome { color: var(--cor-texto); }
+.envelope-abrir { display: inline-flex; vertical-align: -1px; margin-inline-end: 2px; color: var(--tinta-3); transition: transform 200ms var(--mola); }
+.envelope[data-aberto] .envelope-abrir { transform: rotate(90deg); }
+.envelope-dentro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: calc(var(--u) * 0.75);
+  padding: calc(var(--u) * 1) 0 calc(var(--u) * 0.5) calc(var(--u) * 6);
+  animation: chegar 240ms var(--mola) both;
+}
+@media (max-width: 47.99rem) { .envelope-dentro { padding-inline-start: calc(var(--u) * 2); } }
+.envelope-renome { max-width: 20rem; margin-bottom: calc(var(--u) * 0.5); }
+.envelope-filha { min-height: calc(var(--u) * 4); padding-block: calc(var(--u) * 0.5); }
+.envelope-filha + .envelope-filha { border-top: 1px solid var(--linha-d); }
+.envelope-mov-titulo { margin-top: calc(var(--u) * 1); }
+/* quando um está aberto, os outros recuam um passo */
+.envelopes[data-um-aberto] .envelope:not([data-aberto]) { opacity: 0.55; }
+.envelopes .envelope { transition: opacity 200ms var(--mola); }
+
+/* as partes, no registo rápido */
+.registo-arvore { flex: 1; min-width: 0; display: grid; gap: calc(var(--u) * 0.75); }
+.registo-cat--fina { font-weight: 700; background: color-mix(in oklab, var(--cor) 5%, #fff); }
+
+/* ---------------- Finanças: o ano à vista ---------------- */
+.ano-rolo { overflow-x: auto; margin-inline: calc(var(--u) * -1); padding-inline: calc(var(--u) * 1); }
+.ano-tabela {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 58rem;
+  font-variant-numeric: tabular-nums;
+  font-size: var(--t-etiqueta);
+}
+.ano-cabeca {
+  font-weight: 800;
+  color: var(--tinta-3);
+  text-align: right;
+  padding: calc(var(--u) * 0.75) calc(var(--u) * 0.75);
+  letter-spacing: 0.02em;
+}
+.ano-seccao th {
+  text-align: start;
+  font-size: var(--t-corpo);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  padding: calc(var(--u) * 2) calc(var(--u) * 0.5) calc(var(--u) * 0.75);
+}
+.ano-nome { text-align: start; padding: 0 calc(var(--u) * 0.5); white-space: nowrap; font-weight: 700; }
+/* a primeira coluna fica presa: sem ela os números soltam-se dos nomes */
+.ano-nome, .ano-cabeca:first-child {
+  position: sticky;
+  inset-inline-start: 0;
+  background: var(--modulo);
+  z-index: 1;
+}
+.ano-abrir {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: calc(var(--u) * 0.5) 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--u) * 1);
+  min-width: 0;
+}
+span.ano-abrir { cursor: default; }
+.ano-tile { width: calc(var(--u) * 3); height: calc(var(--u) * 3); border-radius: calc(var(--u) * 1); }
+.ano-nome-texto { max-width: 11rem; overflow: hidden; text-overflow: ellipsis; }
+.ano-seta { display: inline-flex; color: var(--tinta-3); transition: transform 200ms var(--mola); }
+.ano-seta[data-aberta] { transform: rotate(90deg); }
+.ano-linha { border-top: 1px solid var(--linha-d); }
+.ano-linha--funda .ano-nome { padding-inline-start: calc(var(--u) * 5); font-weight: 600; color: var(--tinta-2); }
+.ano-linha--soma { border-top: 1.5px solid color-mix(in oklab, var(--tinta) 25%, transparent); font-weight: 800; }
+.ano-valor { text-align: right; padding: calc(var(--u) * 0.75) calc(var(--u) * 0.75); font-weight: 600; color: var(--tinta); }
+.ano-valor[data-vazio] { color: var(--tinta-3); }
+.ano-total { font-weight: 800; border-inline-start: 1px solid var(--linha-d); }
+.ano-media { color: var(--tinta-2); }
+.ano-nota { margin: calc(var(--u) * 1) 0 0; color: var(--tinta-3); font-size: var(--t-etiqueta); font-weight: 600; }
+/* Num telemóvel o Total prende-se à direita: o nome e a resposta ficam
+   sempre à vista, e os meses rolam entre os dois. Sem isto a tabela abria
+   só com nomes e nem um número no ecrã. A média fica para o ecrã largo. */
+@media (max-width: 47.99rem) {
+  .ano-media { display: none; }
+  .ano-total {
+    position: sticky;
+    inset-inline-end: 0;
+    background: var(--modulo);
+    z-index: 1;
+    border-inline-start: 1px solid var(--linha-d);
+  }
+  .ano-nome-texto { max-width: 7.5rem; }
+}
+.financas-navegacao { display: flex; gap: calc(var(--u) * 1); flex-wrap: wrap; }
+.semana-nav-botao[data-activa] { background: var(--tinta); color: var(--modulo); }

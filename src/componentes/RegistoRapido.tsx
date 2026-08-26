@@ -22,9 +22,13 @@ export function RegistoRapido({ categorias, aoRegistar }: {
   const [entrada, definirEntrada] = useState(false)
   const campoValor = useRef<HTMLInputElement>(null)
 
-  const despesas = categorias.filter(c => c.natureza === 'despesa' && !c.arquivada)
-  const entradas = categorias.filter(c => c.natureza === 'entrada' && !c.arquivada)
-  const lista = entrada ? entradas : despesas
+  const vivas = categorias.filter(c => !c.arquivada)
+  const raizes = vivas.filter(c => c.natureza === (entrada ? 'entrada' : 'despesa') && !c.mae_id)
+  /* Escolhida uma categoria com partes, as partes aparecem por baixo:
+     quem quer só "Casa" fica por ali; quem quer "Renda" toca mais uma vez. */
+  const escolhida = vivas.find(c => c.id === categoria)
+  const raizEscolhida = escolhida ? (escolhida.mae_id ?? escolhida.id) : null
+  const filhas = raizEscolhida ? vivas.filter(c => c.mae_id === raizEscolhida) : []
   const cents = lerCents(valor)
   const podeGuardar = cents !== null && cents !== 0
 
@@ -82,25 +86,47 @@ export function RegistoRapido({ categorias, aoRegistar }: {
           {entrada ? 'é uma entrada' : 'é um gasto'}
         </button>
 
-        <div className="chips registo-cats">
-          {lista.map(c => {
-            const Icone = iconeDeCategoria(c.icone)
-            const activa = categoria === c.id
-            return (
-              <button
-                key={c.id}
-                type="button"
-                className="chip com-cor registo-cat"
-                style={{ '--cor': c.cor } as CSSProperties}
-                data-activa={activa || undefined}
-                aria-pressed={activa}
-                onClick={() => definirCategoria(activa ? '' : c.id)}
-              >
-                <Icone lado={15} />
-                {c.nome}
-              </button>
-            )
-          })}
+        <div className="registo-arvore">
+          <div className="chips registo-cats">
+            {raizes.map(c => {
+              const Icone = iconeDeCategoria(c.icone)
+              const activa = raizEscolhida === c.id
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  className="chip com-cor registo-cat"
+                  style={{ '--cor': c.cor } as CSSProperties}
+                  data-activa={activa || undefined}
+                  aria-pressed={activa}
+                  onClick={() => definirCategoria(activa ? '' : c.id)}
+                >
+                  <Icone lado={15} />
+                  {c.nome}
+                </button>
+              )
+            })}
+          </div>
+          {filhas.length > 0 && (
+            <div className="chips registo-cats registo-cats--finas">
+              {filhas.map(c => {
+                const activa = categoria === c.id
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    className="chip com-cor registo-cat registo-cat--fina"
+                    style={{ '--cor': c.cor } as CSSProperties}
+                    data-activa={activa || undefined}
+                    aria-pressed={activa}
+                    onClick={() => definirCategoria(activa ? raizEscolhida ?? '' : c.id)}
+                  >
+                    {c.nome}
+                  </button>
+                )
+              })}
+            </div>
+          )}
         </div>
       </div>
     </form>

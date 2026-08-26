@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import type { Casa } from '../dominio/tipos'
-import { chaveDoMes, mesDeChave, nomeDoMes, useFinancas, type Movimento } from '../dominio/financas'
+import { chaveDoMes, mesDeChave, nomeDoMes, useAno, useFinancas, type Movimento } from '../dominio/financas'
 import { escreverEuros } from '../dominio/dinheiro'
 import { PistaDoMes } from './PistaDoMes'
 import { Comprometido, Envelopes, Livro } from './Envelopes'
 import { RegistoRapido } from './RegistoRapido'
 import { Importar } from './Importar'
+import { TabelaDoAno } from './TabelaDoAno'
 import { ISetaEsq, ISetaDir } from './Icones'
 
 /** O mês seguinte ou o anterior, sem tropeçar em Janeiro. */
@@ -17,8 +18,13 @@ const mover = (m: string, n: number) => {
 export function Financas({ casa }: { casa: Casa }) {
   const [mes, definirMes] = useState(() => chaveDoMes(new Date()))
   const [aImportar, definirAImportar] = useState(false)
+  /* Mês para viver, ano para perceber: a mesma página, dois passos atrás. */
+  const [vista, definirVista] = useState<'mes' | 'ano'>('mes')
+  const [ano, definirAno] = useState(() => new Date().getFullYear())
   const f = useFinancas(casa.id, mes)
+  const dadosDoAno = useAno(vista === 'ano' ? casa.id : null, ano, f.categorias)
   const esteMes = mes === chaveDoMes(new Date())
+  const esteAno = ano === new Date().getFullYear()
 
   /** O ordenado que entra a 29 de Agosto pode ser o de Setembro. */
   const mudarMes = (m: Movimento) => {
@@ -50,21 +56,51 @@ export function Financas({ casa }: { casa: Casa }) {
       <header className="pagina-cabeca">
         <div>
           <h2 className="pagina-titulo">Finanças</h2>
-          <p className="pagina-sub pagina-sub--mes">{nomeDoMes(mesDeChave(mes))}</p>
+          <p className="pagina-sub pagina-sub--mes">
+            {vista === 'mes' ? nomeDoMes(mesDeChave(mes)) : `o ano de ${ano}`}
+          </p>
         </div>
-        <nav className="semana-nav" aria-label="Meses">
-          <button type="button" className="semana-nav-botao" onClick={() => definirMes(m => mover(m, -1))}>
-            <ISetaEsq lado={16} />
-            <span className="sr-only">Mês anterior</span>
-          </button>
-          <button type="button" className="semana-nav-botao" onClick={() => definirMes(chaveDoMes(new Date()))} disabled={esteMes}>
-            Este mês
-          </button>
-          <button type="button" className="semana-nav-botao" onClick={() => definirMes(m => mover(m, 1))}>
-            <ISetaDir lado={16} />
-            <span className="sr-only">Mês seguinte</span>
-          </button>
-        </nav>
+        <div className="financas-navegacao">
+          <nav className="semana-nav" aria-label="Mês ou ano">
+            <button type="button" className="semana-nav-botao" aria-pressed={vista === 'mes'}
+              data-activa={vista === 'mes' || undefined} onClick={() => definirVista('mes')}>
+              Mês
+            </button>
+            <button type="button" className="semana-nav-botao" aria-pressed={vista === 'ano'}
+              data-activa={vista === 'ano' || undefined} onClick={() => definirVista('ano')}>
+              Ano
+            </button>
+          </nav>
+          {vista === 'mes' ? (
+            <nav className="semana-nav" aria-label="Meses">
+              <button type="button" className="semana-nav-botao" onClick={() => definirMes(m => mover(m, -1))}>
+                <ISetaEsq lado={16} />
+                <span className="sr-only">Mês anterior</span>
+              </button>
+              <button type="button" className="semana-nav-botao" onClick={() => definirMes(chaveDoMes(new Date()))} disabled={esteMes}>
+                Este mês
+              </button>
+              <button type="button" className="semana-nav-botao" onClick={() => definirMes(m => mover(m, 1))}>
+                <ISetaDir lado={16} />
+                <span className="sr-only">Mês seguinte</span>
+              </button>
+            </nav>
+          ) : (
+            <nav className="semana-nav" aria-label="Anos">
+              <button type="button" className="semana-nav-botao" onClick={() => definirAno(a => a - 1)}>
+                <ISetaEsq lado={16} />
+                <span className="sr-only">Ano anterior</span>
+              </button>
+              <button type="button" className="semana-nav-botao" onClick={() => definirAno(new Date().getFullYear())} disabled={esteAno}>
+                Este ano
+              </button>
+              <button type="button" className="semana-nav-botao" onClick={() => definirAno(a => a + 1)}>
+                <ISetaDir lado={16} />
+                <span className="sr-only">Ano seguinte</span>
+              </button>
+            </nav>
+          )}
+        </div>
       </header>
 
       {f.estado === 'a-carregar' && (
@@ -95,7 +131,9 @@ export function Financas({ casa }: { casa: Casa }) {
         </p>
       )}
 
-      {f.estado === 'pronto' && f.categorias.length === 0 ? (
+      {vista === 'ano' ? (
+        <TabelaDoAno ano={ano} dados={dadosDoAno} />
+      ) : f.estado === 'pronto' && f.categorias.length === 0 ? (
         <section className="modulo financas-primeiro">
           <h3 className="portada-titulo">Ainda não há contas nesta casa</h3>
           <p className="portada-texto">
@@ -135,7 +173,18 @@ export function Financas({ casa }: { casa: Casa }) {
           )}
 
           <div className="financas-grelha">
-            <Envelopes envelopes={f.envelopes} aoDefinirLimite={f.definirLimiteDoMes} />
+            <Envelopes
+              envelopes={f.envelopes}
+              movimentos={f.movimentos}
+              raizDe={f.raizDe}
+              aoDefinirLimite={f.definirLimiteDoMes}
+              aoRenomear={(id, nome) => f.guardarCategoria({ id, nome })}
+              aoCriarFilha={(mae, nome) => f.guardarCategoria({
+                nome, natureza: mae.natureza, cor: mae.cor, icone: mae.icone,
+                mae_id: mae.id, ordem: mae.ordem,
+              })}
+              aoApagarMovimento={f.apagarMovimento}
+            />
             <Comprometido
               compromissos={f.compromissos}
               pagamentos={f.pagamentos}
