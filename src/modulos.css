@@ -1358,7 +1358,7 @@ button.anol-botao { cursor: pointer; }
 }
 .anol-barra { width: 100%; background: var(--cor); border-radius: 3px; transition: height 420ms var(--mola); }
 .anol-barra[data-negativo] { background: var(--perigo); }
-.anol-inicial { font-size: 0.625rem; font-weight: 700; color: var(--tinta-3); font-variant-numeric: tabular-nums; }
+.anol-inicial { font-size: var(--t-etiqueta); font-weight: 700; color: var(--tinta-3); font-variant-numeric: tabular-nums; }
 .anol-media { font-size: var(--t-etiqueta); font-weight: 600; color: var(--tinta-3); font-variant-numeric: tabular-nums; }
 .financas-navegacao { display: flex; gap: calc(var(--u) * 1); flex-wrap: wrap; }
 .semana-nav-botao[data-activa] { background: var(--tinta); color: var(--modulo); }
