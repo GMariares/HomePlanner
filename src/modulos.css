@@ -253,8 +253,6 @@
   justify-content: center;
   flex: none;
 }
-.tile--grande { width: calc(var(--u) * 7); height: calc(var(--u) * 7); border-radius: calc(var(--u) * 2.5); }
-
 .modulo-destaque {
   margin: 0;
   font-size: var(--t-grande);

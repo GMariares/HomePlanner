@@ -75,7 +75,6 @@ rounded:
   linha: "8px"
   campo: "12px"
   tile: "16px"
-  tile-grande: "20px"
   modulo: "24px"
   pilula: "999px"
 spacing:
@@ -99,9 +98,6 @@ components:
     textColor: "{colors.tinta}"
     rounded: "{rounded.tile}"
     size: "40px"
-  tile-grande:
-    rounded: "{rounded.tile-grande}"
-    size: "56px"
   pilula:
     backgroundColor: "{colors.tinta}"
     textColor: "{colors.modulo}"
@@ -461,7 +457,7 @@ Everything is a soft rectangle or a full pill; there are no sharp corners anywhe
 product and no decorative shapes at all.
 
 **The radius ladder scales with the container.** A module takes 24px (20px on mobile,
-where it is physically smaller, and 20px is also the large 56px tile); an icon tile,
+where it is physically smaller); an icon tile,
 popover, dinner pastille or inline confirmation takes 16px; a field, a text button, a menu
 item, a book row and the small 36px tile inside an envelope take 12px; a list-row inline
 input takes 8px; an inline code span takes 6px; the focus ring rounds at 4px; the 23px
@@ -490,7 +486,7 @@ focus.
 **Icons have one geometry.** Every icon is drawn on a 24×24 viewBox at 1.8 stroke width
 with round caps and round joins, filled only where a shape is genuinely solid (the three
 dots of an overflow menu, a fish's eye). Rendered at 20px by default, 16–18px inside rows
-and fields, 26px in the large tiles.
+and fields, and 14px inside the small tiles of an envelope or a year row.
 
 ### Named Rules
 
