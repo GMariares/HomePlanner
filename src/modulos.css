@@ -1187,7 +1187,9 @@
 .importar-cabecalho { justify-items: start; }
 .importar-conta { margin: 0; font-weight: 800; font-size: var(--t-etiqueta); color: var(--tinta-2); }
 .importar-categoria { max-width: 22rem; }
-.importar-lista { display: grid; max-height: 22rem; overflow-y: auto; }
+/* A janela rola: emoldurada por linhas finas, uma fila cortada ao fundo
+   lê-se como "há mais", não como um erro de desenho. */
+.importar-lista { display: grid; max-height: 22rem; overflow-y: auto; border-block: 1px solid var(--linha-d); overscroll-behavior: contain; }
 
 /* ---------------- Finanças: envelope aberto ---------------- */
 .envelope-topo {
@@ -1302,3 +1304,69 @@ span.ano-abrir { cursor: default; }
 }
 .financas-navegacao { display: flex; gap: calc(var(--u) * 1); flex-wrap: wrap; }
 .semana-nav-botao[data-activa] { background: var(--tinta); color: var(--modulo); }
+
+/* ---------------- Finanças: alocar e fornecedores ---------------- */
+.alocar-explica { margin-top: 0; }
+.alocar-linha { padding-block: calc(var(--u) * 0.75); }
+.alocar-linha + .alocar-linha { border-top: 1px solid var(--linha-d); }
+.alocar-linha .fila { padding-block: calc(var(--u) * 0.5); min-height: 0; }
+.alocar-accoes {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 1);
+  flex-wrap: wrap;
+  padding-inline-start: calc(var(--u) * 0.75);
+}
+.alocar-escolha { flex: 0 1 auto; min-width: calc(var(--u) * 20); padding-block: calc(var(--u) * 0.875); }
+.alocar-lembrar {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.75);
+  font-size: var(--t-etiqueta);
+  font-weight: 800;
+  color: var(--tinta-2);
+  cursor: pointer;
+}
+.alocar-lembrar input { accent-color: var(--tinta); width: 16px; height: 16px; }
+.alocar-chave {
+  flex: 1 1 calc(var(--u) * 16);
+  min-width: calc(var(--u) * 12);
+  padding-block: calc(var(--u) * 0.875);
+  font-size: var(--t-etiqueta);
+  font-weight: 700;
+}
+.alocar-chave:disabled { opacity: 0.4; }
+.alocar-arrumar { padding-block: calc(var(--u) * 1); padding-inline: calc(var(--u) * 2); }
+.fornecedor-chave { font-weight: 800; }
+.fornecedor-novo { border-top: 1px solid var(--linha-d); padding-top: calc(var(--u) * 1.5); padding-inline-start: 0; }
+.importar-alocar { color: var(--c-lista); font-weight: 800; }
+/* O selector herda width:100% de .campo-escrita; numa .fila sem quebra isso
+   vira flex-basis da fila inteira e esmaga o nome a uma letra por linha.
+   Aqui a base é dita à mão e o nome respira. */
+.fornecedor-fila .alocar-escolha { flex: 0 1 22rem; min-width: calc(var(--u) * 18); }
+@media (max-width: 47.99rem) {
+  .fornecedor-fila { flex-wrap: wrap; }
+  .fornecedor-fila .fila-corpo { flex: 1 1 100%; }
+  .fornecedor-fila .alocar-escolha { flex: 1 1 calc(var(--u) * 20); }
+}
+
+/* o registo ganhou fornecedor e data: a linha pode dobrar */
+.registo-linha { flex-wrap: wrap; }
+.registo-fornecedor { flex: 1 1 calc(var(--u) * 18); min-width: calc(var(--u) * 14); }
+/* A seta de sistema da datalist não pertence a este mundo. O UA do Chromium
+   torna-a visível com força; só um !important a cala. */
+.registo-fornecedor::-webkit-calendar-picker-indicator { display: none !important; }
+.registo-data {
+  flex: 0 1 auto;
+  width: calc(var(--u) * 19);
+  padding-inline: calc(var(--u) * 1.25);
+  font-variant-numeric: tabular-nums;
+}
+.registo-regra { font-size: var(--t-etiqueta); font-weight: 800; color: var(--c-financas); }
+.registo-fixar { color: var(--c-financas); }
+@media (max-width: 47.99rem) {
+  /* o "em quê" nunca encolhe a duas letras: o fornecedor dobra de linha */
+  .registo-descricao { min-width: calc(var(--u) * 14); }
+  .registo-data { width: calc(var(--u) * 18); }
+  .registo-guardar { margin-inline-start: auto; }
+}

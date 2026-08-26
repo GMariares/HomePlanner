@@ -181,16 +181,23 @@ function Fila({ e, aberto, aoAbrir, movimentosDaArvore, aoRenomear, aoCriarFilha
   )
 }
 
-export function Envelopes({ envelopes, movimentos, raizDe, aoDefinirLimite, aoRenomear, aoCriarFilha, aoApagarMovimento }: {
+export function Envelopes({ envelopes, movimentos, raizDe, aoDefinirLimite, aoRenomear, aoCriarFilha, aoCriarRaiz, aoApagarMovimento }: {
   envelopes: Envelope[]
   movimentos: Movimento[]
   raizDe: Map<string, string>
   aoDefinirLimite: (id: string, cents: number | null) => void
   aoRenomear: (id: string, nome: string) => void
   aoCriarFilha: (mae: Categoria, nome: string) => void
+  aoCriarRaiz: (nome: string) => void
   aoApagarMovimento: (id: string) => void
 }) {
   const [aberto, definirAberto] = useState<string | null>(null)
+  const [novo, definirNovo] = useState('')
+  const guardarNovo = () => {
+    if (novo.trim().length < 2) return
+    aoCriarRaiz(novo.trim())
+    definirNovo('')
+  }
   if (envelopes.length === 0) return null
 
   return (
@@ -215,6 +222,21 @@ export function Envelopes({ envelopes, movimentos, raizDe, aoDefinirLimite, aoRe
             aoDefinirLimite={aoDefinirLimite}
           />
         ))}
+        <div className="fila fila--branca envelope-novo">
+          <span className="fila-mais" aria-hidden="true"><IMais lado={16} /></span>
+          <span className="fila-corpo">
+            <input
+              className="escrita"
+              value={novo}
+              onChange={ev => definirNovo(ev.target.value)}
+              onKeyDown={ev => { if (ev.key === 'Enter') { ev.preventDefault(); guardarNovo() } }}
+              onBlur={guardarNovo}
+              placeholder="acrescentar um envelope — Férias, Presentes…"
+              aria-label="Acrescentar uma categoria nova"
+              maxLength={40}
+            />
+          </span>
+        </div>
       </div>
     </section>
   )

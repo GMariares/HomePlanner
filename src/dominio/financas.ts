@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { esquemaAtrasado, supabase } from './supabase'
 import { calcularRitmo, entradaDe, gastoDe, pressaoDe, type Ritmo } from './dinheiro'
+import type { Fornecedor } from './fornecedores'
 
 export interface Categoria {
   id: string
@@ -77,22 +78,33 @@ export function useFinancas(casaId: string | null, mes: string) {
   const [compromissos, definirCompromissos] = useState<Compromisso[]>([])
   const [movimentos, definirMovimentos] = useState<Movimento[]>([])
   const [limites, definirLimites] = useState<Record<string, number>>({})
+  const [fornecedores, definirFornecedores] = useState<Fornecedor[]>([])
+  /* A tabela pode ainda não existir (migração nona por correr): a página
+     funciona sem regras, só não arruma sozinha. */
+  const [semFornecedores, definirSemFornecedores] = useState(false)
   const [estado, definirEstado] = useState<EstadoFinancas>('a-carregar')
   const [falhou, definirFalhou] = useState(false)
   const relogio = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const buscar = useCallback(async () => {
     if (!casaId) return
-    const [cats, comps, movs, orcs] = await Promise.all([
+    const [cats, comps, movs, orcs, forns] = await Promise.all([
       supabase.from('categorias').select('*').eq('casa_id', casaId).order('ordem'),
       supabase.from('compromissos').select('*').eq('casa_id', casaId).eq('activo', true),
       supabase.from('movimentos').select('*').eq('casa_id', casaId).eq('mes_conta', mes),
       supabase.from('orcamentos').select('categoria_id, limite_cents').eq('casa_id', casaId).eq('mes', mes),
+      supabase.from('fornecedores').select('*').eq('casa_id', casaId).order('chave'),
     ])
     const erro = cats.error ?? comps.error ?? movs.error ?? orcs.error
     if (erro) {
       definirEstado(esquemaAtrasado(erro) ? 'sem-migracao' : 'sem-rede')
       return
+    }
+    if (forns.error) {
+      definirSemFornecedores(esquemaAtrasado(forns.error))
+    } else {
+      definirFornecedores((forns.data ?? []) as Fornecedor[])
+      definirSemFornecedores(false)
     }
     definirCategorias((cats.data ?? []) as Categoria[])
     definirCompromissos((comps.data ?? []) as Compromisso[])
@@ -260,6 +272,22 @@ export function useFinancas(casaId: string | null, mes: string) {
     if (!error) buscar()
   }, [buscar, casaId])
 
+  const guardarFornecedor = useCallback(async (f: Partial<Fornecedor> & { id?: string }) => {
+    if (!casaId) return
+    const { error } = f.id
+      ? await supabase.from('fornecedores').update(f).eq('id', f.id)
+      : await supabase.from('fornecedores')
+          .upsert({ ...f, casa_id: casaId }, { onConflict: 'casa_id,chave' })
+    definirFalhou(Boolean(error))
+    if (!error) buscar()
+  }, [buscar, casaId])
+
+  const apagarFornecedor = useCallback(async (id: string) => {
+    definirFornecedores(fs => fs.filter(f => f.id !== id))
+    const { error } = await supabase.from('fornecedores').delete().eq('id', id)
+    definirFalhou(Boolean(error))
+  }, [])
+
   const semear = useCallback(async () => {
     const { error } = await supabase.rpc('semear_categorias')
     definirFalhou(Boolean(error))
@@ -270,8 +298,8 @@ export function useFinancas(casaId: string | null, mes: string) {
     estado, falhou, limparFalha: () => definirFalhou(false), recarregar: buscar,
     categorias, compromissos, movimentos, envelopes, ritmo, entrou,
     comprometido, porPagar, pagamentos, orcamentoTotal, limiteDe, porCategoria,
-    raizDe,
-    registar, alterarMovimento, apagarMovimento,
+    raizDe, fornecedores, semFornecedores,
+    registar, alterarMovimento, apagarMovimento, guardarFornecedor, apagarFornecedor,
     guardarCategoria, definirLimiteDoMes, guardarCompromisso, semear,
   }
 }

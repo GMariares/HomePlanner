@@ -12,22 +12,50 @@ export type Grelha = string[][]
 
 /* ---------------- CSV ---------------- */
 
-/** Separador: o que aparecer mais vezes fora de aspas na primeira linha. */
+/**
+ * Separador: o que aparecer mais vezes fora de aspas, medido na linha mais
+ * densa das primeiras vinte. Um extracto a sério começa com um preâmbulo
+ * ("Consultar saldos e movimentos…") que não tem separador nenhum — decidir
+ * pela primeira linha era decidir às cegas.
+ */
 function acharSeparador(texto: string): string {
-  const primeira = texto.split(/\r?\n/)[0] ?? ''
+  const linhas = texto.split(/\r?\n/).slice(0, 20)
   const candidatos = [';', ',', '\t', '|']
   let melhor = ';'
   let mais = -1
   for (const s of candidatos) {
-    let conta = 0
-    let dentro = false
-    for (const ch of primeira) {
-      if (ch === '"') dentro = !dentro
-      else if (ch === s && !dentro) conta++
+    let pico = 0
+    for (const linha of linhas) {
+      let conta = 0
+      let dentro = false
+      for (const ch of linha) {
+        if (ch === '"') dentro = !dentro
+        else if (ch === s && !dentro) conta++
+      }
+      if (conta > pico) pico = conta
     }
-    if (conta > mais) { mais = conta; melhor = s }
+    if (pico > mais) { mais = pico; melhor = s }
   }
   return melhor
+}
+
+const PALAVRAS_DE_CABECALHO = [
+  'data', 'descri', 'movimento', 'debito', 'credito', 'montante', 'valor', 'saldo', 'amount', 'date',
+]
+
+/**
+ * Onde começa a tabela a sério. Os bancos põem seis linhas de conversa
+ * antes do cabeçalho — nome da conta, datas do pedido — e uma linha de
+ * saldo no fim. A tabela começa na primeira linha que fala como um
+ * cabeçalho: duas ou mais colunas com palavras de cabeçalho.
+ */
+function acharCabecalho(g: Grelha): number {
+  for (let i = 0; i < Math.min(g.length, 25); i++) {
+    const baixas = g[i].map(c => c.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, ''))
+    const acertos = baixas.filter(c => c.trim() && PALAVRAS_DE_CABECALHO.some(p => c.includes(p))).length
+    if (acertos >= 2 && g[i].filter(c => c.trim()).length >= 3) return i
+  }
+  return 0
 }
 
 export function lerCsv(texto: string): Grelha {
@@ -54,7 +82,8 @@ export function lerCsv(texto: string): Grelha {
     campo += ch
   }
   if (campo !== '' || linha.length) { linha.push(campo); linhas.push(linha) }
-  return linhas.filter(l => l.some(c => c.trim() !== ''))
+  const cheias = linhas.filter(l => l.some(c => c.trim() !== ''))
+  return cheias.slice(acharCabecalho(cheias))
 }
 
 /* ---------------- XLSX, sem dependências ---------------- */
@@ -155,12 +184,25 @@ export async function lerXlsx(buf: ArrayBuffer): Promise<Grelha> {
   return grelha
 }
 
+/**
+ * Os bancos portugueses ainda exportam em Latin-1: lido como UTF-8, o
+ * "Descrição" vira "Descri��o" e as chaves dos fornecedores deixam de
+ * casar. Tenta-se UTF-8 estrito; se os bytes não forem UTF-8, é windows-1252.
+ */
+export function descodificar(bytes: ArrayBuffer): string {
+  try {
+    return new TextDecoder('utf-8', { fatal: true }).decode(bytes)
+  } catch {
+    return new TextDecoder('windows-1252').decode(bytes)
+  }
+}
+
 export async function lerFicheiro(f: File): Promise<Grelha> {
   if (/\.xlsx$/i.test(f.name)) return lerXlsx(await f.arrayBuffer())
   if (/\.xls$/i.test(f.name)) {
     throw new Error('O .xls antigo não se lê aqui. Grave como .xlsx ou como CSV.')
   }
-  return lerCsv(await f.text())
+  return lerCsv(descodificar(await f.arrayBuffer()))
 }
 
 /* ---------------- adivinhar o mapa ---------------- */
@@ -202,18 +244,26 @@ export function adivinharMapa(g: Grelha): Mapa {
   const cabeca = g[0].map(c => c.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, ''))
   const acha = (...ps: string[]) => cabeca.findIndex(c => ps.some(p => c.includes(p)))
 
+  /* "Data valor" contém a palavra "valor" e não é valor nenhum: uma coluna
+     que fale de datas nunca é a do dinheiro. E havendo débito e crédito,
+     são eles que mandam — é o formato dos extractos cá. */
+  const achaValor = () => cabeca.findIndex(c =>
+    !c.includes('data') && !c.includes('date') &&
+    ['montante', 'valor', 'importancia', 'amount'].some(p => c.includes(p)))
   const porNome: Mapa = {
     data: acha('data', 'date'),
     descricao: acha('descri', 'movimento', 'detalhe', 'concept'),
-    valor: acha('montante', 'valor', 'importancia', 'amount'),
+    valor: -1,
     credito: -1,
     cabecalho: true,
   }
   const debito = acha('debito')
   const credito = acha('credito')
-  if (porNome.valor === -1 && debito >= 0 && credito >= 0) {
+  if (debito >= 0 && credito >= 0) {
     porNome.valor = debito
     porNome.credito = credito
+  } else {
+    porNome.valor = achaValor()
   }
   if (porNome.data >= 0 && porNome.valor >= 0) {
     if (porNome.descricao === -1) porNome.descricao = porNome.data === 0 ? 1 : 0

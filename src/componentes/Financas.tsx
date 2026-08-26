@@ -7,7 +7,11 @@ import { Comprometido, Envelopes, Livro } from './Envelopes'
 import { RegistoRapido } from './RegistoRapido'
 import { Importar } from './Importar'
 import { TabelaDoAno } from './TabelaDoAno'
+import { Fornecedores, PorAlocar } from './Alocar'
 import { ISetaEsq, ISetaDir } from './Icones'
+
+/* Um envelope novo nasce com uma cor do mundo; muda-se depois se se quiser. */
+const CORES_NOVAS = ['#4a7fa8', '#a0682c', '#7a5bb5', '#3e8560', '#a65a86', '#7d7a4a', '#c0566e']
 
 /** O mês seguinte ou o anterior, sem tropeçar em Janeiro. */
 const mover = (m: string, n: number) => {
@@ -148,7 +152,12 @@ export function Financas({ casa }: { casa: Casa }) {
         <div className="financas">
           <div className="financas-topo">
             <PistaDoMes ritmo={f.ritmo} />
-            <RegistoRapido categorias={f.categorias} aoRegistar={f.registar} />
+            <RegistoRapido
+              categorias={f.categorias}
+              fornecedores={f.fornecedores}
+              aoRegistar={f.registar}
+              aoGuardarFornecedor={f.semFornecedores ? undefined : f.guardarFornecedor}
+            />
           </div>
 
           <p className="financas-resumo">
@@ -164,6 +173,7 @@ export function Financas({ casa }: { casa: Casa }) {
           {aImportar && (
             <Importar
               categorias={f.categorias}
+              fornecedores={f.fornecedores}
               existentes={f.movimentos}
               aoFechar={() => definirAImportar(false)}
               aoImportar={async linhas => {
@@ -183,6 +193,12 @@ export function Financas({ casa }: { casa: Casa }) {
                 nome, natureza: mae.natureza, cor: mae.cor, icone: mae.icone,
                 mae_id: mae.id, ordem: mae.ordem,
               })}
+              aoCriarRaiz={nome => f.guardarCategoria({
+                nome, natureza: 'despesa',
+                cor: CORES_NOVAS[f.categorias.length % CORES_NOVAS.length],
+                icone: 'saco',
+                ordem: 150 + f.categorias.length,
+              })}
               aoApagarMovimento={f.apagarMovimento}
             />
             <Comprometido
@@ -195,12 +211,51 @@ export function Financas({ casa }: { casa: Casa }) {
             />
           </div>
 
+          {!f.semFornecedores && (
+            <PorAlocar
+              movimentos={f.movimentos}
+              categorias={f.categorias}
+              aoAlocar={({ movimento, categoriaId, chave, irmas }) => {
+                f.alterarMovimento(movimento.id, {
+                  categoria_id: categoriaId,
+                  fornecedor: movimento.fornecedor ?? (chave || movimento.descricao.trim()),
+                })
+                /* Arrumar uma arruma as irmãs: as três compras do Lidl saem juntas. */
+                for (const irma of irmas) {
+                  f.alterarMovimento(irma.id, { categoria_id: categoriaId })
+                }
+                if (chave) {
+                  f.guardarFornecedor({ chave, nome: movimento.descricao.trim().slice(0, 40), categoria_id: categoriaId })
+                }
+              }}
+            />
+          )}
+
           <Livro
             movimentos={f.movimentos}
             categorias={f.porCategoria}
             aoApagar={f.apagarMovimento}
             aoMudarMes={mudarMes}
           />
+
+          {!f.semFornecedores && (
+            <Fornecedores
+              fornecedores={f.fornecedores}
+              categorias={f.categorias}
+              aoGuardar={f.guardarFornecedor}
+              aoApagar={f.apagarFornecedor}
+            />
+          )}
+          {f.semFornecedores && (
+            <p className="faixa" role="status">
+              <span className="faixa-marca">Falta a nona migração</span>
+              <span>
+                Os fornecedores precisam de
+                <code> supabase/migrations/20260829120000_fornecedores.sql </code>
+                no SQL Editor. Até lá, o resto funciona.
+              </span>
+            </p>
+          )}
         </div>
       ) : null}
     </main>

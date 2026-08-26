@@ -2,7 +2,9 @@ import { useMemo, useState } from 'react'
 import { adivinharMapa, lerData, lerFicheiro, type Grelha, type Mapa } from '../dominio/extracto'
 import { escreverEuros, lerCents } from '../dominio/dinheiro'
 import type { Categoria, Movimento } from '../dominio/financas'
+import { regraPara, type Fornecedor } from '../dominio/fornecedores'
 import { chaveDeNome } from '../dominio/adiar'
+import { EscolhaDeCategoria } from './Alocar'
 
 interface Candidata {
   data: string
@@ -11,6 +13,8 @@ interface Candidata {
   impressao: string
   jaExiste: boolean
   usar: boolean
+  /** A regra que casou, se alguma casou. Sem regra, fica por alocar. */
+  regra: Fornecedor | null
 }
 
 /** A mesma linha do mesmo extracto, vinda outra vez, é a mesma linha. */
@@ -27,8 +31,9 @@ const NOMES = ['data', 'descricao', 'valor'] as const
  * aparece marcado e desligado — reimportar um período sobreposto é o
  * normal, não um erro do utilizador.
  */
-export function Importar({ categorias, existentes, aoImportar, aoFechar }: {
+export function Importar({ categorias, fornecedores = [], existentes, aoImportar, aoFechar }: {
   categorias: Categoria[]
+  fornecedores?: Fornecedor[]
   existentes: Movimento[]
   aoImportar: (linhas: Partial<Movimento>[]) => Promise<void>
   aoFechar: () => void
@@ -78,13 +83,18 @@ export function Importar({ categorias, existentes, aoImportar, aoFechar }: {
       if (!data || cents === null || cents === 0) continue
       const descricao = (mapa.descricao >= 0 ? l[mapa.descricao] ?? '' : '').trim()
       const impressao = impressaoDe(data, cents, descricao)
-      saida.push({ data, descricao, valor_cents: cents, impressao, jaExiste: jaCa.has(impressao), usar: true })
+      /* As regras da casa arrumam o que conhecem; o resto fica marcado. */
+      const regra = regraPara(descricao, fornecedores)
+      saida.push({ data, descricao, valor_cents: cents, impressao, jaExiste: jaCa.has(impressao), usar: true, regra })
     }
     return saida
-  }, [grelha, mapa, jaCa])
+  }, [grelha, mapa, jaCa, fornecedores])
 
   const novas = candidatas.filter((c, i) => !c.jaExiste && !saltar.has(i))
   const repetidas = candidatas.filter(c => c.jaExiste).length
+  const arrumadas = novas.filter(c => c.regra?.categoria_id).length
+  const porAlocar = novas.length - arrumadas
+  const porId = new Map(categorias.map(c => [c.id, c]))
 
   const guardar = async () => {
     definirAGuardar(true)
@@ -92,7 +102,10 @@ export function Importar({ categorias, existentes, aoImportar, aoFechar }: {
       data: c.data,
       valor_cents: c.valor_cents,
       descricao: c.descricao,
-      categoria_id: categoria || null,
+      fornecedor: c.regra?.nome || null,
+      /* A regra manda; sem regra vale o recurso escolhido; sem recurso,
+         fica sem categoria — marcado por alocar, nunca calado na errada. */
+      categoria_id: c.regra?.categoria_id ?? (categoria || null),
       impressao: c.impressao,
     })))
     definirAGuardar(false)
@@ -161,21 +174,23 @@ export function Importar({ categorias, existentes, aoImportar, aoFechar }: {
           <p className="importar-conta">
             {candidatas.length === 0
               ? 'Nenhuma linha se percebeu — experimente trocar as colunas acima.'
-              : `${novas.length} para entrar${repetidas > 0 ? `, ${repetidas} já cá estavam` : ''}`}
+              : `${novas.length} para entrar${arrumadas > 0 ? ` · ${arrumadas} arrumam-se sozinhas` : ''}${porAlocar > 0 ? ` · ${porAlocar} ficam por alocar` : ''}${repetidas > 0 ? ` · ${repetidas} já cá estavam` : ''}`}
           </p>
 
           {candidatas.length > 0 && (
             <>
-              <label className="campo importar-categoria">
-                <span className="campo-nome">Pôr tudo em (pode mudar-se depois)</span>
-                <select className="campo-escrita periodo-dia" value={categoria}
-                  onChange={e => definirCategoria(e.target.value)}>
-                  <option value="">sem categoria</option>
-                  {categorias.filter(c => !c.arquivada).map(c => (
-                    <option key={c.id} value={c.id}>{c.nome}</option>
-                  ))}
-                </select>
-              </label>
+              {porAlocar > 0 && (
+                <label className="campo importar-categoria">
+                  <span className="campo-nome">O que não se conhecer entra em</span>
+                  <EscolhaDeCategoria
+                    categorias={categorias}
+                    valor={categoria}
+                    aoEscolher={definirCategoria}
+                    rotulo="Categoria de recurso"
+                    vazio="por alocar — arruma-se depois"
+                  />
+                </label>
+              )}
 
               <div className="importar-lista">
                 {candidatas.slice(0, 60).map((c, i) => (
@@ -184,6 +199,12 @@ export function Importar({ categorias, existentes, aoImportar, aoFechar }: {
                       <span className="fila-nome">{c.descricao || 'sem descrição'}</span>
                       <span className="fila-meta">
                         <span>{c.data.slice(8, 10)}/{c.data.slice(5, 7)}</span>
+                        {c.regra?.categoria_id && (
+                          <span className="movimento-cat">
+                            {c.regra.nome ? `${c.regra.nome} → ` : ''}{porId.get(c.regra.categoria_id)?.nome}
+                          </span>
+                        )}
+                        {!c.regra?.categoria_id && !c.jaExiste && <span className="importar-alocar">por alocar</span>}
                         {c.jaExiste && <span className="movimento-mes">já cá estava</span>}
                       </span>
                     </span>
