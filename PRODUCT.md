@@ -96,8 +96,13 @@ Monday-first weeks. Single currency; multi-currency was offered and not taken.
 Interface language: **Portuguese (pt-PT)**. All labels, copy, dates and errors ship in
 Portuguese; English appears nowhere in the interface.
 
-Undecided: budgeting periods; how income is modelled; whether the shopping list tracks
-quantities or only items.
+Undecided: budgeting periods; whether the shopping list tracks quantities or only items.
+
+Decided and closed (26/08/2026): income is modelled as its own envelopes with a monthly
+forecast, mirroring the expense side. The shopping list and Finanças stay **unconnected** —
+no automatic expense from a bought item, no price reconciliation, no shared totals. The
+list belongs to the supermarket aisle and the accounts belong to the month; joining them
+would put the list in the business of asking for accounts while someone is shopping.
 
 ## Brand Commitments
 

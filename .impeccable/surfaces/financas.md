@@ -18,9 +18,9 @@ supermercado; ver se ainda há folga antes de comprar). Partilhado por omissão.
 ## 2. Outcome and proof
 
 Saber em três segundos se o mês vai bem, e registar um gasto mais depressa do que
-não o registar. A verdade que nenhum concorrente tem: a lista de compras já leva
-preços e já os soma — as Finanças são o único sítio que reconcilia o que se
-planeou gastar com o que saiu mesmo da conta.
+não o registar. A prova é o extracto do banco a entrar como vem e a arrumar-se
+quase todo sozinho: a casa diz uma vez que "Auchan é Mercearias" e não volta a
+dizê-lo.
 
 ## 3. Selected direction — O passo do mês
 
@@ -45,8 +45,10 @@ CSV/XLSX com mapa de colunas lembrado por banco e detecção de duplicados;
 entradas (ordenado recorrente + avulsas); livro do mês; categoria e fornecedor
 por movimento; **categorias configuráveis na aplicação**.
 
-**Fora (anti-goals):** Open Banking / sincronização viva; automatismo lista de
-compras → despesa (a decidir mais tarde; os preços já lá estão); investimentos e
+**Fora (anti-goals):** Open Banking / sincronização viva; **qualquer ligação entre a
+lista de compras e as Finanças** — decidido pelo dono da casa a 26/08/2026, e não é
+"por agora": a lista serve o supermercado e as contas servem o mês, e cruzá-las só
+poria a lista a pedir contas a quem está a fazer compras; investimentos e
 património; multi-moeda; fotografia de recibos.
 
 ## 5. States and ranges
