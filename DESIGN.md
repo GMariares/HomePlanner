@@ -17,6 +17,14 @@ colors:
   pai: "#3f57ad"
   mae: "#336f50"
   filha: "#7a51a8"
+  groselha: "#c0566e"
+  canela: "#a0682c"
+  ameixa: "#7a5bb5"
+  faianca: "#4a7fa8"
+  malva: "#a65a86"
+  azeitona: "#7d7a4a"
+  pinho: "#3e8560"
+  pedra: "#75705f"
 typography:
   display:
     fontFamily: "Manrope, ui-sans-serif, system-ui, sans-serif"
@@ -48,10 +56,26 @@ typography:
     fontWeight: 800
     lineHeight: 1.3
     letterSpacing: "0.01em"
+  mono:
+    fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace"
+    fontSize: "0.85em"
+    fontWeight: 500
+    lineHeight: 1.3
+    letterSpacing: "normal"
+  micro:
+    fontFamily: "Manrope, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.6875rem"
+    fontWeight: 700
+    lineHeight: 1.2
+    letterSpacing: "0.01em"
 rounded:
+  medidor: "3px"
+  aro: "4px"
+  codigo: "6px"
   linha: "8px"
   campo: "12px"
   tile: "16px"
+  tile-grande: "20px"
   modulo: "24px"
   pilula: "999px"
 spacing:
@@ -76,7 +100,7 @@ components:
     rounded: "{rounded.tile}"
     size: "40px"
   tile-grande:
-    rounded: "20px"
+    rounded: "{rounded.tile-grande}"
     size: "56px"
   pilula:
     backgroundColor: "{colors.tinta}"
@@ -132,6 +156,34 @@ components:
     rounded: "{rounded.tile}"
     padding: "10px"
     width: "96px"
+  tile-pequeno:
+    textColor: "{colors.tinta}"
+    rounded: "{rounded.campo}"
+    size: "36px"
+  selo:
+    backgroundColor: "#f5f4f4"
+    textColor: "{colors.tinta-2}"
+    typography: "{typography.label}"
+    rounded: "{rounded.pilula}"
+    padding: "4px 10px"
+  medidor:
+    backgroundColor: "#f0efee"
+    rounded: "{rounded.pilula}"
+    height: "6px"
+  medidor-fino:
+    backgroundColor: "#f0efee"
+    rounded: "{rounded.pilula}"
+    height: "4px"
+  barra-do-ano:
+    backgroundColor: "#f6f5f5"
+    rounded: "{rounded.medidor}"
+    height: "32px"
+  codigo:
+    backgroundColor: "#f1f0f0"
+    textColor: "{colors.tinta}"
+    typography: "{typography.mono}"
+    rounded: "{rounded.codigo}"
+    padding: "1px 5px"
 ---
 
 # Design System: HomePlanner
@@ -168,12 +220,15 @@ repository in a single 1.8 stroke, with no emoji, no icon library and no photogr
 
 - Porcelain ground (#f2f0ea) with pure white modules floating on it — one ground, one surface, no third plane.
 - One hue per area of the house; all four of its working tints derived from that hue by one `color-mix` formula.
-- Manrope alone, 200–800, in exactly four size steps; the hierarchy is carried by weight and space, not by more sizes.
+- Manrope alone, 200–800, in five size steps — four for reading and one constrained micro rung; the hierarchy is carried by weight and space, not by more sizes.
 - 8px governs every gap, every padding and every radius.
 - Numbers are tabular and right-aligned, everywhere, without exception.
 - State is a colour wash plus a raised shadow — never a border colour.
 - Drawn-in-house icons: 24×24 box, 1.8 stroke, round caps and joins.
 - One expansion gesture per module.
+- A hue is never text at full strength: text on a category colour is derived, not raw.
+- A module decides its own columns from its own width, not from the width of the screen.
+- Nothing judges without a real number behind it: no verdict from a partial estimate.
 
 ## Colors
 
@@ -219,7 +274,29 @@ The pens. Each household member writes in their own colour, and that colour appe
 - **Linha** (#e7e4da): Hairline dividers between rows inside one module. Deliberately rare.
 - **Perigo** (#b4432c): Destructive text buttons, invalid field rings, and the inline confirmation wash. Never a background fill.
 
+### Category Palette
+
+The finance section lets a household invent its own categories, and each one owns a hue
+drawn from a fixed palette so a new envelope never arrives in a colour the world doesn't
+speak. Eight beyond the five area hues, all at the same low chroma:
+
+- **Groselha** (#c0566e): health and anything that reads as care.
+- **Canela** (#a0682c): eating out.
+- **Ameixa** (#7a5bb5): leisure.
+- **Faiança** (#4a7fa8): clothes; the first hue offered to a new envelope.
+- **Malva** (#a65a86): personal care.
+- **Azeitona** (#7d7a4a): animals.
+- **Pinho** (#3e8560): the second hue offered to a new income line.
+- **Pedra** (#75705f): the catch-all — "Outros", "Sem categoria", and transfers between
+  the household's own accounts, which are deliberately the quietest thing on the page.
+
 ### Named Rules
+
+**The Derived Tint Rule.** A hue is a surface colour, never a text colour. Text that must
+carry a category's identity takes `color-mix(in oklab, var(--cor) 78%, var(--tinta))` —
+the same 78% the `.com-cor` formula already mixes. Measured on white, raw honey (#b9862c)
+reaches 3.2:1 and fails; the derived tint reaches 4.7:1 and passes. If a label needs to be
+the colour of its module, it goes through the formula or it does not go.
 
 **The One Formula Rule.** Any element carrying `.com-cor` declares a single `--cor` and
 receives its whole family by derivation: tile at 14% over white, chip at 8% over white,
@@ -265,12 +342,23 @@ at arm's length.
 - **Label** (700–800, 0.75rem / 12px, +0.01em): Field names, counts, metadata, chips, text
   buttons, the day badge. Sentence case; uppercase appears only on the marker word of a
   developer-facing warning strip.
+- **Micro** (700–800, 0.6875rem / 11px, +0.01em): The constrained rung. Thumb-bar labels,
+  the "hoje" badge, the calendar feed address. Never body, never a value the household has
+  to compare, and never reached for because something did not fit — only where nothing
+  else can.
+- **Mono** (500, 0.85em, system stack): A literal the household must copy or type exactly —
+  a migration filename, a subscription address — inside a 6% ink wash at 6px radius. It is
+  the one place a second family appears, and it is there because the characters have to be
+  unambiguous, not because the content is technical.
 
 ### Named Rules
 
-**The Four Steps Rule.** There are four type sizes and nothing between them — 12, 15, 18,
-24, plus 34 for display. If a new element seems to need a fifth step, the answer is a
-weight change or a space change, not a new size. Two of the five steps shrink on mobile;
+**The Five Steps Rule.** There are five type sizes and nothing between them — 11, 12, 15,
+18, 24, plus 34 for display. Four of them are for reading. The fifth, 11px, is a
+constrained rung and needs a reason a designer would accept: five thumb-bar labels that
+must fit across a 390px phone, the "hoje" badge, a subscription URL that has to be read
+once and copied. If a new element seems to need a size that is not on this list, the
+answer is a weight change or a space change, not a new size. Two steps shrink on mobile;
 the rest hold, because 15px body at arm's length is already the floor.
 
 **The One Family Rule.** One family carries the entire product. Emphasis is weight (500 →
@@ -373,16 +461,25 @@ Everything is a soft rectangle or a full pill; there are no sharp corners anywhe
 product and no decorative shapes at all.
 
 **The radius ladder scales with the container.** A module takes 24px (20px on mobile,
-where it is physically smaller); an icon tile, popover, dinner pastille or inline
-confirmation takes 16px; a field, a text button, a menu item and a book row take 12px; a
-list-row inline input takes 8px. The rule is proportional: the bigger the thing, the
-rounder the corner, so a small chip inside a big module never looks like a scaled-down
-copy of it.
+where it is physically smaller, and 20px is also the large 56px tile); an icon tile,
+popover, dinner pastille or inline confirmation takes 16px; a field, a text button, a menu
+item, a book row and the small 36px tile inside an envelope take 12px; a list-row inline
+input takes 8px; an inline code span takes 6px; the focus ring rounds at 4px; the 23px
+bars of the year strip take 3px. The rule is proportional: the bigger the thing, the rounder
+the corner, so a small chip inside a big module never looks like a scaled-down copy of it
+— and a bar so small that 8px would round it into a lozenge takes 3px instead, because a
+lozenge would falsify the height that is the whole point of the bar.
 
 **Pills are for things that act or that name a state.** Full 999px radius marks the
 primary button, the navigation items, the chips, the author tags, the "hoje" badge, the
 week navigation buttons, the check circle, and the author dot. If it is round-ended, you
 can press it or it is telling you what something currently is.
+
+**Meters are pills, bars are rectangles.** A meter that fills left to right — the pace of
+the month, an envelope, one of its parts — is a 999px track with a 999px fill, 6px tall
+(4px for a part). A bar that encodes height in a series — the twelve months of the year
+strip — is a small rectangle at 3px, because round ends on a short bar read as a value the
+bar does not have.
 
 **Borders are almost absent.** There is one hairline in the system — `1px solid #e7e4da`
 between consecutive rows inside a module, at the top of a totals row, and along the top of
@@ -524,6 +621,81 @@ scrolls horizontally with its scrollbar hidden and a 32px mask fade at the trail
 and it carries 48px of trailing padding so the fade never bites the last pastille when you
 reach the end.
 
+### The Pista (signature)
+
+The month's pace. A single 16px track at full pill radius holds two marks: a **corridor**
+— a 12% ink wash between two 1.5px rules, sitting where an even spend rate would put the
+household today, with a tolerance band either side — and the **fill**, the tile-green
+amount actually spent, turning danger red only once it passes the whole budget. Above the
+track sits the spent figure at display size with "de {budget}" beside it in strong; below
+it a pill-shaped **selo** carries the verdict in words — *a bom ritmo*, *acima do ritmo*,
+*ainda é cedo para dizer* — each with its own 10–14% wash and 78–80% derived text.
+
+The pace is built to refuse a verdict it cannot support. It covers variable envelopes
+only, so the rent landing on the 8th cannot make a Tuesday look lost; it says nothing at
+all before day 7; and with no ceiling anywhere it drops the track entirely and says *sem
+orçamento posto*, because an empty meter is a control pretending to have data.
+
+### The Envelope (signature)
+
+A category and its month, as a row that opens. Closed: a 36px tile at 12px radius, the
+name with a chevron, the amount right-aligned at 800 tabular, a 6px meter, then a foot
+line carrying the editable ceiling and the movement count. Open: the same row with a
+drawer below it holding the name field, the category's parts — each with its own ceiling,
+count and 4px meter — an inline row to add another part, and the month's movements.
+
+Three rules hold it together. **The ceiling belongs to whoever has it:** a burst parent
+never paints a healthy part red, so the state that colours a meter and its words is
+computed per envelope and per part, not inherited. **A parent with priced parts is the
+sum of its parts:** set 700 on rent and 120 on power and the parent reads 820 and stops
+being editable, because two numbers claiming to be the same envelope is how a spreadsheet
+starts lying. And **the same component serves both economies:** an income envelope is the
+identical drawing with different words — *pôr uma previsão*, *faltam*, *20,00 € acima* —
+and above target is folha green, never danger.
+
+The grid decides its own columns with a container query at 34rem, not a media query: the
+narrow column of a two-column page is wide on a 1440px screen and still narrow, and a
+viewport-based rule truncated "Ordenado" to "Ord…" inside it.
+
+### The Balanço (signature)
+
+The month in three numbers — in, out, left — as one module of three columns divided by
+hairlines, never three cards. Each column is a label, the real figure at display size, the
+estimate beneath it, and the difference spelled out with its sign and its meaning
+(*+16,00 € acima do previsto*). Colour follows the words and never leads: above is folha
+green on income and danger on spending, because the same arithmetic means opposite things
+on the two sides. On a phone the three columns become three stacked rows and the dividing
+hairline moves from the side to the top.
+
+**The No Verdict Without A Number Rule.** A column judges only when its estimate is real:
+spending needs at least one ceiling set (committed bills alone are a part of a budget, not
+a budget), the net needs both sides. Where the estimate is missing the column says what is
+missing — *sem tecto posto* — and drops the difference line entirely rather than reporting
+a difference against zero. A red verdict a household did nothing to earn is the fastest
+way to teach it to stop reading verdicts.
+
+### The Dobra
+
+A module that opens, for the things consulted rather than asked: the month's book, the
+supplier rules. Closed it is one line — the title as a button with a leading chevron, and
+its count still on the right, so a shut drawer still informs. The chevron rotates 90° on
+opening and the body arrives on the standard 240ms entrance. It is the same one-gesture
+doctrine as the module itself, applied to a whole section.
+
+### The Faixa do ano
+
+The year on a phone. Fifteen columns cannot be scrolled sideways into sense on a 390px
+screen — that layout opens on zero months — so below 48rem the year table is replaced,
+not adapted: one faixa per category, with the name, the year total, twelve 23px bars whose
+heights are relative to that row's own biggest month, the month initials beneath, and the
+average across the months that actually had movement. The shape of the year reads at a
+glance; the exact figure for one month lives in the month view, one tap away. Above 48rem
+the table returns, with its first column and its Total column pinned.
+
+**The Honest Denominator Rule.** An average divides by the months a row actually had
+movement, never by the months of the calendar. A household that starts in August has four
+months of rent at 847 € and would read 424 — half, wearing the face of a right answer.
+
 ### Warning strip (`faixa`)
 
 Developer- and operator-facing messages (missing configuration, a save that did not land)
@@ -553,6 +725,14 @@ the floor.
   focus ring is a 2px ink outline at 2px offset, everywhere.
 - **Do** give a module exactly one opening gesture and make the whole surface the target.
 - **Do** write empty states as one sentence inside the module.
+- **Do** run a hue through the 78% derivation before it becomes text. Raw honey on white is
+  3.2:1; the derived tint is 4.7:1.
+- **Do** let a module decide its own column count from its own width with a container
+  query. The screen's width is not the module's width.
+- **Do** compute a state — burst, reached, over, under — on the thing that has it, so a
+  parent's condition never paints its children.
+- **Do** say what is missing when a number has no estimate behind it, and show no
+  difference at all rather than a difference against zero.
 
 ### Don't:
 
@@ -562,8 +742,9 @@ the floor.
   open things.
 - **Don't** ship a symmetric glow. Shadows are offset and blurred; zero-offset shadows are
   reserved for the inset focus and check rings.
-- **Don't** introduce a second font family, an italic, or a fifth type size. Reach for weight
-  or space instead.
+- **Don't** introduce a second font family, an italic, or a sixth type size. Reach for
+  weight or space instead — and the fifth step (11px) needs a constraint that a designer
+  would accept, not a paragraph that did not fit.
 - **Don't** use emoji, an icon library, or photography anywhere in the product.
 - **Don't** put a third plane on the screen — porcelain floor, white module, nothing between.
 - **Don't** scatter small buttons across a module to make it openable; one gesture, whole
@@ -571,3 +752,13 @@ the floor.
 - **Don't** let a quantity, price or dish name that the household typed get clipped by a
   fixed-width column.
 - **Don't** ship a full-screen empty state where a sentence inside the module will do.
+- **Don't** put a button inside a button. The ceiling control lives beside the row that
+  opens an envelope, not inside its target — nested buttons are invalid and the inner one
+  stops being reachable by keyboard.
+- **Don't** draw a meter with nothing to measure. No budget means no track, not an empty
+  one.
+- **Don't** deliver a verdict from a partial estimate. The pace refuses to judge before day
+  7 and without a budget; every other number on the page owes the household the same
+  discipline.
+- **Don't** scroll a wide table sideways and call it responsive. If the first screen of a
+  phone shows no data, the layout is replaced, not adapted.

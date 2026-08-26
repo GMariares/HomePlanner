@@ -10,19 +10,13 @@
           "src/modulos.css"
         ],
         "createdAt": "2026-08-26T11:44:57.001Z",
-        "reason": "Claude: one-shot width settle on 6px round-capped progress fills (pista, envelopes); scaleX would squash the 999px caps into ellipses — worse craft than a contained layout anim on two tiny strips"
+        "reason": "Claude: one-shot width settle on 6px round-capped progress fills (pista, envelopes); scaleX would squash the 999px caps into ellipses \u2014 worse craft than a contained layout anim on two tiny strips"
       },
       {
         "rule": "design-system-color",
         "value": "#000",
         "createdAt": "2026-08-26T18:21:50.260Z",
-        "reason": "Claude: mask-image alpha stop, not a painted colour — #000 means fully opaque in a luminance/alpha mask and never reaches a pixel; there is no non-colour syntax for a mask stop"
-      },
-      {
-        "rule": "design-system-radius",
-        "value": "3px",
-        "createdAt": "2026-08-26T19:00:22.111Z",
-        "reason": "Claude: a escada de raios do DESIGN.md diz 'quanto maior a coisa, mais redondo o canto' e pára nos 8px do campo em linha; uma barra de 23px do ano é a coisa mais pequena do mundo e a 8px lia-se como pastilha, falseando a altura que codifica"
+        "reason": "Claude: mask-image alpha stop, not a painted colour \u2014 #000 means fully opaque in a luminance/alpha mask and never reaches a pixel; there is no non-colour syntax for a mask stop"
       }
     ]
   }

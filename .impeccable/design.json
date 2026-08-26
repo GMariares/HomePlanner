@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-25T00:00:00Z",
+  "generatedAt": "2026-08-26T19:00:00Z",
   "title": "Design System: HomePlanner",
   "extensions": {
     "colorMeta": {
@@ -9,105 +9,368 @@
         "displayName": "Porcelana",
         "canonical": "oklch(95.5% 0.008 91.5)",
         "purpose": "The one floor of the application: page background, PWA theme colour, scrollbar track. Warm, never blue-grey.",
-        "tonalRamp": ["oklch(15% 0.008 91.5)", "oklch(26% 0.008 91.5)", "oklch(37% 0.008 91.5)", "oklch(48% 0.008 91.5)", "oklch(59% 0.008 91.5)", "oklch(70% 0.008 91.5)", "oklch(82% 0.008 91.5)", "oklch(94% 0.003 91.5)"]
+        "tonalRamp": [
+          "oklch(15% 0.008 91.5)",
+          "oklch(26% 0.008 91.5)",
+          "oklch(37% 0.008 91.5)",
+          "oklch(48% 0.008 91.5)",
+          "oklch(59% 0.008 91.5)",
+          "oklch(70% 0.008 91.5)",
+          "oklch(82% 0.008 91.5)",
+          "oklch(94% 0.003 91.5)"
+        ]
       },
       "modulo": {
         "role": "neutral",
         "displayName": "Módulo",
         "canonical": "oklch(100% 0 0)",
         "purpose": "Pure white — the only surface that rests on the floor, plus popovers and the sign-in card.",
-        "tonalRamp": ["oklch(15% 0 0)", "oklch(26% 0 0)", "oklch(37% 0 0)", "oklch(48% 0 0)", "oklch(59% 0 0)", "oklch(70% 0 0)", "oklch(82% 0 0)", "oklch(94% 0 0)"]
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26% 0 0)",
+          "oklch(37% 0 0)",
+          "oklch(48% 0 0)",
+          "oklch(59% 0 0)",
+          "oklch(70% 0 0)",
+          "oklch(82% 0 0)",
+          "oklch(94% 0 0)"
+        ]
       },
       "tinta": {
         "role": "primary",
         "displayName": "Tinta",
         "canonical": "oklch(22.5% 0.010 294.8)",
         "purpose": "Near-black with a trace of violet: the writing ink of the product and the fill of every pill that acts — primary button, current nav item, brand tile.",
-        "tonalRamp": ["oklch(15% 0.010 294.8)", "oklch(26% 0.010 294.8)", "oklch(37% 0.010 294.8)", "oklch(48% 0.010 294.8)", "oklch(59% 0.010 294.8)", "oklch(70% 0.010 294.8)", "oklch(82% 0.010 294.8)", "oklch(94% 0.003 294.8)"]
+        "tonalRamp": [
+          "oklch(15% 0.010 294.8)",
+          "oklch(26% 0.010 294.8)",
+          "oklch(37% 0.010 294.8)",
+          "oklch(48% 0.010 294.8)",
+          "oklch(59% 0.010 294.8)",
+          "oklch(70% 0.010 294.8)",
+          "oklch(82% 0.010 294.8)",
+          "oklch(94% 0.003 294.8)"
+        ]
       },
       "tinta-2": {
         "role": "neutral",
         "displayName": "Tinta Secundária",
         "canonical": "oklch(50.4% 0.022 90.7)",
         "purpose": "Supporting prose — page subtitles, module notes, text buttons at rest. Tinted from the floor rather than a pure grey; 5.2:1 on porcelain.",
-        "tonalRamp": ["oklch(15% 0.022 90.7)", "oklch(26% 0.022 90.7)", "oklch(37% 0.022 90.7)", "oklch(48% 0.022 90.7)", "oklch(59% 0.022 90.7)", "oklch(70% 0.022 90.7)", "oklch(82% 0.022 90.7)", "oklch(94% 0.008 90.7)"]
+        "tonalRamp": [
+          "oklch(15% 0.022 90.7)",
+          "oklch(26% 0.022 90.7)",
+          "oklch(37% 0.022 90.7)",
+          "oklch(48% 0.022 90.7)",
+          "oklch(59% 0.022 90.7)",
+          "oklch(70% 0.022 90.7)",
+          "oklch(82% 0.022 90.7)",
+          "oklch(94% 0.008 90.7)"
+        ]
       },
       "tinta-3": {
         "role": "neutral",
         "displayName": "Tinta Terciária",
         "canonical": "oklch(52.5% 0.022 90.7)",
         "purpose": "Metadata and placeholders only — times, counts, \"e mais 9…\", disabled controls. 4.7:1 on porcelain, 5.4:1 on a module.",
-        "tonalRamp": ["oklch(15% 0.022 90.7)", "oklch(26% 0.022 90.7)", "oklch(37% 0.022 90.7)", "oklch(48% 0.022 90.7)", "oklch(59% 0.022 90.7)", "oklch(70% 0.022 90.7)", "oklch(82% 0.022 90.7)", "oklch(94% 0.008 90.7)"]
+        "tonalRamp": [
+          "oklch(15% 0.022 90.7)",
+          "oklch(26% 0.022 90.7)",
+          "oklch(37% 0.022 90.7)",
+          "oklch(48% 0.022 90.7)",
+          "oklch(59% 0.022 90.7)",
+          "oklch(70% 0.022 90.7)",
+          "oklch(82% 0.022 90.7)",
+          "oklch(94% 0.008 90.7)"
+        ]
       },
       "linha": {
         "role": "neutral",
         "displayName": "Linha",
         "canonical": "oklch(91.8% 0.014 93.0)",
         "purpose": "The single hairline in the system: between consecutive rows inside a module, above a totals row, along the top of the mobile thumb bar.",
-        "tonalRamp": ["oklch(15% 0.014 93.0)", "oklch(26% 0.014 93.0)", "oklch(37% 0.014 93.0)", "oklch(48% 0.014 93.0)", "oklch(59% 0.014 93.0)", "oklch(70% 0.014 93.0)", "oklch(82% 0.014 93.0)", "oklch(94% 0.005 93.0)"]
+        "tonalRamp": [
+          "oklch(15% 0.014 93.0)",
+          "oklch(26% 0.014 93.0)",
+          "oklch(37% 0.014 93.0)",
+          "oklch(48% 0.014 93.0)",
+          "oklch(59% 0.014 93.0)",
+          "oklch(70% 0.014 93.0)",
+          "oklch(82% 0.014 93.0)",
+          "oklch(94% 0.005 93.0)"
+        ]
       },
       "perigo": {
         "role": "tertiary",
         "displayName": "Perigo",
         "canonical": "oklch(53.5% 0.152 33.3)",
         "purpose": "Destructive text buttons, invalid field rings, the marker word of a warning strip, and the 7% wash behind an inline confirmation. Never a fill.",
-        "tonalRamp": ["oklch(15% 0.152 33.3)", "oklch(26% 0.152 33.3)", "oklch(37% 0.152 33.3)", "oklch(48% 0.152 33.3)", "oklch(59% 0.152 33.3)", "oklch(70% 0.152 33.3)", "oklch(82% 0.152 33.3)", "oklch(94% 0.053 33.3)"]
+        "tonalRamp": [
+          "oklch(15% 0.152 33.3)",
+          "oklch(26% 0.152 33.3)",
+          "oklch(37% 0.152 33.3)",
+          "oklch(48% 0.152 33.3)",
+          "oklch(59% 0.152 33.3)",
+          "oklch(70% 0.152 33.3)",
+          "oklch(82% 0.152 33.3)",
+          "oklch(94% 0.053 33.3)"
+        ]
       },
       "iris": {
         "role": "secondary",
         "displayName": "Íris",
         "canonical": "oklch(52.6% 0.136 274.8)",
         "purpose": "The hue of the week: day modules, the \"hoje\" badge, the schedule column on Início.",
-        "tonalRamp": ["oklch(15% 0.136 274.8)", "oklch(26% 0.136 274.8)", "oklch(37% 0.136 274.8)", "oklch(48% 0.136 274.8)", "oklch(59% 0.136 274.8)", "oklch(70% 0.136 274.8)", "oklch(82% 0.136 274.8)", "oklch(94% 0.048 274.8)"]
+        "tonalRamp": [
+          "oklch(15% 0.136 274.8)",
+          "oklch(26% 0.136 274.8)",
+          "oklch(37% 0.136 274.8)",
+          "oklch(48% 0.136 274.8)",
+          "oklch(59% 0.136 274.8)",
+          "oklch(70% 0.136 274.8)",
+          "oklch(82% 0.136 274.8)",
+          "oklch(94% 0.048 274.8)"
+        ]
       },
       "folha": {
         "role": "secondary",
         "displayName": "Folha",
         "canonical": "oklch(53.2% 0.084 150.2)",
         "purpose": "The hue of the menu and dinners: the dinner module, the seven-day strip, the dish tiles.",
-        "tonalRamp": ["oklch(15% 0.084 150.2)", "oklch(26% 0.084 150.2)", "oklch(37% 0.084 150.2)", "oklch(48% 0.084 150.2)", "oklch(59% 0.084 150.2)", "oklch(70% 0.084 150.2)", "oklch(82% 0.084 150.2)", "oklch(94% 0.029 150.2)"]
+        "tonalRamp": [
+          "oklch(15% 0.084 150.2)",
+          "oklch(26% 0.084 150.2)",
+          "oklch(37% 0.084 150.2)",
+          "oklch(48% 0.084 150.2)",
+          "oklch(59% 0.084 150.2)",
+          "oklch(70% 0.084 150.2)",
+          "oklch(82% 0.084 150.2)",
+          "oklch(94% 0.029 150.2)"
+        ]
       },
       "mel": {
         "role": "secondary",
         "displayName": "Mel",
         "canonical": "oklch(65.5% 0.120 77.4)",
         "purpose": "The hue of the shopping list: the list module, the set chips, the filled checks in the aisle, and the text selection highlight.",
-        "tonalRamp": ["oklch(15% 0.120 77.4)", "oklch(26% 0.120 77.4)", "oklch(37% 0.120 77.4)", "oklch(48% 0.120 77.4)", "oklch(59% 0.120 77.4)", "oklch(70% 0.120 77.4)", "oklch(82% 0.120 77.4)", "oklch(94% 0.042 77.4)"]
+        "tonalRamp": [
+          "oklch(15% 0.120 77.4)",
+          "oklch(26% 0.120 77.4)",
+          "oklch(37% 0.120 77.4)",
+          "oklch(48% 0.120 77.4)",
+          "oklch(59% 0.120 77.4)",
+          "oklch(70% 0.120 77.4)",
+          "oklch(82% 0.120 77.4)",
+          "oklch(94% 0.042 77.4)"
+        ]
       },
       "terracota": {
         "role": "secondary",
         "displayName": "Terracota",
         "canonical": "oklch(59.1% 0.131 41.4)",
         "purpose": "The hue of the book of dishes and its pantry.",
-        "tonalRamp": ["oklch(15% 0.131 41.4)", "oklch(26% 0.131 41.4)", "oklch(37% 0.131 41.4)", "oklch(48% 0.131 41.4)", "oklch(59% 0.131 41.4)", "oklch(70% 0.131 41.4)", "oklch(82% 0.131 41.4)", "oklch(94% 0.046 41.4)"]
+        "tonalRamp": [
+          "oklch(15% 0.131 41.4)",
+          "oklch(26% 0.131 41.4)",
+          "oklch(37% 0.131 41.4)",
+          "oklch(48% 0.131 41.4)",
+          "oklch(59% 0.131 41.4)",
+          "oklch(70% 0.131 41.4)",
+          "oklch(82% 0.131 41.4)",
+          "oklch(94% 0.046 41.4)"
+        ]
       },
       "azulejo-verde": {
         "role": "secondary",
         "displayName": "Azulejo-verde",
         "canonical": "oklch(54.3% 0.077 188.2)",
         "purpose": "The hue of Finanças — present and designed while the area is still \"em breve\".",
-        "tonalRamp": ["oklch(15% 0.077 188.2)", "oklch(26% 0.077 188.2)", "oklch(37% 0.077 188.2)", "oklch(48% 0.077 188.2)", "oklch(59% 0.077 188.2)", "oklch(70% 0.077 188.2)", "oklch(82% 0.077 188.2)", "oklch(94% 0.027 188.2)"]
+        "tonalRamp": [
+          "oklch(15% 0.077 188.2)",
+          "oklch(26% 0.077 188.2)",
+          "oklch(37% 0.077 188.2)",
+          "oklch(48% 0.077 188.2)",
+          "oklch(59% 0.077 188.2)",
+          "oklch(70% 0.077 188.2)",
+          "oklch(82% 0.077 188.2)",
+          "oklch(94% 0.027 188.2)"
+        ]
       },
       "pai": {
         "role": "tertiary",
         "displayName": "Caneta do Pai",
         "canonical": "oklch(48.4% 0.140 269.0)",
         "purpose": "One household member's pen: the dot beside their line and the tint of their author tag. 6.6:1 on a white module.",
-        "tonalRamp": ["oklch(15% 0.140 269.0)", "oklch(26% 0.140 269.0)", "oklch(37% 0.140 269.0)", "oklch(48% 0.140 269.0)", "oklch(59% 0.140 269.0)", "oklch(70% 0.140 269.0)", "oklch(82% 0.140 269.0)", "oklch(94% 0.049 269.0)"]
+        "tonalRamp": [
+          "oklch(15% 0.140 269.0)",
+          "oklch(26% 0.140 269.0)",
+          "oklch(37% 0.140 269.0)",
+          "oklch(48% 0.140 269.0)",
+          "oklch(59% 0.140 269.0)",
+          "oklch(70% 0.140 269.0)",
+          "oklch(82% 0.140 269.0)",
+          "oklch(94% 0.049 269.0)"
+        ]
       },
       "mae": {
         "role": "tertiary",
         "displayName": "Caneta da Mãe",
         "canonical": "oklch(49.2% 0.081 158.8)",
         "purpose": "One household member's pen. 6.0:1 on a white module.",
-        "tonalRamp": ["oklch(15% 0.081 158.8)", "oklch(26% 0.081 158.8)", "oklch(37% 0.081 158.8)", "oklch(48% 0.081 158.8)", "oklch(59% 0.081 158.8)", "oklch(70% 0.081 158.8)", "oklch(82% 0.081 158.8)", "oklch(94% 0.028 158.8)"]
+        "tonalRamp": [
+          "oklch(15% 0.081 158.8)",
+          "oklch(26% 0.081 158.8)",
+          "oklch(37% 0.081 158.8)",
+          "oklch(48% 0.081 158.8)",
+          "oklch(59% 0.081 158.8)",
+          "oklch(70% 0.081 158.8)",
+          "oklch(82% 0.081 158.8)",
+          "oklch(94% 0.028 158.8)"
+        ]
       },
       "filha": {
         "role": "tertiary",
         "displayName": "Caneta da Filha",
         "canonical": "oklch(51.9% 0.137 303.8)",
         "purpose": "One household member's pen. 5.9:1 on a white module.",
-        "tonalRamp": ["oklch(15% 0.137 303.8)", "oklch(26% 0.137 303.8)", "oklch(37% 0.137 303.8)", "oklch(48% 0.137 303.8)", "oklch(59% 0.137 303.8)", "oklch(70% 0.137 303.8)", "oklch(82% 0.137 303.8)", "oklch(94% 0.048 303.8)"]
+        "tonalRamp": [
+          "oklch(15% 0.137 303.8)",
+          "oklch(26% 0.137 303.8)",
+          "oklch(37% 0.137 303.8)",
+          "oklch(48% 0.137 303.8)",
+          "oklch(59% 0.137 303.8)",
+          "oklch(70% 0.137 303.8)",
+          "oklch(82% 0.137 303.8)",
+          "oklch(94% 0.048 303.8)"
+        ]
+      },
+      "groselha": {
+        "role": "tertiary",
+        "displayName": "Groselha",
+        "canonical": "oklch(59.2% 0.138 8.1)",
+        "purpose": "Health and anything that reads as care; the heartbeat icon carries it.",
+        "tonalRamp": [
+          "oklch(15% 0.138 8.1)",
+          "oklch(26% 0.138 8.1)",
+          "oklch(37% 0.138 8.1)",
+          "oklch(48% 0.138 8.1)",
+          "oklch(59% 0.138 8.1)",
+          "oklch(70% 0.138 8.1)",
+          "oklch(82% 0.138 8.1)",
+          "oklch(94% 0.048 8.1)"
+        ]
+      },
+      "canela": {
+        "role": "tertiary",
+        "displayName": "Canela",
+        "canonical": "oklch(56.6% 0.104 64.5)",
+        "purpose": "Eating out — the restaurant envelope and its chip.",
+        "tonalRamp": [
+          "oklch(15% 0.104 64.5)",
+          "oklch(26% 0.104 64.5)",
+          "oklch(37% 0.104 64.5)",
+          "oklch(48% 0.104 64.5)",
+          "oklch(59% 0.104 64.5)",
+          "oklch(70% 0.104 64.5)",
+          "oklch(82% 0.104 64.5)",
+          "oklch(94% 0.036 64.5)"
+        ]
+      },
+      "ameixa": {
+        "role": "tertiary",
+        "displayName": "Ameixa",
+        "canonical": "oklch(54.4% 0.138 297.5)",
+        "purpose": "Leisure.",
+        "tonalRamp": [
+          "oklch(15% 0.138 297.5)",
+          "oklch(26% 0.138 297.5)",
+          "oklch(37% 0.138 297.5)",
+          "oklch(48% 0.138 297.5)",
+          "oklch(59% 0.138 297.5)",
+          "oklch(70% 0.138 297.5)",
+          "oklch(82% 0.138 297.5)",
+          "oklch(94% 0.048 297.5)"
+        ]
+      },
+      "faianca": {
+        "role": "tertiary",
+        "displayName": "Faiança",
+        "canonical": "oklch(57.7% 0.085 243.4)",
+        "purpose": "Clothes, and the first hue offered to a newly created envelope.",
+        "tonalRamp": [
+          "oklch(15% 0.085 243.4)",
+          "oklch(26% 0.085 243.4)",
+          "oklch(37% 0.085 243.4)",
+          "oklch(48% 0.085 243.4)",
+          "oklch(59% 0.085 243.4)",
+          "oklch(70% 0.085 243.4)",
+          "oklch(82% 0.085 243.4)",
+          "oklch(94% 0.03 243.4)"
+        ]
+      },
+      "malva": {
+        "role": "tertiary",
+        "displayName": "Malva",
+        "canonical": "oklch(57% 0.113 345.5)",
+        "purpose": "Personal care.",
+        "tonalRamp": [
+          "oklch(15% 0.113 345.5)",
+          "oklch(26% 0.113 345.5)",
+          "oklch(37% 0.113 345.5)",
+          "oklch(48% 0.113 345.5)",
+          "oklch(59% 0.113 345.5)",
+          "oklch(70% 0.113 345.5)",
+          "oklch(82% 0.113 345.5)",
+          "oklch(94% 0.04 345.5)"
+        ]
+      },
+      "azeitona": {
+        "role": "tertiary",
+        "displayName": "Azeitona",
+        "canonical": "oklch(57% 0.067 105.2)",
+        "purpose": "Animals.",
+        "tonalRamp": [
+          "oklch(15% 0.067 105.2)",
+          "oklch(26% 0.067 105.2)",
+          "oklch(37% 0.067 105.2)",
+          "oklch(48% 0.067 105.2)",
+          "oklch(59% 0.067 105.2)",
+          "oklch(70% 0.067 105.2)",
+          "oklch(82% 0.067 105.2)",
+          "oklch(94% 0.023 105.2)"
+        ]
+      },
+      "pinho": {
+        "role": "tertiary",
+        "displayName": "Pinho",
+        "canonical": "oklch(56% 0.093 158.6)",
+        "purpose": "The second hue offered to a new income line.",
+        "tonalRamp": [
+          "oklch(15% 0.093 158.6)",
+          "oklch(26% 0.093 158.6)",
+          "oklch(37% 0.093 158.6)",
+          "oklch(48% 0.093 158.6)",
+          "oklch(59% 0.093 158.6)",
+          "oklch(70% 0.093 158.6)",
+          "oklch(82% 0.093 158.6)",
+          "oklch(94% 0.033 158.6)"
+        ]
+      },
+      "pedra": {
+        "role": "neutral",
+        "displayName": "Pedra",
+        "canonical": "oklch(54.5% 0.026 93.5)",
+        "purpose": "The catch-all: Outros, Sem categoria, and transfers between the household own accounts — deliberately the quietest colour on the page.",
+        "tonalRamp": [
+          "oklch(15% 0.026 93.5)",
+          "oklch(26% 0.026 93.5)",
+          "oklch(37% 0.026 93.5)",
+          "oklch(48% 0.026 93.5)",
+          "oklch(59% 0.026 93.5)",
+          "oklch(70% 0.026 93.5)",
+          "oklch(82% 0.026 93.5)",
+          "oklch(94% 0.009 93.5)"
+        ]
       }
     },
     "typographyMeta": {
@@ -130,6 +393,10 @@
       "label": {
         "displayName": "Label",
         "purpose": "Field names, counts, metadata, chips, text buttons, the day badge. Sentence case at 700–800."
+      },
+      "micro": {
+        "displayName": "Micro",
+        "purpose": "The constrained fifth rung (11px): thumb-bar labels across a 390px phone, the \"hoje\" badge, the calendar feed address. Never body, never a compared value."
       }
     },
     "fonts": [
@@ -221,11 +488,26 @@
       }
     ],
     "breakpoints": [
-      { "name": "telemovel", "value": "max-width: 47.99rem (768px)" },
-      { "name": "largo", "value": "min-width: 48rem (768px)" },
-      { "name": "amplo", "value": "min-width: 64rem (1024px)" },
-      { "name": "medida", "value": "max-width: 75rem (1200px) — the shared measure of top bar, page and warning strips" },
-      { "name": "coluna-dia", "value": "columns: 19rem — the packing width of the week's day modules" }
+      {
+        "name": "telemovel",
+        "value": "max-width: 47.99rem (768px)"
+      },
+      {
+        "name": "largo",
+        "value": "min-width: 48rem (768px)"
+      },
+      {
+        "name": "amplo",
+        "value": "min-width: 64rem (1024px)"
+      },
+      {
+        "name": "medida",
+        "value": "max-width: 75rem (1200px) — the shared measure of top bar, page and warning strips"
+      },
+      {
+        "name": "coluna-dia",
+        "value": "columns: 19rem — the packing width of the week's day modules"
+      }
     ]
   },
   "components": [
@@ -308,6 +590,30 @@
       "description": "The in-house icon system: 24×24 viewBox, 1.8 stroke, round caps and joins, rendered at 20px inside a tile tinted from the area's hue. No emoji, no library, no photography.",
       "html": "<span style=\"display:flex;gap:12px\"><span class=\"ds-tile\" style=\"--cor:#5561b8\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"4\" y=\"5.5\" width=\"16\" height=\"14.5\" rx=\"3\"/><path d=\"M4 10.5h16\"/><path d=\"M8.5 3.5v3.5M15.5 3.5v3.5\"/><path d=\"M8.5 14.5h2\"/></svg></span><span class=\"ds-tile\" style=\"--cor:#b9862c\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4.5 9.5h15l-1.5 10h-12Z\"/><path d=\"M8.5 9.5 12 3.5l3.5 6\"/><path d=\"M9.5 13v3.5M14.5 13v3.5\"/></svg></span><span class=\"ds-tile\" style=\"--cor:#bd5f3a\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 5.5A2.5 2.5 0 0 1 7.5 3H19v15H7.5A2.5 2.5 0 0 0 5 20.5Z\"/><path d=\"M5 18V5.5\"/><path d=\"M19 18v3H7.5\"/><path d=\"M9.5 7.5h5.5\"/></svg></span><span class=\"ds-tile\" style=\"--cor:#2f7e78\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"8.5\"/><path d=\"M15 9.2a3.8 3.8 0 1 0 0 5.6\"/><path d=\"M8.5 10.8h4M8.5 13.2h4\"/></svg></span></span>",
       "css": ".ds-tile { width: 40px; height: 40px; border-radius: 16px; background: color-mix(in oklab, var(--cor) 14%, #fff); color: color-mix(in oklab, var(--cor) 78%, #1c1b20); display: inline-flex; align-items: center; justify-content: center; flex: none; }"
+    },
+    {
+      "name": "Envelope",
+      "kind": "custom",
+      "refersTo": "medidor",
+      "description": "A category and its month: a row that opens. Closed it is tile, name, amount, meter and a foot line carrying the editable ceiling and the count.",
+      "html": "<div class=\"ds-env\"><button class=\"ds-env-topo\"><span class=\"ds-env-tile\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 11.5 12 4.5l8 7\"/><path d=\"M6 10v9h12v-9\"/><path d=\"M10 19v-5h4v5\"/></svg></span><span class=\"ds-env-corpo\"><span class=\"ds-env-cabeca\"><span class=\"ds-env-titulo\"><svg class=\"ds-env-seta\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9 5l7 7-7 7\"/></svg><span class=\"ds-env-nome\">Casa</span></span><span class=\"ds-env-valor\">828,60 €</span></span><span class=\"ds-env-barra\"><span class=\"ds-env-cheio\"></span></span></span></button><div class=\"ds-env-pe\"><button class=\"ds-env-tecto\">faltam 26,40 €</button><span class=\"ds-env-conta\">3 movimentos</span></div></div>",
+      "css": ".ds-env { --cor: #5561b8; display: grid; padding: 10px 0; font-family: Manrope, ui-sans-serif, system-ui, sans-serif; color: #1c1b20; } .ds-env-topo { display: flex; align-items: flex-start; gap: 12px; width: 100%; background: none; border: 0; padding: 0; font: inherit; color: inherit; text-align: start; cursor: pointer; border-radius: 8px; } .ds-env-tile { width: 36px; height: 36px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; flex: none; background: color-mix(in oklab, var(--cor) 14%, #fff); color: color-mix(in oklab, var(--cor) 78%, #1c1b20); } .ds-env-corpo { flex: 1; min-width: 0; display: grid; gap: 6px; } .ds-env-cabeca { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; } .ds-env-titulo { display: flex; align-items: baseline; gap: 6px; min-width: 0; } .ds-env-seta { color: #6f6a5c; } .ds-env-nome { font-weight: 700; font-size: 15px; } .ds-env-valor { font-weight: 800; font-size: 15px; font-variant-numeric: tabular-nums; } .ds-env-barra { display: block; height: 6px; border-radius: 999px; background: color-mix(in oklab, #1c1b20 7%, #fff); overflow: hidden; } .ds-env-cheio { display: block; height: 100%; width: 97%; border-radius: 999px; background: var(--cor); } .ds-env-pe { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-top: 6px; padding-inline-start: 48px; font-size: 12px; } .ds-env-tecto { background: none; border: 0; padding: 4px 6px; margin: -4px -6px; border-radius: 12px; font: inherit; font-weight: 800; color: #696456; cursor: pointer; } .ds-env-tecto:hover { background: color-mix(in oklab, #1c1b20 6%, transparent); color: #1c1b20; } .ds-env-topo:hover .ds-env-nome { color: color-mix(in oklab, var(--cor) 78%, #1c1b20); } .ds-env-conta { color: #6f6a5c; font-weight: 600; }"
+    },
+    {
+      "name": "Pista do mês",
+      "kind": "custom",
+      "refersTo": "selo",
+      "description": "The month pace: a corridor where an even spend rate would put the household today, the fill of what has actually gone, and the verdict in words on a pill.",
+      "html": "<section class=\"ds-pista\"><header class=\"ds-pista-cab\"><h3 class=\"ds-pista-tit\">O passo do mês</h3><p class=\"ds-pista-dia\">dia 26 de 31</p></header><p class=\"ds-pista-num\"><strong class=\"ds-pista-gasto\">1299,79 €</strong><span class=\"ds-pista-de\">de 1345,00 €</span></p><div class=\"ds-pista-barra\"><span class=\"ds-pista-corredor\"></span><span class=\"ds-pista-gasta\"></span></div><p class=\"ds-pista-leitura\"><span class=\"ds-pista-selo\">acima do ritmo</span><span class=\"ds-pista-nota\">ao ritmo de hoje seriam 1128,06 €</span></p></section>",
+      "css": ".ds-pista { display: grid; gap: 12px; font-family: Manrope, ui-sans-serif, system-ui, sans-serif; color: #1c1b20; } .ds-pista-cab { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; } .ds-pista-tit { margin: 0; font-size: 15px; font-weight: 800; letter-spacing: -0.01em; } .ds-pista-dia { margin: 0; color: #6f6a5c; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; } .ds-pista-num { margin: 0; display: flex; align-items: baseline; gap: 10px; } .ds-pista-gasto { font-size: 34px; font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; } .ds-pista-de { color: #696456; font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; } .ds-pista-barra { position: relative; height: 16px; border-radius: 999px; background: color-mix(in oklab, #1c1b20 7%, #fff); overflow: hidden; } .ds-pista-corredor { position: absolute; top: 0; bottom: 0; inset-inline-start: 76%; width: 16%; background: color-mix(in oklab, #1c1b20 12%, transparent); border-inline: 1.5px solid color-mix(in oklab, #1c1b20 30%, transparent); } .ds-pista-gasta { position: absolute; inset-block: 0; inset-inline-start: 0; width: 96%; border-radius: 999px; background: #2f7e78; } .ds-pista-leitura { margin: 0; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; } .ds-pista-selo { font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 999px; background: color-mix(in oklab, #b9862c 14%, #fff); color: color-mix(in oklab, #b9862c 80%, #1c1b20); } .ds-pista-nota { color: #6f6a5c; font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Faixa do ano",
+      "kind": "custom",
+      "refersTo": "barra-do-ano",
+      "description": "One year of one category on a phone: twelve bars scaled to that row own biggest month, with the average over the months that actually had movement.",
+      "html": "<div class=\"ds-anol\"><span class=\"ds-anol-cab\"><span class=\"ds-anol-tile\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 11.5 12 4.5l8 7\"/><path d=\"M6 10v9h12v-9\"/></svg></span><span class=\"ds-anol-nome\">Casa</span><span class=\"ds-anol-total\">3389</span></span><span class=\"ds-anol-meses\"><span class=\"ds-anol-mes\"><span class=\"ds-anol-tubo\"></span><span class=\"ds-anol-ini\">J</span></span><span class=\"ds-anol-mes\"><span class=\"ds-anol-tubo\"></span><span class=\"ds-anol-ini\">F</span></span><span class=\"ds-anol-mes\"><span class=\"ds-anol-tubo\"></span><span class=\"ds-anol-ini\">M</span></span><span class=\"ds-anol-mes\"><span class=\"ds-anol-tubo\"></span><span class=\"ds-anol-ini\">A</span></span><span class=\"ds-anol-mes\"><span class=\"ds-anol-tubo\"><i style=\"height:100%\"></i></span><span class=\"ds-anol-ini\">M</span></span><span class=\"ds-anol-mes\"><span class=\"ds-anol-tubo\"><i style=\"height:98%\"></i></span><span class=\"ds-anol-ini\">J</span></span><span class=\"ds-anol-mes\"><span class=\"ds-anol-tubo\"><i style=\"height:100%\"></i></span><span class=\"ds-anol-ini\">J</span></span><span class=\"ds-anol-mes\"><span class=\"ds-anol-tubo\"><i style=\"height:96%\"></i></span><span class=\"ds-anol-ini\">A</span></span><span class=\"ds-anol-mes\"><span class=\"ds-anol-tubo\"></span><span class=\"ds-anol-ini\">S</span></span><span class=\"ds-anol-mes\"><span class=\"ds-anol-tubo\"></span><span class=\"ds-anol-ini\">O</span></span><span class=\"ds-anol-mes\"><span class=\"ds-anol-tubo\"></span><span class=\"ds-anol-ini\">N</span></span><span class=\"ds-anol-mes\"><span class=\"ds-anol-tubo\"></span><span class=\"ds-anol-ini\">D</span></span></span><span class=\"ds-anol-media\">média 847 € em 4 meses</span></div>",
+      "css": ".ds-anol { --cor: #5561b8; display: grid; gap: 6px; padding: 10px 0; font-family: Manrope, ui-sans-serif, system-ui, sans-serif; color: #1c1b20; max-width: 320px; } .ds-anol-cab { display: flex; align-items: center; gap: 8px; } .ds-anol-tile { width: 24px; height: 24px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; background: color-mix(in oklab, var(--cor) 14%, #fff); color: color-mix(in oklab, var(--cor) 78%, #1c1b20); } .ds-anol-nome { font-weight: 700; font-size: 15px; } .ds-anol-total { margin-inline-start: auto; font-weight: 800; font-size: 15px; font-variant-numeric: tabular-nums; } .ds-anol-meses { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 3px; align-items: end; } .ds-anol-mes { display: grid; gap: 3px; justify-items: center; } .ds-anol-tubo { width: 100%; height: 32px; display: flex; align-items: flex-end; background: color-mix(in oklab, #1c1b20 5%, #fff); border-radius: 3px; overflow: hidden; } .ds-anol-tubo i { width: 100%; background: var(--cor); border-radius: 3px; } .ds-anol-ini { font-size: 12px; font-weight: 700; color: #6f6a5c; } .ds-anol-media { font-size: 12px; font-weight: 600; color: #6f6a5c; font-variant-numeric: tabular-nums; }"
     }
   ],
   "narrative": {
@@ -316,18 +622,26 @@
     "keyCharacteristics": [
       "Porcelain ground (#f2f0ea) with pure white modules floating on it — one ground, one surface, no third plane.",
       "One hue per area of the house; all four of its working tints derived from that hue by one color-mix formula.",
-      "Manrope alone, 200–800, in exactly four size steps; the hierarchy is carried by weight and space, not by more sizes.",
+      "Manrope alone, 200–800, in five size steps — four for reading and one constrained micro rung; the hierarchy is carried by weight and space, not by more sizes.",
       "8px governs every gap, every padding and every radius.",
       "Numbers are tabular and right-aligned, everywhere, without exception.",
       "State is a colour wash plus a raised shadow — never a border colour.",
       "Drawn-in-house icons: 24×24 box, 1.8 stroke, round caps and joins.",
-      "One expansion gesture per module."
+      "One expansion gesture per module.",
+      "A hue is never text at full strength: text on a category colour is derived, not raw.",
+      "A module decides its own columns from its own width, not from the width of the screen.",
+      "Nothing judges without a real number behind it: no verdict from a partial estimate."
     ],
     "rules": [
       {
         "name": "The One Formula Rule",
         "body": "Any element carrying .com-cor declares a single --cor and receives its whole family by derivation: tile at 14% over white, chip at 8% over white, pressed at 20% over white, text at 78% over ink — all mixed in OKLab. No tint in this system is hand-picked. Change the area's hue and every surface, chip, wash and label in that area moves with it. A new pastel typed in by hand is a bug, not a variant.",
         "section": "colors"
+      },
+      {
+        "name": "The Derived Tint Rule",
+        "section": "colors",
+        "body": "A hue is a surface colour, never a text colour. Text that must carry a category identity takes color-mix(in oklab, var(--cor) 78%, var(--tinta)) — the same 78% the .com-cor formula already mixes. Measured on white, raw honey (#b9862c) reaches 3.2:1 and fails; the derived tint reaches 4.7:1 and passes."
       },
       {
         "name": "The Legible Pen Rule",
@@ -340,9 +654,9 @@
         "section": "colors"
       },
       {
-        "name": "The Four Steps Rule",
-        "body": "There are four type sizes and nothing between them — 12, 15, 18, 24, plus 34 for display. If a new element seems to need a fifth step, the answer is a weight change or a space change, not a new size. Two of the five steps shrink on mobile; the rest hold, because 15px body at arm's length is already the floor.",
-        "section": "typography"
+        "name": "The Five Steps Rule",
+        "section": "typography",
+        "body": "There are five type sizes and nothing between them — 11, 12, 15, 18, 24, plus 34 for display. Four of them are for reading. The fifth, 11px, is a constrained rung and needs a reason a designer would accept: five thumb-bar labels that must fit across a 390px phone, the \"hoje\" badge, a subscription URL that has to be read once and copied. If a new element seems to need a size that is not on this list, the answer is a weight change or a space change, not a new size."
       },
       {
         "name": "The One Family Rule",
@@ -383,6 +697,16 @@
         "name": "The One Gesture Rule",
         "body": "A module has exactly one opening gesture, not a dust of little buttons. On Início the entire module is the button and tapping anywhere in it swells the area into its full page. Inside a page, the same rule holds one level down: a dinner pastille opens the day, a book row opens the dish, a row's overflow menu is the single extra affordance and it lives in one place at the end of the row.",
         "section": "components"
+      },
+      {
+        "name": "The No Verdict Without A Number Rule",
+        "section": "components",
+        "body": "A column of the Balanço judges only when its estimate is real: spending needs at least one ceiling set (committed bills alone are a part of a budget, not a budget), the net needs both sides. Where the estimate is missing the column says what is missing — sem tecto posto — and drops the difference line entirely rather than reporting a difference against zero."
+      },
+      {
+        "name": "The Honest Denominator Rule",
+        "section": "components",
+        "body": "An average divides by the months a row actually had movement, never by the months of the calendar. A household that starts in August has four months of rent at 847 € and would read 424 — half, wearing the face of a right answer."
       }
     ],
     "dos": [
@@ -395,19 +719,27 @@
       "Do draw new icons in src/componentes/Icones.tsx on the 24×24 box at 1.8 stroke with round caps and joins, matching the existing set.",
       "Do give every control its rest, hover, active, focus-visible and disabled states — the focus ring is a 2px ink outline at 2px offset, everywhere.",
       "Do give a module exactly one opening gesture and make the whole surface the target.",
-      "Do write empty states as one sentence inside the module."
+      "Do write empty states as one sentence inside the module.",
+      "Do run a hue through the 78% derivation before it becomes text. Raw honey on white is 3.2:1; the derived tint is 4.7:1.",
+      "Do let a module decide its own column count from its own width with a container query. The screen width is not the module width.",
+      "Do compute a state — burst, reached, over, under — on the thing that has it, so a parent condition never paints its children.",
+      "Do say what is missing when a number has no estimate behind it, and show no difference at all rather than a difference against zero."
     ],
     "donts": [
       "Don't hand-pick a pastel. Any tint not produced by the formula is a defect.",
       "Don't put a card, a bordered box, a tinted panel or a second shadow inside a module.",
       "Don't use a border colour to signal state — no coloured rings on selected, current or open things.",
       "Don't ship a symmetric glow. Shadows are offset and blurred; zero-offset shadows are reserved for the inset focus and check rings.",
-      "Don't introduce a second font family, an italic, or a fifth type size. Reach for weight or space instead.",
+      "Don't introduce a second font family, an italic, or a sixth type size. Reach for weight or space instead — and the fifth step (11px) needs a constraint that a designer would accept, not a paragraph that did not fit.",
       "Don't use emoji, an icon library, or photography anywhere in the product.",
       "Don't put a third plane on the screen — porcelain floor, white module, nothing between.",
       "Don't scatter small buttons across a module to make it openable; one gesture, whole surface.",
       "Don't let a quantity, price or dish name that the household typed get clipped by a fixed-width column.",
-      "Don't ship a full-screen empty state where a sentence inside the module will do."
+      "Don't ship a full-screen empty state where a sentence inside the module will do.",
+      "Don't put a button inside a button. The ceiling control lives beside the row that opens an envelope, not inside its target — nested buttons are invalid and the inner one stops being reachable by keyboard.",
+      "Don't draw a meter with nothing to measure. No budget means no track, not an empty one.",
+      "Don't deliver a verdict from a partial estimate. The pace refuses to judge before day 7 and without a budget; every other number on the page owes the household the same discipline.",
+      "Don't scroll a wide table sideways and call it responsive. If the first screen of a phone shows no data, the layout is replaced, not adapted."
     ]
   }
 }
