@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import type { Casa } from '../dominio/tipos'
 import { chaveDoMes, mesDeChave, nomeDoMes, useAno, useFinancas, type Movimento } from '../dominio/financas'
-import { escreverEuros } from '../dominio/dinheiro'
 import { PistaDoMes } from './PistaDoMes'
+import { Balanco } from './Resumo'
 import { Comprometido, Envelopes, Livro } from './Envelopes'
 import { RegistoRapido } from './RegistoRapido'
 import { Importar } from './Importar'
@@ -12,6 +12,7 @@ import { ISetaEsq, ISetaDir } from './Icones'
 
 /* Um envelope novo nasce com uma cor do mundo; muda-se depois se se quiser. */
 const CORES_NOVAS = ['#4a7fa8', '#a0682c', '#7a5bb5', '#3e8560', '#a65a86', '#7d7a4a', '#c0566e']
+const CORES_ENTRADA = ['#2f7e78', '#467a52', '#3e8560', '#4a7fa8']
 
 /** O mês seguinte ou o anterior, sem tropeçar em Janeiro. */
 const mover = (m: string, n: number) => {
@@ -150,6 +151,15 @@ export function Financas({ casa }: { casa: Casa }) {
         </section>
       ) : f.estado === 'pronto' || f.movimentos.length > 0 ? (
         <div className="financas">
+          <Balanco
+            r={f.resumo}
+            accao={
+              <button type="button" className="botao-texto" onClick={() => definirAImportar(v => !v)}>
+                {aImportar ? 'fechar o extracto' : 'trazer um extracto'}
+              </button>
+            }
+          />
+
           <div className="financas-topo">
             <PistaDoMes ritmo={f.ritmo} />
             <RegistoRapido
@@ -159,16 +169,6 @@ export function Financas({ casa }: { casa: Casa }) {
               aoGuardarFornecedor={f.semFornecedores ? undefined : f.guardarFornecedor}
             />
           </div>
-
-          <p className="financas-resumo">
-            <span className="total-nome">Entrou</span>
-            <strong className="total-valor total-valor--cesto">{escreverEuros(f.entrou)}</strong>
-            <span className="total-nome">Prometido</span>
-            <strong className="total-valor total-valor--cesto">{escreverEuros(f.comprometido)}</strong>
-            <button type="button" className="botao-texto" onClick={() => definirAImportar(v => !v)}>
-              {aImportar ? 'fechar o extracto' : 'trazer um extracto'}
-            </button>
-          </p>
 
           {aImportar && (
             <Importar
@@ -201,14 +201,35 @@ export function Financas({ casa }: { casa: Casa }) {
               })}
               aoApagarMovimento={f.apagarMovimento}
             />
-            <Comprometido
-              compromissos={f.compromissos}
-              pagamentos={f.pagamentos}
-              categorias={f.porCategoria}
-              comprometido={f.comprometido}
-              porPagar={f.porPagar}
-              aoPagar={pagar}
-            />
+            <div className="financas-coluna">
+              <Envelopes
+                envelopes={f.entradas}
+                movimentos={f.movimentos}
+                raizDe={f.raizDe}
+                natureza="entrada"
+                aoDefinirLimite={f.definirLimiteDoMes}
+                aoRenomear={(id, nome) => f.guardarCategoria({ id, nome })}
+                aoCriarFilha={(mae, nome) => f.guardarCategoria({
+                  nome, natureza: mae.natureza, cor: mae.cor, icone: mae.icone,
+                  mae_id: mae.id, ordem: mae.ordem,
+                })}
+                aoCriarRaiz={nome => f.guardarCategoria({
+                  nome, natureza: 'entrada',
+                  cor: CORES_ENTRADA[f.categorias.length % CORES_ENTRADA.length],
+                  icone: 'moeda',
+                  ordem: 250 + f.categorias.length,
+                })}
+                aoApagarMovimento={f.apagarMovimento}
+              />
+              <Comprometido
+                compromissos={f.compromissos}
+                pagamentos={f.pagamentos}
+                categorias={f.porCategoria}
+                comprometido={f.comprometido}
+                porPagar={f.porPagar}
+                aoPagar={pagar}
+              />
+            </div>
           </div>
 
           {!f.semFornecedores && (

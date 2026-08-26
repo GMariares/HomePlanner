@@ -204,6 +204,11 @@ export function Importar({ categorias, fornecedores = [], existentes, aoImportar
                             {c.regra.nome ? `${c.regra.nome} → ` : ''}{porId.get(c.regra.categoria_id)?.nome}
                           </span>
                         )}
+                        {/* Uma passagem entre contas entra no livro e não conta
+                            para nada: mais vale dizê-lo antes de entrar. */}
+                        {c.regra?.categoria_id
+                          && porId.get(c.regra.categoria_id)?.natureza === 'transferencia'
+                          && <span className="movimento-neutro">não conta</span>}
                         {!c.regra?.categoria_id && !c.jaExiste && <span className="importar-alocar">por alocar</span>}
                         {c.jaExiste && <span className="movimento-mes">já cá estava</span>}
                       </span>

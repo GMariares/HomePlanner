@@ -53,26 +53,41 @@ export function lerCents(texto: string): number | null {
 
 /* ------------------------------------------------------------------ */
 
+export type Natureza = 'despesa' | 'entrada' | 'transferencia'
+
 export interface MovimentoLeve {
   valor_cents: number
   compromisso_id?: string | null
-  natureza?: 'despesa' | 'entrada' | null
+  natureza?: Natureza | null
   data: string
 }
 
 /**
+ * Dinheiro que muda de bolso.
+ *
+ * Passar 500 € da poupança para a conta à ordem sai no extracto como um
+ * débito de 500 €, e não é despesa nenhuma: o dinheiro continua na casa.
+ * Uma transferência não é gasto nem entrada — não conta para nada. Só
+ * aparece no livro, porque aconteceu.
+ */
+export const eTransferencia = (m: MovimentoLeve) => m.natureza === 'transferencia'
+
+/**
  * O que é entrada e o que é gasto.
  *
- * Um estorno do supermercado é positivo NUMA CATEGORIA DE DESPESA: não é
- * dinheiro que a casa ganhou, é uma compra que se desfez, por isso desconta
- * do envelope em vez de aparecer como rendimento. Entrada é só o que vem de
- * uma categoria de entrada — ou de nenhuma.
+ * Manda a categoria, não o sinal. Um estorno do supermercado é positivo
+ * NUMA CATEGORIA DE DESPESA: não é dinheiro que a casa ganhou, é uma
+ * compra que se desfez, e desconta do envelope. Do outro lado vale o
+ * espelho: um acerto negativo no ordenado tira ao que entrou, não é uma
+ * despesa nova. Sem categoria, decide o sinal.
  */
-export const eEntrada = (m: MovimentoLeve) => m.valor_cents > 0 && m.natureza !== 'despesa'
+export const eEntrada = (m: MovimentoLeve) =>
+  !eTransferencia(m) &&
+  (m.natureza === 'entrada' || (m.valor_cents > 0 && m.natureza !== 'despesa'))
 
 /** O gasto de um conjunto de movimentos. Positivo = saiu dinheiro. */
 export const gastoDe = (ms: MovimentoLeve[]) =>
-  -ms.filter(m => !eEntrada(m)).reduce((s, m) => s + m.valor_cents, 0)
+  -ms.filter(m => !eTransferencia(m) && !eEntrada(m)).reduce((s, m) => s + m.valor_cents, 0)
 
 /** O que entrou. */
 export const entradaDe = (ms: MovimentoLeve[]) =>

@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { esquemaAtrasado, supabase } from './supabase'
-import { calcularRitmo, entradaDe, gastoDe, pressaoDe, type Ritmo } from './dinheiro'
+import {
+  calcularRitmo, entradaDe, eTransferencia, gastoDe, pressaoDe,
+  type Natureza, type Ritmo,
+} from './dinheiro'
 import type { Fornecedor } from './fornecedores'
 
 export interface Categoria {
@@ -8,7 +11,7 @@ export interface Categoria {
   nome: string
   /** A categoria de que esta é parte. Nula = categoria de raiz. */
   mae_id?: string | null
-  natureza: 'despesa' | 'entrada'
+  natureza: Natureza
   cor: string
   icone: string
   limite_cents: number | null
@@ -40,15 +43,48 @@ export interface Movimento {
   impressao: string | null
 }
 
-export interface Envelope {
+export interface ParteDoEnvelope {
   categoria: Categoria
-  /** O gasto da árvore inteira: a categoria e as suas subcategorias. */
   gasto: number
+  quantos: number
   limite: number | null
   pressao: number
+}
+
+export interface Envelope {
+  categoria: Categoria
+  /**
+   * O que a árvore inteira moveu este mês: a categoria e as suas partes.
+   * Numa categoria de entrada é o que entrou, não o que saiu.
+   */
+  gasto: number
+  limite: number | null
+  /** O tecto veio da soma das partes e não se edita na mãe. */
+  limiteSomado: boolean
+  pressao: number
   quantos: number
-  /** As subcategorias, cada uma com o seu gasto do mês. */
-  filhos: { categoria: Categoria; gasto: number; quantos: number }[]
+  /** As subcategorias, cada uma com o seu mês e o seu tecto. */
+  filhos: ParteDoEnvelope[]
+}
+
+/**
+ * Os três números do mês.
+ *
+ * O real ao lado do previsto, e a diferença dita por extenso. O previsto
+ * da despesa são os envelopes mais os compromissos: o que é variável e o
+ * que já está prometido, que é como a casa decide.
+ */
+export interface Resumo {
+  entrou: number
+  previstoEntrada: number
+  saiu: number
+  previstoSaida: number
+  sobra: number
+  sobraPrevista: number
+  /** Quantos movimentos ainda podem mudar estes números. */
+  porAlocar: number
+  /** Quantas transferências entre contas ficaram de fora das contas. */
+  transferencias: number
 }
 
 export type EstadoFinancas = 'a-carregar' | 'pronto' | 'sem-rede' | 'sem-migracao'
@@ -64,6 +100,66 @@ export const mesDeChave = (c: string) => {
 
 export const nomeDoMes = (d: Date) =>
   new Intl.DateTimeFormat('pt-PT', { month: 'long', year: 'numeric' }).format(d)
+
+/** Um movimento com a natureza da sua categoria já à mão. */
+export type MovimentoContado = Movimento & { natureza: Natureza | null }
+
+/**
+ * Os envelopes de uma natureza.
+ *
+ * O envelope é a árvore: um gasto na subcategoria "Renda" é um gasto de
+ * "Casa" — é assim que a folha de cálculo da família somava. As entradas
+ * fazem-se pela mesma forma, só que do outro lado: o "tecto" de uma
+ * entrada é o que se espera receber.
+ *
+ * Função pura de propósito: é aqui que estão as contas que a página
+ * mostra, e contas que não se podem provar sozinhas acabam a mentir.
+ */
+export function construirEnvelopes(
+  categorias: Categoria[],
+  movimentos: MovimentoContado[],
+  limiteDe: (c: Categoria) => number | null,
+  raizDe: Map<string, string>,
+  natureza: 'despesa' | 'entrada',
+): Envelope[] {
+  const conta = natureza === 'entrada' ? entradaDe : gastoDe
+  return categorias
+    .filter(c => c.natureza === natureza && !c.arquivada && !c.mae_id)
+    .map(categoria => {
+      const daArvore = movimentos.filter(m =>
+        m.categoria_id != null && raizDe.get(m.categoria_id) === categoria.id && !m.compromisso_id)
+      const gasto = conta(daArvore)
+      const filhos: ParteDoEnvelope[] = categorias
+        .filter(c => c.mae_id === categoria.id && !c.arquivada)
+        .map(filha => {
+          const seus = daArvore.filter(m => m.categoria_id === filha.id)
+          const seu = conta(seus)
+          const limite = limiteDe(filha)
+          return { categoria: filha, gasto: seu, quantos: seus.length, limite, pressao: pressaoDe(seu, limite) }
+        })
+        .sort((a, b) => b.gasto - a.gasto)
+      /* Quem põe 700 na Renda e 120 na Luz já disse que a Casa são 820: o
+         tecto da mãe é a soma das partes e deixa de se editar à mão. Dois
+         números a dizerem coisas diferentes sobre o mesmo envelope é como
+         uma folha de cálculo começa a mentir. */
+      const dosFilhos = filhos.map(f => f.limite).filter((v): v is number => v != null)
+      const limiteSomado = dosFilhos.length > 0
+      const limite = limiteSomado
+        ? dosFilhos.reduce((s, v) => s + v, 0)
+        : limiteDe(categoria)
+      return {
+        categoria, gasto, limite, limiteSomado,
+        pressao: pressaoDe(gasto, limite), quantos: daArvore.length, filhos,
+      }
+    })
+    /* A despesa ordena-se por pressão: o que está mais perto de rebentar
+       lê-se primeiro — uma lista alfabética faz o leitor procurar o
+       problema, esta entrega-lho. A entrada segue a ordem da casa: o
+       ordenado antes dos extras, sempre no mesmo sítio. */
+    .sort((a, b) => (natureza === 'despesa'
+      ? b.pressao - a.pressao || a.categoria.ordem - b.categoria.ordem
+      : a.categoria.ordem - b.categoria.ordem))
+}
 
 /**
  * As contas de um mês.
@@ -162,29 +258,14 @@ export function useFinancas(casaId: string | null, mes: string) {
     return mapa
   }, [categorias])
 
-  const envelopes: Envelope[] = useMemo(() => {
-    const raizes = categorias.filter(c => c.natureza === 'despesa' && !c.arquivada && !c.mae_id)
-    return raizes
-      .map(categoria => {
-        /* O envelope é a árvore: um gasto na subcategoria "Renda" é um gasto
-           de "Casa". É assim que a folha de cálculo da família somava. */
-        const daArvore = comNatureza.filter(m =>
-          m.categoria_id != null && raizDe.get(m.categoria_id) === categoria.id && !m.compromisso_id)
-        const gasto = gastoDe(daArvore)
-        const limite = limiteDe(categoria)
-        const filhos = categorias
-          .filter(c => c.mae_id === categoria.id && !c.arquivada)
-          .map(filha => {
-            const seus = daArvore.filter(m => m.categoria_id === filha.id)
-            return { categoria: filha, gasto: gastoDe(seus), quantos: seus.length }
-          })
-          .sort((a, b) => b.gasto - a.gasto)
-        return { categoria, gasto, limite, pressao: pressaoDe(gasto, limite), quantos: daArvore.length, filhos }
-      })
-      /* Por pressão: o que está mais perto de rebentar lê-se primeiro. Uma
-         lista alfabética faz o leitor procurar o problema; esta entrega-lho. */
-      .sort((a, b) => b.pressao - a.pressao || a.categoria.ordem - b.categoria.ordem)
-  }, [categorias, comNatureza, limiteDe, raizDe])
+  const construir = useCallback(
+    (natureza: 'despesa' | 'entrada') =>
+      construirEnvelopes(categorias, comNatureza, limiteDe, raizDe, natureza),
+    [categorias, comNatureza, limiteDe, raizDe],
+  )
+
+  const envelopes: Envelope[] = useMemo(() => construir('despesa'), [construir])
+  const entradas: Envelope[] = useMemo(() => construir('entrada'), [construir])
 
   /** O corredor mede só o variável: os compromissos ficam de fora. */
   const variaveis = useMemo(() => comNatureza.filter(m => !m.compromisso_id), [comNatureza])
@@ -200,6 +281,12 @@ export function useFinancas(casaId: string | null, mes: string) {
   )
 
   const entrou = useMemo(() => entradaDe(comNatureza), [comNatureza])
+
+  /** O que se espera receber: a soma dos envelopes de entrada. */
+  const previstoEntrada = useMemo(
+    () => entradas.reduce((s, e) => s + (e.limite ?? 0), 0),
+    [entradas],
+  )
 
   /** Um compromisso está pago quando há um movimento seu neste mês. */
   const pagamentos = useMemo(() => {
@@ -217,6 +304,27 @@ export function useFinancas(casaId: string | null, mes: string) {
     () => compromissos.filter(c => !pagamentos.has(c.id)).reduce((s, c) => s + c.valor_cents, 0),
     [compromissos, pagamentos],
   )
+
+  /**
+   * Os três números do mês, reais ao lado dos previstos.
+   *
+   * "Saiu" é tudo o que saiu, compromissos incluídos — é o que a conta
+   * bancária viu. O previsto é a soma das duas decisões da casa: os
+   * envelopes (o variável) e os compromissos (o que já está prometido).
+   * As transferências entre contas não estão em lado nenhum destes
+   * números: mudaram de bolso, não mudaram de dono.
+   */
+  const resumo: Resumo = useMemo(() => {
+    const saiu = gastoDe(comNatureza)
+    const previstoSaida = orcamentoTotal + comprometido
+    return {
+      entrou, previstoEntrada, saiu, previstoSaida,
+      sobra: entrou - saiu,
+      sobraPrevista: previstoEntrada - previstoSaida,
+      porAlocar: comNatureza.filter(m => !m.categoria_id).length,
+      transferencias: comNatureza.filter(eTransferencia).length,
+    }
+  }, [comNatureza, entrou, previstoEntrada, orcamentoTotal, comprometido])
 
   /* ---------------- escrever ---------------- */
 
@@ -296,7 +404,7 @@ export function useFinancas(casaId: string | null, mes: string) {
 
   return {
     estado, falhou, limparFalha: () => definirFalhou(false), recarregar: buscar,
-    categorias, compromissos, movimentos, envelopes, ritmo, entrou,
+    categorias, compromissos, movimentos, envelopes, entradas, ritmo, entrou, resumo,
     comprometido, porPagar, pagamentos, orcamentoTotal, limiteDe, porCategoria,
     raizDe, fornecedores, semFornecedores,
     registar, alterarMovimento, apagarMovimento, guardarFornecedor, apagarFornecedor,
@@ -321,6 +429,8 @@ export interface Ano {
   entradas: LinhaDoAno[]
   totalDespesa: number[]
   totalEntrada: number[]
+  /** Transferências entre contas do ano: contadas, nunca somadas. */
+  transferencias: number
   /** Sobre quantos meses faz sentido tirar a média este ano. */
   mesesDecorridos: number
   recarregar: () => void
@@ -358,11 +468,15 @@ export function useAno(casaId: string | null, ano: number, categorias: Categoria
     const porCategoria = new Map<string, number[]>()
     const semCategoria = { despesa: Array(12).fill(0) as number[], entrada: Array(12).fill(0) as number[] }
     const natureza = new Map(categorias.map(c => [c.id, c.natureza]))
+    let transferencias = 0
 
     for (const m of movimentos) {
       const mes = Number(m.mes_conta.slice(5, 7)) - 1
       if (mes < 0 || mes > 11) continue
       const nat = m.categoria_id ? natureza.get(m.categoria_id) : undefined
+      /* O dinheiro que muda de bolso não é ano nenhum: conta-se para se
+         poder dizer que ficou de fora, e mais nada. */
+      if (nat === 'transferencia') { transferencias += 1; continue }
       /* Um positivo numa despesa é um estorno: desconta. Um movimento sem
          categoria conta na natureza do seu sinal — não desaparece do ano. */
       if (!m.categoria_id || !nat) {
@@ -432,6 +546,7 @@ export function useAno(casaId: string | null, ano: number, categorias: Categoria
       estado, despesas, entradas,
       totalDespesa: totalDe(despesas),
       totalEntrada: totalDe(entradas),
+      transferencias,
       mesesDecorridos,
       recarregar: buscar,
     }

@@ -70,7 +70,7 @@ function LinhaTotal({ nome, meses, mesesDecorridos }: { nome: string; meses: num
  * aconteceu, não o corredor do que ainda se decide.
  */
 export function TabelaDoAno({ ano, dados }: { ano: number; dados: Ano }) {
-  const { despesas, entradas, totalDespesa, totalEntrada, mesesDecorridos } = dados
+  const { despesas, entradas, totalDespesa, totalEntrada, mesesDecorridos, transferencias } = dados
   const vazio = despesas.length === 0 && entradas.length === 0
   const poupanca = totalEntrada.map((v, i) => v - totalDespesa[i])
 
@@ -123,6 +123,9 @@ export function TabelaDoAno({ ano, dados }: { ano: number; dados: Ano }) {
       <p className="ano-nota">
         valores em euros, sem cêntimos · com os compromissos incluídos ·
         Total soma o ano, Média divide pelos meses decorridos
+        {transferencias > 0 && (transferencias === 1
+          ? ' · 1 transferência entre contas ficou de fora'
+          : ` · ${transferencias} transferências entre contas ficaram de fora`)}
       </p>
       <p className="sr-only">
         Despesa do ano: {escreverEuros(totalDespesa.reduce((s, v) => s + v, 0))}.

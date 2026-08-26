@@ -53,6 +53,10 @@ export const IPata = (p: P) => (
 export const ISaco = (p: P) => (
   <I {...p}><path d="M6 8.5h12l1 11H5Z" /><path d="M9 8.5V6a3 3 0 0 1 6 0v2.5" /></I>
 )
+/* Duas setas a trocar de lugar: dinheiro que muda de bolso e não sai de casa. */
+export const ITroca = (p: P) => (
+  <I {...p}><path d="M4 9h14" /><path d="M14.5 5.5 18 9l-3.5 3.5" /><path d="M20 15H6" /><path d="M9.5 11.5 6 15l3.5 3.5" /></I>
+)
 export const IMoeda2 = (p: P) => (
   <I {...p}><circle cx="12" cy="12" r="8.5" /><path d="M15 9.2a3.8 3.8 0 1 0 0 5.6" /><path d="M8.5 10.8h4M8.5 13.2h4" /></I>
 )
@@ -60,7 +64,7 @@ export const IMoeda2 = (p: P) => (
 const MAPA: Record<string, (p: P) => ReactElement> = {
   cesto: ICesto2, casa: ICasa2, raio: IRaio, carro: ICarro, cruz: ICruz,
   livro: ILivro2, talheres: ITalheres2, balao: IBalao, camisola: ICamisola,
-  gota: IGota, pata: IPata, saco: ISaco, moeda: IMoeda2,
+  gota: IGota, pata: IPata, saco: ISaco, moeda: IMoeda2, troca: ITroca,
 }
 
 /** As chaves que uma categoria pode escolher. */

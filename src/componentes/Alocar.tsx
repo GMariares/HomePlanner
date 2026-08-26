@@ -3,6 +3,7 @@ import type { Categoria, Movimento } from '../dominio/financas'
 import { proporChave, regraPara, type Fornecedor } from '../dominio/fornecedores'
 import { escreverEuros } from '../dominio/dinheiro'
 import { IPontos } from './Icones'
+import { Dobra } from './Dobra'
 
 /** As categorias num selector, com as partes debaixo das suas mães. */
 export function EscolhaDeCategoria({ categorias, valor, aoEscolher, rotulo, vazio = 'por alocar' }: {
@@ -65,6 +66,7 @@ export function PorAlocar({ movimentos, categorias, aoAlocar }: {
 
   if (soltos.length === 0) return null
 
+  const temTransferencias = categorias.some(c => c.natureza === 'transferencia')
   const chaveDe = (m: Movimento) => chaves[m.id] ?? proporChave(m.descricao)
   const lembrarDe = (m: Movimento) => lembrar[m.id] ?? true
 
@@ -89,6 +91,7 @@ export function PorAlocar({ movimentos, categorias, aoAlocar }: {
       <p className="vazio alocar-explica">
         Diga de que categoria é cada um. Com a chave marcada, a casa aprende:
         este fornecedor passa a arrumar-se sozinho nos próximos extractos.
+        {temTransferencias && ' Uma passagem entre contas suas vai para Transferências: fica no livro e não conta para nada.'}
       </p>
 
       {soltos.slice(0, 30).map(m => (
@@ -171,14 +174,12 @@ export function Fornecedores({ fornecedores, categorias, aoGuardar, aoApagar }: 
   }
 
   return (
-    <section className="modulo" aria-labelledby="fornecedores-titulo">
-      <header className="dia-cabeca">
-        <h3 id="fornecedores-titulo" className="dia-nome">Os fornecedores</h3>
-        <span className="dia-data modulo-numero">
-          {fornecedores.length === 0 ? 'ainda nenhum'
-            : fornecedores.length === 1 ? '1 regra' : `${fornecedores.length} regras`}
-        </span>
-      </header>
+    <Dobra
+      id="fornecedores"
+      titulo="Os fornecedores"
+      conta={fornecedores.length === 0 ? 'ainda nenhum'
+        : fornecedores.length === 1 ? '1 regra' : `${fornecedores.length} regras`}
+    >
       <p className="vazio alocar-explica">
         “Auchan é Mercado” diz-se uma vez. A chave casa com qualquer descrição
         que a contenha — “auchan” apanha AUCHAN MATOSINHOS e AUCHAN GAIA.
@@ -225,6 +226,6 @@ export function Fornecedores({ fornecedores, categorias, aoGuardar, aoApagar }: 
           Guardar
         </button>
       </div>
-    </section>
+    </Dobra>
   )
 }

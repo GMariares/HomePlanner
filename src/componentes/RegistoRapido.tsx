@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState, type CSSProperties, type FormEvent } from 'react'
 import type { Categoria, Movimento } from '../dominio/financas'
-import { lerCents } from '../dominio/dinheiro'
+import { lerCents, type Natureza } from '../dominio/dinheiro'
 import { regraPara, type Fornecedor } from '../dominio/fornecedores'
 import { chaveDeNome } from '../dominio/adiar'
 import { iconeDeCategoria } from './IconesFinancas'
@@ -31,8 +31,11 @@ export function RegistoRapido({ categorias, fornecedores = [], aoRegistar, aoGua
   const [data, definirData] = useState(hojeIso)
   const [categoria, definirCategoria] = useState<string>('')
   const [escolhidaAMao, definirEscolhidaAMao] = useState(false)
-  const [entrada, definirEntrada] = useState(false)
+  const [natureza, definirNatureza] = useState<Natureza>('despesa')
+  const [naturezaAMao, definirNaturezaAMao] = useState(false)
   const campoValor = useRef<HTMLInputElement>(null)
+
+  const vivas = categorias.filter(c => !c.arquivada)
 
   /* "Auchan" escrito no fornecedor escolhe a categoria sozinho — a regra
      que a casa já ensinou. Uma escolha à mão ganha sempre à regra. */
@@ -40,13 +43,23 @@ export function RegistoRapido({ categorias, fornecedores = [], aoRegistar, aoGua
     () => (fornecedor.trim() ? regraPara(fornecedor, fornecedores) : null),
     [fornecedor, fornecedores],
   )
-  const categoriaEfectiva = escolhidaAMao ? categoria : (regra?.categoria_id ?? categoria)
+  const daRegra = regra?.categoria_id ? vivas.find(c => c.id === regra.categoria_id) : undefined
+  /* Uma regra que aponte para uma transferência muda também o lado do
+     registo: escrever "Trf Cxdapp" não é um gasto, e o controlo tem de o
+     dizer. Quem escolheu o lado à mão manda — aí a regra só vale se for do
+     mesmo lado. */
+  const regraVale = Boolean(daRegra && (!naturezaAMao || daRegra.natureza === natureza))
+  const naturezaEfectiva: Natureza =
+    !naturezaAMao && !escolhidaAMao && daRegra ? daRegra.natureza : natureza
+  const entrada = naturezaEfectiva === 'entrada'
+  const transferencia = naturezaEfectiva === 'transferencia'
+
+  const categoriaEfectiva = escolhidaAMao ? categoria : (regraVale ? regra?.categoria_id ?? '' : categoria)
   const regraNova = Boolean(
     aoGuardarFornecedor && fornecedor.trim().length >= 2 && categoriaEfectiva && !regra,
   )
 
-  const vivas = categorias.filter(c => !c.arquivada)
-  const raizes = vivas.filter(c => c.natureza === (entrada ? 'entrada' : 'despesa') && !c.mae_id)
+  const raizes = vivas.filter(c => c.natureza === naturezaEfectiva && !c.mae_id)
   /* Escolhida uma categoria com partes, as partes aparecem por baixo:
      quem quer só "Casa" fica por ali; quem quer "Renda" toca mais uma vez. */
   const escolhida = vivas.find(c => c.id === categoriaEfectiva)
@@ -68,7 +81,7 @@ export function RegistoRapido({ categorias, fornecedores = [], aoRegistar, aoGua
       categoria_id: categoriaEfectiva || null,
     })
     definirValor(''); definirDescricao(''); definirFornecedor('')
-    definirEscolhidaAMao(false)
+    definirEscolhidaAMao(false); definirNaturezaAMao(false)
     campoValor.current?.focus()
   }
 
@@ -92,14 +105,14 @@ export function RegistoRapido({ categorias, fornecedores = [], aoRegistar, aoGua
           onChange={e => definirValor(e.target.value)}
           placeholder="0,00"
           inputMode="decimal"
-          aria-label={entrada ? 'Quanto entrou' : 'Quanto se gastou'}
+          aria-label={transferencia ? 'Quanto passou' : entrada ? 'Quanto entrou' : 'Quanto se gastou'}
           maxLength={12}
         />
         <input
           className="campo-escrita registo-descricao"
           value={descricao}
           onChange={e => definirDescricao(e.target.value)}
-          placeholder={entrada ? 'de onde veio…' : 'em quê…'}
+          placeholder={transferencia ? 'de onde para onde…' : entrada ? 'de onde veio…' : 'em quê…'}
           aria-label="Descrição"
           maxLength={80}
         />
@@ -130,14 +143,32 @@ export function RegistoRapido({ categorias, fornecedores = [], aoRegistar, aoGua
       </div>
 
       <div className="registo-baixo">
-        <button
-          type="button"
-          className="botao-texto"
-          aria-pressed={entrada}
-          onClick={() => { definirEntrada(v => !v); definirCategoria(''); definirEscolhidaAMao(false) }}
-        >
-          {entrada ? 'é uma entrada' : 'é um gasto'}
-        </button>
+        <nav className="semana-nav registo-lados" aria-label="De que lado é este registo">
+          {/* Sem categoria de transferência — a décima migração por correr —
+              o lado não aparece: um separador que não leva a lado nenhum é
+              pior do que não existir. */}
+          {(([
+            ['despesa', 'gasto'],
+            ['entrada', 'entrada'],
+            ['transferencia', 'transferência'],
+          ] as [Natureza, string][]).filter(([qual]) =>
+            qual !== 'transferencia' || vivas.some(c => c.natureza === 'transferencia'),
+          )).map(([qual, palavra]) => (
+            <button
+              key={qual}
+              type="button"
+              className="semana-nav-botao"
+              aria-pressed={naturezaEfectiva === qual}
+              data-activa={naturezaEfectiva === qual || undefined}
+              onClick={() => {
+                definirNatureza(qual); definirNaturezaAMao(true)
+                definirCategoria(''); definirEscolhidaAMao(false)
+              }}
+            >
+              {palavra}
+            </button>
+          ))}
+        </nav>
         {regra && !escolhidaAMao && (
           <span className="registo-regra" role="status">
             {regra.nome || regra.chave} → já sabe a categoria
@@ -165,7 +196,7 @@ export function RegistoRapido({ categorias, fornecedores = [], aoRegistar, aoGua
                   onClick={() => { definirCategoria(activa ? '' : c.id); definirEscolhidaAMao(true) }}
                 >
                   <Icone lado={15} />
-                  {c.nome}
+                  <span className="chip-nome">{c.nome}</span>
                 </button>
               )
             })}
@@ -184,7 +215,7 @@ export function RegistoRapido({ categorias, fornecedores = [], aoRegistar, aoGua
                     aria-pressed={activa}
                     onClick={() => { definirCategoria(activa ? raizEscolhida ?? '' : c.id); definirEscolhidaAMao(true) }}
                   >
-                    {c.nome}
+                    <span className="chip-nome">{c.nome}</span>
                   </button>
                 )
               })}

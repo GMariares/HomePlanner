@@ -1071,8 +1071,12 @@
 
 /* ---------------- Finanças: envelopes ---------------- */
 .envelopes { display: grid; gap: calc(var(--u) * 0.5); }
-@media (min-width: 64rem) {
-  .envelopes { grid-template-columns: 1fr 1fr; gap: calc(var(--u) * 0.5) calc(var(--u) * 3); }
+/* Duas colunas quando o MÓDULO dá para duas — não quando o ecrã dá. A
+   coluna estreita da direita é larga num ecrã de 1440 e continua estreita:
+   com a media query, "Ordenado" lia-se "Ord…". */
+.caixa-envelopes { container-type: inline-size; }
+@container (min-width: 34rem) {
+  .envelopes { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: calc(var(--u) * 0.5) calc(var(--u) * 3); }
   /* aberto, o envelope toma a largura toda: é ali que se está a trabalhar */
   .envelope[data-aberto] { grid-column: 1 / -1; }
 }
@@ -1098,16 +1102,20 @@
   gap: calc(var(--u) * 0.75);
 }
 .envelope-cabeca { display: flex; align-items: baseline; justify-content: space-between; gap: calc(var(--u) * 1); min-width: 0; }
+.envelope-titulo { display: flex; align-items: baseline; gap: calc(var(--u) * 0.75); min-width: 0; }
 /* Um nome comprido encolhe e corta; nunca come o número ao lado. */
 .envelope-nome { font-weight: 700; min-width: 0; flex: 0 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .envelope-cabeca > * { min-width: 0; }
 .envelope-valor { font-variant-numeric: tabular-nums; font-weight: 800; flex: none; }
 .envelope-barra { display: block; height: 6px; border-radius: 999px; background: color-mix(in oklab, var(--tinta) 7%, #fff); overflow: hidden; }
 .envelope-cheio { display: block; height: 100%; border-radius: 999px; background: var(--cor); transition: width 420ms var(--mola); }
-.envelope[data-rebentou] .envelope-cheio { background: var(--perigo); }
+.envelope-cheio[data-estado="passou"] { background: var(--perigo); }
+.envelope-cheio[data-estado="atingido"] { background: var(--c-ementa); }
 /* "faltam 118,00 €" e "2 movimentos" não cabem lado a lado num telemóvel
    estreito: dobram em vez de empurrarem o envelope para fora do módulo. */
 .envelope-pe {
+  margin-top: calc(var(--u) * 0.75);
+  padding-inline-start: calc(var(--u) * 6);
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -1118,7 +1126,8 @@
 }
 .envelope-pe > * { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .envelope-tecto { font-weight: 800; }
-.envelope[data-rebentou] .envelope-tecto { color: var(--perigo); }
+.envelope-tecto[data-estado="passou"] { color: var(--perigo); }
+.envelope-tecto[data-estado="atingido"] { color: var(--c-ementa); }
 .envelope-conta { color: var(--tinta-3); font-weight: 600; }
 .envelope-limite { width: calc(var(--u) * 12); padding: calc(var(--u) * 0.5) calc(var(--u) * 1); font-variant-numeric: tabular-nums; }
 .compromisso-atraso { color: var(--perigo); font-weight: 800; }
@@ -1149,12 +1158,15 @@
 .registo-guardar { flex: none; padding-inline: calc(var(--u) * 2.5); }
 .registo-baixo { display: flex; align-items: flex-start; gap: calc(var(--u) * 1.5); flex-wrap: wrap; }
 .registo-cats { flex: 1; min-width: 0; }
+/* "Cuidados pessoais e farmácia da família toda" é um nome que uma casa
+   escreve mesmo: o chip encolhe e corta em vez de sair do módulo. */
+.registo-cat { max-width: 100%; }
+.chip-nome { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .registo-cat[data-activa] { background: var(--cor); color: #fff; }
 .registo-cat[data-activa] .chip-conta { color: color-mix(in oklab, #fff 70%, transparent); }
 @media (max-width: 47.99rem) {
   .registo-valor { width: calc(var(--u) * 11); font-size: var(--t-corpo); }
   .registo-guardar { padding-inline: calc(var(--u) * 1.75); }
-  .registo-guardar-texto { display: none; }
   /* As categorias correm de lado em vez de encherem o ecrã, e o corte
      desvanece para dizer que há mais — um corte a direito lê-se como um erro. */
   .registo-cats {
@@ -1228,7 +1240,7 @@
 .envelopes .envelope { transition: opacity 200ms var(--mola); }
 
 /* as partes, no registo rápido */
-.registo-arvore { flex: 1; min-width: 0; display: grid; gap: calc(var(--u) * 0.75); }
+.registo-arvore { flex: 1 1 100%; min-width: 0; display: grid; gap: calc(var(--u) * 0.75); }
 .registo-cat--fina { font-weight: 700; background: color-mix(in oklab, var(--cor) 5%, #fff); }
 
 /* ---------------- Finanças: o ano à vista ---------------- */
@@ -1365,8 +1377,133 @@ span.ano-abrir { cursor: default; }
 .registo-regra { font-size: var(--t-etiqueta); font-weight: 800; color: var(--c-financas); }
 .registo-fixar { color: var(--c-financas); }
 @media (max-width: 47.99rem) {
-  /* o "em quê" nunca encolhe a duas letras: o fornecedor dobra de linha */
-  .registo-descricao { min-width: calc(var(--u) * 14); }
-  .registo-data { width: calc(var(--u) * 18); }
-  .registo-guardar { margin-inline-start: auto; }
+  /* Num telemóvel a linha do registo é uma grelha dita: quanto e o botão
+     em cima, o quê a seguir, onde e quando por baixo. Deixada ao acaso do
+     flex-wrap, o botão ficava sozinho numa linha e o "em quê" com duas
+     letras. */
+  .registo-linha {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: calc(var(--u) * 1);
+  }
+  .registo-sinal { grid-area: 1 / 1; }
+  .registo-valor { grid-area: 1 / 2; width: 100%; }
+  .registo-guardar { grid-area: 1 / 3; }
+  .registo-descricao { grid-area: 2 / 1 / 3 / 4; min-width: 0; }
+  .registo-fornecedor { grid-area: 3 / 1 / 4 / 3; min-width: 0; }
+  /* 140px é o que o campo de data do sistema precisa para dizer o ano
+     todo; a 128 lia-se "08/26/202". */
+  .registo-data { grid-area: 3 / 3; width: calc(var(--u) * 17.5); }
+}
+
+/* ---------------- Finanças: o mês em três números ----------------
+   Um módulo só, três colunas separadas por um fio. Três cartões
+   iguais seriam três caixas dentro de uma caixa — aqui a hierarquia
+   é tipo e espaço, como manda a casa. */
+.balanco-accao { margin-inline-start: auto; }
+.balanco-linha {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: calc(var(--u) * 2);
+  margin-top: calc(var(--u) * 1.5);
+}
+.balanco-bloco { min-width: 0; display: grid; gap: calc(var(--u) * 0.5); align-content: start; }
+.balanco-bloco + .balanco-bloco {
+  border-inline-start: 1px solid var(--linha-d);
+  padding-inline-start: calc(var(--u) * 2);
+}
+.balanco-nome { margin: 0; font-size: var(--t-etiqueta); font-weight: 800; color: var(--tinta-2); }
+.balanco-real {
+  margin: 0;
+  font-size: var(--t-grande);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.balanco-previsto {
+  margin: 0;
+  font-size: var(--t-etiqueta);
+  font-weight: 700;
+  color: var(--tinta-3);
+  font-variant-numeric: tabular-nums;
+}
+/* A diferença diz-se por extenso: a cor acompanha, nunca decide sozinha. */
+.balanco-diferenca {
+  margin: calc(var(--u) * 0.25) 0 0;
+  font-size: var(--t-etiqueta);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--tinta-3);
+}
+.balanco-diferenca[data-tom="bom"] { color: var(--c-ementa); }
+.balanco-diferenca[data-tom="mau"] { color: var(--perigo); }
+.balanco-palavra { font-weight: 600; margin-inline-start: calc(var(--u) * 0.75); }
+.balanco-nota {
+  margin: calc(var(--u) * 2) 0 0;
+  color: var(--tinta-3);
+  font-size: var(--t-etiqueta);
+  font-weight: 600;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 calc(var(--u) * 1.5);
+}
+.balanco-aviso { color: var(--c-lista); font-weight: 800; }
+@media (max-width: 47.99rem) {
+  /* Empilhados, o fio passa a ser em cima: três colunas de 2,1rem num
+     telemóvel davam três números partidos ao meio. */
+  .balanco-accao { margin-inline-start: auto; }
+.balanco-linha { grid-template-columns: minmax(0, 1fr); gap: calc(var(--u) * 1.5); }
+  .balanco-bloco + .balanco-bloco {
+    border-inline-start: 0;
+    padding-inline-start: 0;
+    border-top: 1px solid var(--linha-d);
+    padding-top: calc(var(--u) * 1.5);
+  }
+  .balanco-real { font-size: var(--t-titulo); }
+}
+
+/* ---------------- um módulo que abre ---------------- */
+.dobra-cabeca { justify-content: space-between; margin-bottom: 0; }
+.dobra-nome { min-width: 0; flex: 0 1 auto; }
+.dobra-topo {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: calc(var(--u) * 0.75) 0;
+  margin: calc(var(--u) * -0.75) 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--u) * 1);
+  border-radius: calc(var(--u) * 1);
+}
+.dobra-seta { display: inline-flex; color: var(--tinta-3); transition: transform 200ms var(--mola); }
+.dobra-seta[data-aberta] { transform: rotate(90deg); }
+.dobra-topo:hover .dobra-seta { color: var(--tinta); }
+.dobra-corpo { animation: chegar 240ms var(--mola) both; padding-top: calc(var(--u) * 1); }
+
+/* ---------------- envelopes: as partes ganham tecto ---------------- */
+.envelope-barra--fina { height: 4px; margin-top: calc(var(--u) * 0.5); }
+.envelope-tecto--parte { color: var(--tinta-2); }
+span.envelope-tecto { cursor: default; }
+.envelope-somado { margin-block: 0 calc(var(--u) * 1); font-size: var(--t-etiqueta); color: var(--tinta-3); }
+.envelope-somado strong { color: var(--tinta-2); font-variant-numeric: tabular-nums; }
+.envelope-filha .fila-corpo { gap: calc(var(--u) * 0.5); }
+
+/* o que não conta para nada: está no livro, e cala-se */
+.movimento-neutro { color: var(--tinta-3); font-weight: 800; }
+.fila-numero[data-neutro] { color: var(--tinta-3); }
+
+/* ---------------- a coluna da direita, e o lado do registo ---------------- */
+.financas-coluna { display: grid; gap: calc(var(--u) * 2); align-content: start; min-width: 0; }
+.financas-resumo:empty { display: none; }
+/* Dentro de um módulo branco a pílula do mundo não pode trazer sombra —
+   seria uma caixa dentro de uma caixa. Assenta no gelo dos campos. */
+.registo-lados {
+  flex: none;
+  box-shadow: none;
+  background: color-mix(in oklab, var(--tinta) 5%, #fff);
 }
