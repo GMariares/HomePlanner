@@ -657,6 +657,15 @@ The grid decides its own columns with a container query at 34rem, not a media qu
 narrow column of a two-column page is wide on a 1440px screen and still narrow, and a
 viewport-based rule truncated "Ordenado" to "Ord…" inside it.
 
+**The Consequence Rule.** Registering a gasto is not a number changing — the envelope
+takes the blow, and that visible consequence is the whole reward for having registered.
+The tile flashes its category hue with a white icon for 700ms, the total counts to its new
+figure over 450ms, the ceiling line counts with it so the two numbers never contradict
+each other mid-flight, and the stretch of meter between where the bar was and where it
+landed lights up at 40% hue and settles. That lit stretch is the only thing on the screen
+that says *how much*. None of it ever fires on mount: a page that opens shows its numbers
+already true.
+
 ### The Balanço (signature)
 
 The month in three numbers — in, out, left — as one module of three columns divided by
@@ -692,6 +701,12 @@ average across the months that actually had movement. The shape of the year read
 glance; the exact figure for one month lives in the month view, one tap away. Above 48rem
 the table returns, with its first column and its Total column pinned.
 
+The strip draws itself once per entry into the view: each bar rises from the baseline over
+360ms, delayed by its **month** and not by its row, so the sweep runs along the axis of
+time with every category moving at the same step — 22ms per month, capped at 260ms, about
+620ms end to end. A per-row stagger would read as rows loading; this reads as the year
+being drawn, which is what the axis means.
+
 **The Honest Denominator Rule.** An average divides by the months a row actually had
 movement, never by the months of the calendar. A household that starts in August has four
 months of rent at 847 € and would read 424 — half, wearing the face of a right answer.
@@ -723,6 +738,11 @@ the floor.
   round caps and joins, matching the existing set.
 - **Do** give every control its rest, hover, active, focus-visible and disabled states — the
   focus ring is a 2px ink outline at 2px offset, everywhere.
+- **Do** animate a number only when it changes while someone is watching. On mount every
+  figure is already its final value.
+- **Do** reduce movement rather than erase it under `prefers-reduced-motion`: spatial
+  motion goes, colour, opacity and a meter settling at 120ms stay, because a gesture that
+  stops being confirmed loses information, not decoration.
 - **Do** give a module exactly one opening gesture and make the whole surface the target.
 - **Do** write empty states as one sentence inside the module.
 - **Do** run a hue through the 78% derivation before it becomes text. Raw honey on white is

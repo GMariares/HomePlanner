@@ -31,6 +31,7 @@ export function RegistoRapido({ categorias, fornecedores = [], aoRegistar, aoGua
   const [data, definirData] = useState(hojeIso)
   const [categoria, definirCategoria] = useState<string>('')
   const [escolhidaAMao, definirEscolhidaAMao] = useState(false)
+  const [guardado, definirGuardado] = useState(false)
   const [natureza, definirNatureza] = useState<Natureza>('despesa')
   const [naturezaAMao, definirNaturezaAMao] = useState(false)
   const campoValor = useRef<HTMLInputElement>(null)
@@ -83,6 +84,10 @@ export function RegistoRapido({ categorias, fornecedores = [], aoRegistar, aoGua
     definirValor(''); definirDescricao(''); definirFornecedor('')
     definirEscolhidaAMao(false); definirNaturezaAMao(false)
     campoValor.current?.focus()
+    /* Num telemóvel o envelope que recebeu o gasto está fora do ecrã: sem
+       um sinal aqui, carregar em Registar não devolve nada a quem carregou. */
+    definirGuardado(true)
+    setTimeout(() => definirGuardado(false), 800)
   }
 
   const fixarRegra = () => {
@@ -95,7 +100,7 @@ export function RegistoRapido({ categorias, fornecedores = [], aoRegistar, aoGua
   }
 
   return (
-    <form className="registo" onSubmit={guardar}>
+    <form className="registo" onSubmit={guardar} data-guardado={guardado || undefined}>
       <div className="registo-linha">
         <span className="registo-sinal" aria-hidden="true">{entrada ? '+' : '−'}</span>
         <input

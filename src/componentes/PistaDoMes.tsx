@@ -1,5 +1,6 @@
 import type { Ritmo } from '../dominio/dinheiro'
 import { escreverEuros } from '../dominio/dinheiro'
+import { useContagem } from '../dominio/animar'
 
 /**
  * O passo do mês.
@@ -16,6 +17,9 @@ import { escreverEuros } from '../dominio/dinheiro'
 export function PistaDoMes({ ritmo }: { ritmo: Ritmo }) {
   const { gasto, orcamento, esperado, tolerancia, dia, dias, estado, palavras } = ritmo
   const semOrcamento = orcamento === 0
+  /* O número anda com a barra: registar um gasto move os dois ao mesmo
+     tempo, e é essa consequência que paga o gesto de registar. */
+  const mostrado = useContagem(gasto, 520)
 
   const pct = (v: number) => (orcamento === 0 ? 0 : Math.min(100, Math.max(0, (v / orcamento) * 100)))
   const inicioCorredor = pct(esperado - tolerancia)
@@ -35,7 +39,7 @@ export function PistaDoMes({ ritmo }: { ritmo: Ritmo }) {
       </header>
 
       <p className="pista-numero">
-        <strong className="pista-gasto">{escreverEuros(gasto)}</strong>
+        <strong className="pista-gasto">{escreverEuros(mostrado)}</strong>
         {!semOrcamento && (
           <span className="pista-de">de {escreverEuros(orcamento)}</span>
         )}

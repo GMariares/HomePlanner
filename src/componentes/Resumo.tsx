@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import type { Resumo as Dados } from '../dominio/financas'
 import { escreverEuros } from '../dominio/dinheiro'
+import { useContagem } from '../dominio/animar'
 
 /**
  * Uma das três colunas: o real, o previsto e a diferença por extenso.
@@ -24,6 +25,7 @@ function Numero({ nome, real, previsto, temPrevisao, falta, melhorAcima }: {
   falta: string
   melhorAcima: boolean
 }) {
+  const mostrado = useContagem(real)
   const diferenca = real - previsto
   const tom = !temPrevisao || diferenca === 0 ? 'neutro'
     : (diferenca > 0) === melhorAcima ? 'bom' : 'mau'
@@ -31,7 +33,7 @@ function Numero({ nome, real, previsto, temPrevisao, falta, melhorAcima }: {
   return (
     <div className="balanco-bloco">
       <p className="balanco-nome">{nome}</p>
-      <p className="balanco-real">{escreverEuros(real)}</p>
+      <p className="balanco-real">{escreverEuros(mostrado)}</p>
       <p className="balanco-previsto">
         {temPrevisao ? <>previsto {escreverEuros(previsto)}</> : falta}
       </p>

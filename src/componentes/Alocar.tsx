@@ -3,6 +3,7 @@ import type { Categoria, Movimento } from '../dominio/financas'
 import { proporChave, regraPara, type Fornecedor } from '../dominio/fornecedores'
 import { escreverEuros } from '../dominio/dinheiro'
 import { IPontos } from './Icones'
+import { useMovimentoReduzido } from '../dominio/animar'
 import { Dobra } from './Dobra'
 
 /** As categorias num selector, com as partes debaixo das suas mães. */
@@ -63,6 +64,10 @@ export function PorAlocar({ movimentos, categorias, aoAlocar }: {
   const [escolhas, definirEscolhas] = useState<Record<string, string>>({})
   const [chaves, definirChaves] = useState<Record<string, string>>({})
   const [lembrar, definirLembrar] = useState<Record<string, boolean>>({})
+  /* Arrumada, a linha sai por onde entrou em vez de desaparecer: sem isso,
+     arrumar três irmãs de uma vez lê-se como se a lista tivesse partido. */
+  const [aSair, definirASair] = useState<Record<string, boolean>>({})
+  const reduzido = useMovimentoReduzido()
 
   if (soltos.length === 0) return null
 
@@ -77,7 +82,10 @@ export function PorAlocar({ movimentos, categorias, aoAlocar }: {
     const irmas = chave
       ? soltos.filter(s => s.id !== m.id && regraPara(s.descricao, [{ id: '', chave, nome: '', categoria_id: categoriaId }]))
       : []
-    aoAlocar({ movimento: m, categoriaId, chave, irmas })
+    const guardar = () => aoAlocar({ movimento: m, categoriaId, chave, irmas })
+    if (reduzido) { guardar(); return }
+    definirASair(a => ({ ...a, [m.id]: true, ...Object.fromEntries(irmas.map(i => [i.id, true])) }))
+    setTimeout(guardar, 260)
   }
 
   return (
@@ -95,7 +103,7 @@ export function PorAlocar({ movimentos, categorias, aoAlocar }: {
       </p>
 
       {soltos.slice(0, 30).map(m => (
-        <div className="alocar-linha" key={m.id}>
+        <div className="alocar-linha" key={m.id} data-a-sair={aSair[m.id] || undefined}>
           <div className="fila">
             <span className="fila-corpo">
               <span className="fila-nome">{m.descricao || 'sem descrição'}</span>

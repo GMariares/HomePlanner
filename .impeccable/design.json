@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-26T19:00:00Z",
+  "generatedAt": "2026-08-26T20:00:00Z",
   "title": "Design System: HomePlanner",
   "extensions": {
     "colorMeta": {
@@ -485,6 +485,31 @@
         "name": "reduced-motion",
         "value": "prefers-reduced-motion: reduce → all transitions and animations collapse to 0.01ms; the page entrance is removed entirely",
         "purpose": "Non-negotiable; declared globally, not per-component."
+      },
+      {
+        "name": "golpe",
+        "value": "700ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The stretch of meter a new movement added, lit at 40% hue and settling. The only mark on screen that says how much."
+      },
+      {
+        "name": "acusar",
+        "value": "700ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "An envelope tile flashing its full category hue with a white icon to acknowledge what it just received."
+      },
+      {
+        "name": "contagem",
+        "value": "450ms ease-out cubic (rAF)",
+        "purpose": "A figure walking to its new value. Never on mount; interrupts from wherever the eye left it."
+      },
+      {
+        "name": "subir",
+        "value": "360ms cubic-bezier(0.16, 1, 0.3, 1), 22ms per month, capped at 260ms",
+        "purpose": "The year strip drawing itself along the axis of time, all categories at the same step."
+      },
+      {
+        "name": "registado",
+        "value": "800ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "A ring of finance-teal light around the register module — the only signal that returns to a thumb when the envelope it fed is off-screen."
       }
     ],
     "breakpoints": [
@@ -707,6 +732,11 @@
         "name": "The Honest Denominator Rule",
         "section": "components",
         "body": "An average divides by the months a row actually had movement, never by the months of the calendar. A household that starts in August has four months of rent at 847 € and would read 424 — half, wearing the face of a right answer."
+      },
+      {
+        "name": "The Consequence Rule",
+        "section": "components",
+        "body": "Registering a gasto is not a number changing — the envelope takes the blow, and that visible consequence is the whole reward for having registered. The tile flashes its category hue, the total counts to its new figure, the ceiling line counts with it so the two numbers never contradict each other mid-flight, and the stretch of meter between where the bar was and where it landed lights up and settles. None of it ever fires on mount."
       }
     ],
     "dos": [
@@ -723,7 +753,9 @@
       "Do run a hue through the 78% derivation before it becomes text. Raw honey on white is 3.2:1; the derived tint is 4.7:1.",
       "Do let a module decide its own column count from its own width with a container query. The screen width is not the module width.",
       "Do compute a state — burst, reached, over, under — on the thing that has it, so a parent condition never paints its children.",
-      "Do say what is missing when a number has no estimate behind it, and show no difference at all rather than a difference against zero."
+      "Do say what is missing when a number has no estimate behind it, and show no difference at all rather than a difference against zero.",
+      "Do animate a number only when it changes while someone is watching. On mount every figure is already its final value.",
+      "Do reduce movement rather than erase it under prefers-reduced-motion: spatial motion goes, colour, opacity and a meter settling at 120ms stay."
     ],
     "donts": [
       "Don't hand-pick a pastel. Any tint not produced by the formula is a defect.",

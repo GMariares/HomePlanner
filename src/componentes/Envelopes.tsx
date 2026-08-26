@@ -6,6 +6,7 @@ import { IPontos, IMais, ISetaDir } from './Icones'
 import { Menu } from './Menu'
 import { Escrita } from './Escrita'
 import { Dobra } from './Dobra'
+import { useContagem, useMudanca } from '../dominio/animar'
 import { useAdiar } from '../dominio/adiar'
 import { useRascunho } from '../dominio/rascunho'
 import { iconeDeCategoria } from './IconesFinancas'
@@ -87,14 +88,33 @@ const estadoDe = (gasto: number, limite: number | null, entrada: boolean) =>
     : entrada ? (gasto >= limite ? 'atingido' : undefined)
     : (gasto > limite ? 'passou' : undefined)
 
-/** A barra de um envelope ou de uma parte. Decoração de uma verdade escrita. */
+/**
+ * A barra de um envelope ou de uma parte.
+ *
+ * Decoração de uma verdade escrita — e, no instante em que um gasto entra,
+ * a única coisa no ecrã que diz o TAMANHO do que entrou: o pedaço entre
+ * onde a barra estava e onde ficou acende-se e assenta. É o golpe à vista.
+ */
 function Barra({ gasto, limite, entrada, fina = false }: {
   gasto: number; limite: number | null; entrada: boolean; fina?: boolean
 }) {
-  const cheio = limite && limite > 0 ? Math.min(100, (gasto / limite) * 100) : 0
+  const { anterior, aMudar } = useMudanca(gasto)
+  const pct = (v: number) => (limite && limite > 0 ? Math.min(100, Math.max(0, (v / limite) * 100)) : 0)
+  const cheio = pct(gasto)
+  const antes = pct(anterior)
+  const golpe = aMudar && Math.abs(cheio - antes) > 0.4
   return (
     <span className={fina ? 'envelope-barra envelope-barra--fina' : 'envelope-barra'} aria-hidden="true">
       <span className="envelope-cheio" data-estado={estadoDe(gasto, limite, entrada)} style={{ width: `${cheio}%` }} />
+      {golpe && (
+        <span
+          className="envelope-golpe"
+          style={{
+            insetInlineStart: `${Math.min(antes, cheio)}%`,
+            width: `${Math.abs(cheio - antes)}%`,
+          }}
+        />
+      )}
     </span>
   )
 }
@@ -128,6 +148,10 @@ function Fila({ e, aberto, aoAbrir, movimentosDaArvore, aoRenomear, aoCriarFilha
 
   const Icone = iconeDeCategoria(e.categoria.icone)
   const entrada = e.categoria.natureza === 'entrada'
+  /* O envelope acusa a recepção: o azulejo carrega a cor por um instante
+     e o total anda até ao número novo. Só quando muda com alguém a ver. */
+  const { aMudar: recebeu } = useMudanca(e.gasto)
+  const total = useContagem(e.gasto)
   const porCategoria = new Map<string, string>()
   for (const f of e.filhos) porCategoria.set(f.categoria.id, f.categoria.nome)
 
@@ -136,6 +160,7 @@ function Fila({ e, aberto, aoAbrir, movimentosDaArvore, aoRenomear, aoCriarFilha
       className="envelope com-cor"
       style={{ '--cor': e.categoria.cor } as CSSProperties}
       data-aberto={aberto || undefined}
+      data-recebeu={recebeu || undefined}
     >
       {/* O tecto é um botão e vive FORA do botão que abre: um botão dentro
           de outro não é HTML válido e o de dentro deixa de se alcançar pelo
@@ -153,7 +178,7 @@ function Fila({ e, aberto, aoAbrir, movimentosDaArvore, aoRenomear, aoCriarFilha
               <span className="envelope-abrir" aria-hidden="true"><ISetaDir lado={12} /></span>
               <span className="envelope-nome">{e.categoria.nome}</span>
             </span>
-            <span className="envelope-valor">{escreverEuros(e.gasto)}</span>
+            <span className="envelope-valor">{escreverEuros(total)}</span>
           </span>
           <Barra gasto={e.gasto} limite={e.limite} entrada={entrada} />
         </span>
@@ -163,7 +188,10 @@ function Fila({ e, aberto, aoAbrir, movimentosDaArvore, aoRenomear, aoCriarFilha
         <Tecto
           id={e.categoria.id}
           nome={e.categoria.nome}
-          gasto={e.gasto}
+          /* O mesmo número contado que está no cabeçalho. Com o valor real
+             aqui, o pé dizia "faltam 115,70 €" enquanto o topo ainda ia em
+             267,81 — dois números a discordarem à vista um do outro. */
+          gasto={total}
           limite={e.limite}
           entrada={entrada}
           somado={e.limiteSomado}

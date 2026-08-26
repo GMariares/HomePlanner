@@ -185,7 +185,10 @@ function Faixa({ l, funda = false, soma = false }: { l: LinhaDoAno; funda?: bool
               <span
                 className="anol-barra"
                 data-negativo={v < 0 || undefined}
-                style={{ height: v === 0 ? 0 : `${Math.max(8, Math.round((Math.abs(v) / maior) * 100))}%` }}
+                style={{
+                  height: v === 0 ? 0 : `${Math.max(8, Math.round((Math.abs(v) / maior) * 100))}%`,
+                  '--i': i,
+                } as CSSProperties}
               />
             </span>
             <span className="anol-inicial">{INICIAIS[i]}</span>

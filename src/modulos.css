@@ -124,9 +124,23 @@
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: none; }
 }
+/* Menos movimento não é nenhum movimento. O que se corta é o deslocamento
+   — entradas, subidas, escalas, o desenho do ano, o golpe que varre a
+   barra. O que fica é o que carrega sentido: a cor que muda de estado, a
+   opacidade que diz activo, o medidor a assentar no seu valor novo. Um
+   gesto que deixa de ser confirmado é uma perda de informação, não de
+   decoração. */
 @media (prefers-reduced-motion: reduce) {
-  .pagina { animation: none; }
-  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  .pagina, .dobra-corpo, .envelope-dentro { animation: none; }
+  .anol-barra { animation: none; }
+  .envelope-golpe { display: none; }
+  .alocar-linha[data-a-sair] { transition: opacity 80ms linear; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-property: opacity, background-color, color, border-color, box-shadow, width, height !important;
+    transition-duration: 120ms !important;
+  }
 }
 
 .pagina-cabeca {
@@ -1109,6 +1123,32 @@
 .envelope-valor { font-variant-numeric: tabular-nums; font-weight: 800; flex: none; }
 .envelope-barra { display: block; height: 6px; border-radius: 999px; background: color-mix(in oklab, var(--tinta) 7%, #fff); overflow: hidden; }
 .envelope-cheio { display: block; height: 100%; border-radius: 999px; background: var(--cor); transition: width 420ms var(--mola); }
+/* O tamanho do gasto que acabou de entrar, desenhado onde ele entrou: o
+   pedaço entre onde a barra estava e onde ficou acende e assenta. É a
+   única coisa no ecrã que diz QUANTO, e dura o tempo de se ver. */
+.envelope-golpe {
+  position: absolute;
+  inset-block: 0;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--cor) 40%, #fff);
+  animation: golpe 700ms var(--mola) both;
+  pointer-events: none;
+}
+@keyframes golpe {
+  0% { opacity: 0; transform: scaleX(0.4); }
+  22% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: none; }
+}
+.envelope-barra { position: relative; }
+/* O azulejo acusa a recepção com a cor inteira. A 20% do premido contra
+   os 14% do azulejo a diferença era de 6% e não se via — um aceno que não
+   se lê não é um aceno. */
+.envelope[data-recebeu] .envelope-tile { animation: acusar 700ms var(--mola) both; }
+@keyframes acusar {
+  0% { background: var(--cor); color: #fff; transform: scale(0.92); }
+  30% { background: var(--cor); color: #fff; transform: scale(1.04); }
+  100% { background: var(--cor-tile); color: var(--cor-texto); transform: none; }
+}
 .envelope-cheio[data-estado="passou"] { background: var(--perigo); }
 .envelope-cheio[data-estado="atingido"] { background: var(--c-ementa); }
 /* "faltam 118,00 €" e "2 movimentos" não cabem lado a lado num telemóvel
@@ -1149,6 +1189,14 @@
   grid-template-columns: minmax(0, 1fr);
   gap: calc(var(--u) * 1.5);
   min-width: 0;
+}
+/* Guardado: um anel de luz da cor das contas, uma vez. Num telemóvel o
+   envelope que recebeu o gasto está fora do ecrã e este é o único sinal
+   que volta a quem carregou. */
+.registo[data-guardado] { animation: registado 800ms var(--mola) both; }
+@keyframes registado {
+  0% { box-shadow: var(--sombra-modulo), inset 0 0 0 2px color-mix(in oklab, var(--c-financas) 55%, transparent); }
+  100% { box-shadow: var(--sombra-modulo), inset 0 0 0 2px transparent; }
 }
 .registo-linha, .registo-baixo { min-width: 0; }
 .registo-linha { display: flex; align-items: center; gap: calc(var(--u) * 1); }
@@ -1356,7 +1404,20 @@ button.anol-botao { cursor: pointer; }
   border-radius: 3px;
   overflow: hidden;
 }
-.anol-barra { width: 100%; background: var(--cor); border-radius: 3px; transition: height 420ms var(--mola); }
+/* Doze barras que sobem à vez: o ano desenha-se em vez de aparecer, e a
+   forma dele — o pico de Julho, os meses vazios — lê-se no gesto. O
+   atraso é do MÊS e não da linha: a varredura corre pelo eixo do tempo,
+   todas as categorias ao mesmo passo, que é o que o eixo quer dizer.
+   Travado nos 260ms de atraso, 620ms do princípio ao fim. */
+.anol-barra {
+  width: 100%;
+  background: var(--cor);
+  border-radius: 3px;
+  transform-origin: bottom;
+  animation: subir 360ms var(--mola) both;
+  animation-delay: calc(min(var(--i, 0) * 22, 260) * 1ms);
+}
+@keyframes subir { from { transform: scaleY(0); } }
 .anol-barra[data-negativo] { background: var(--perigo); }
 .anol-inicial { font-size: var(--t-etiqueta); font-weight: 700; color: var(--tinta-3); font-variant-numeric: tabular-nums; }
 .anol-media { font-size: var(--t-etiqueta); font-weight: 600; color: var(--tinta-3); font-variant-numeric: tabular-nums; }
@@ -1365,7 +1426,13 @@ button.anol-botao { cursor: pointer; }
 
 /* ---------------- Finanças: alocar e fornecedores ---------------- */
 .alocar-explica { margin-top: 0; }
-.alocar-linha { padding-block: calc(var(--u) * 0.75); }
+.alocar-linha {
+  padding-block: calc(var(--u) * 0.75);
+  transition: opacity 240ms var(--mola), transform 240ms var(--mola);
+}
+/* Arrumada, a linha sai pelo lado da categoria que a recebeu. Sem isto,
+   arrumar três irmãs de uma vez lê-se como se a lista tivesse partido. */
+.alocar-linha[data-a-sair] { opacity: 0; transform: translateX(calc(var(--u) * 3)); }
 .alocar-linha + .alocar-linha { border-top: 1px solid var(--linha-d); }
 .alocar-linha .fila { padding-block: calc(var(--u) * 0.5); min-height: 0; }
 .alocar-accoes {
