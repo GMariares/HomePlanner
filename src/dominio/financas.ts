@@ -361,6 +361,37 @@ export function useFinancas(casaId: string | null, mes: string) {
     if (error) buscar()
   }, [buscar])
 
+  /**
+   * Arrumar vários de uma vez.
+   *
+   * Depois de um extracto trazer noventa linhas, escolher a categoria de
+   * cada uma é o trabalho; carregar num botão por cada uma é só peagem.
+   * Aqui vai uma chamada por categoria e não uma por movimento.
+   */
+  const alocarMovimentos = useCallback(async (lotes: { ids: string[]; categoria_id: string }[]) => {
+    const uteis = lotes.filter(l => l.ids.length > 0)
+    if (uteis.length === 0) return
+    definirMovimentos(ms => {
+      const destino = new Map<string, string>()
+      for (const l of uteis) for (const id of l.ids) destino.set(id, l.categoria_id)
+      return ms.map(m => (destino.has(m.id) ? { ...m, categoria_id: destino.get(m.id)! } : m))
+    })
+    const respostas = await Promise.all(uteis.map(l =>
+      supabase.from('movimentos').update({ categoria_id: l.categoria_id }).in('id', l.ids)))
+    const falhou = respostas.some(r => r.error)
+    definirFalhou(falhou)
+    buscar()
+  }, [buscar])
+
+  /** Guardar várias regras de fornecedor numa ida só. */
+  const guardarFornecedores = useCallback(async (lista: Partial<Fornecedor>[]) => {
+    if (!casaId || lista.length === 0) return
+    const { error } = await supabase.from('fornecedores')
+      .upsert(lista.map(f => ({ ...f, casa_id: casaId })), { onConflict: 'casa_id,chave' })
+    definirFalhou(Boolean(error))
+    if (!error) buscar()
+  }, [buscar, casaId])
+
   /** Apagar vários de uma vez: uma chamada, não vinte. */
   const apagarMovimentos = useCallback(async (ids: string[]) => {
     if (ids.length === 0) return
@@ -430,7 +461,8 @@ export function useFinancas(casaId: string | null, mes: string) {
     categorias, compromissos, movimentos, envelopes, entradas, ritmo, entrou, resumo,
     comprometido, porPagar, pagamentos, orcamentoTotal, limiteDe, porCategoria,
     raizDe, fornecedores, semFornecedores,
-    registar, alterarMovimento, apagarMovimento, apagarMovimentos, guardarFornecedor, apagarFornecedor,
+    registar, alterarMovimento, apagarMovimento, apagarMovimentos, alocarMovimentos,
+    guardarFornecedor, guardarFornecedores, apagarFornecedor,
     guardarCategoria, definirLimiteDoMes, guardarCompromisso, semear,
   }
 }

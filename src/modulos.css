@@ -1458,6 +1458,33 @@ button.anol-botao { cursor: pointer; }
 }
 .alocar-chave:disabled { opacity: 0.4; }
 .alocar-arrumar { padding-block: calc(var(--u) * 1); padding-inline: calc(var(--u) * 2); }
+/* O gesto de arrumar é um só e está sempre no mesmo sítio: flutua sobre a
+   lista, que lhe passa por baixo, para não obrigar a descer setenta linhas
+   até ao botão. Tem sombra e cantos próprios — uma barra quadrada com um
+   fio em cima lia-se como uma divisória largada a meio da lista, e não
+   como uma coisa que está por cima dela. */
+.alocar-rodape {
+  position: sticky;
+  bottom: calc(var(--u) * 1);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--u) * 1.5);
+  flex-wrap: wrap;
+  margin-top: calc(var(--u) * 2);
+  padding: calc(var(--u) * 1.25) calc(var(--u) * 1.25) calc(var(--u) * 1.25) calc(var(--u) * 2);
+  border-radius: var(--raio-tile);
+  background: color-mix(in srgb, var(--modulo) 92%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 8px 24px -12px rgb(28 27 32 / 0.28), 0 0 0 1px var(--linha-d);
+  animation: chegar 260ms var(--mola) both;
+}
+@media (max-width: 47.99rem) {
+  /* acima da barra do polegar, nunca por baixo dela */
+  .alocar-rodape { bottom: calc(var(--u) * 8 + env(safe-area-inset-bottom)); }
+}
 .fornecedor-chave { font-weight: 800; }
 .fornecedor-novo { border-top: 1px solid var(--linha-d); padding-top: calc(var(--u) * 1.5); padding-inline-start: 0; }
 .importar-alocar { color: color-mix(in oklab, var(--c-lista) 78%, var(--tinta)); font-weight: 800; }

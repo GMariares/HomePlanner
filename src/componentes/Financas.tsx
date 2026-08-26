@@ -245,18 +245,25 @@ export function Financas({ casa }: { casa: Casa }) {
             <PorAlocar
               movimentos={f.movimentos}
               categorias={f.categorias}
-              aoAlocar={({ movimento, categoriaId, chave, irmas }) => {
-                f.alterarMovimento(movimento.id, {
-                  categoria_id: categoriaId,
-                  fornecedor: movimento.fornecedor ?? (chave || movimento.descricao.trim()),
-                })
-                /* Arrumar uma arruma as irmãs: as três compras do Lidl saem juntas. */
-                for (const irma of irmas) {
-                  f.alterarMovimento(irma.id, { categoria_id: categoriaId })
+              aoAlocar={lote => {
+                /* Um lote de setenta linhas é uma chamada por categoria e
+                   uma para as regras, não cento e quarenta idas ao
+                   servidor. As irmãs vão no mesmo saco da sua linha. */
+                const porCategoria = new Map<string, string[]>()
+                for (const { movimento, categoriaId, irmas } of lote) {
+                  const ids = porCategoria.get(categoriaId) ?? []
+                  ids.push(movimento.id, ...irmas.map(i => i.id))
+                  porCategoria.set(categoriaId, ids)
                 }
-                if (chave) {
-                  f.guardarFornecedor({ chave, nome: movimento.descricao.trim().slice(0, 40), categoria_id: categoriaId })
-                }
+                f.alocarMovimentos([...porCategoria].map(([categoria_id, ids]) => ({ ids, categoria_id })))
+                const regras = lote
+                  .filter(a => a.chave)
+                  .map(a => ({
+                    chave: a.chave!,
+                    nome: a.movimento.descricao.trim().slice(0, 40),
+                    categoria_id: a.categoriaId,
+                  }))
+                if (regras.length > 0 && !f.semFornecedores) f.guardarFornecedores(regras)
               }}
             />
           )}

@@ -39,23 +39,27 @@ export function EscolhaDeCategoria({ categorias, valor, aoEscolher, rotulo, vazi
   )
 }
 
+/** Uma linha arrumada, com as irmãs que vão com ela. */
+export interface Arrumacao {
+  movimento: Movimento
+  categoriaId: string
+  chave: string | null
+  irmas: Movimento[]
+}
+
 /**
  * O que ficou por alocar.
  *
- * Cada linha arruma-se aqui: escolhe-se a categoria e, se a chave ficar
- * marcada, a casa aprende — este fornecedor passa a arrumar-se sozinho,
- * neste extracto e nos próximos. Arrumar uma linha arruma logo as irmãs:
- * as três compras do Lidl saem juntas da lista.
+ * Escolhe-se a categoria de cada linha e arruma-se o lote de uma vez. Com
+ * a chave marcada a casa aprende: o fornecedor passa a arrumar-se sozinho
+ * nos próximos extractos, e as irmãs desta saem já com ela — as três
+ * compras do Lidl vão juntas sem se lhes tocar.
  */
 export function PorAlocar({ movimentos, categorias, aoAlocar }: {
   movimentos: Movimento[]
   categorias: Categoria[]
-  aoAlocar: (opcao: {
-    movimento: Movimento
-    categoriaId: string
-    chave: string | null
-    irmas: Movimento[]
-  }) => void
+  /** Vai sempre um lote, mesmo quando é de um só: arrumar é um gesto. */
+  aoAlocar: (lote: Arrumacao[]) => void
 }) {
   const soltos = useMemo(
     () => movimentos.filter(m => !m.categoria_id).sort((a, b) => b.data.localeCompare(a.data)),
@@ -75,18 +79,46 @@ export function PorAlocar({ movimentos, categorias, aoAlocar }: {
   const chaveDe = (m: Movimento) => chaves[m.id] ?? proporChave(m.descricao)
   const lembrarDe = (m: Movimento) => lembrar[m.id] ?? true
 
-  const arrumar = (m: Movimento) => {
-    const categoriaId = escolhas[m.id]
-    if (!categoriaId) return
-    const chave = lembrarDe(m) && chaveDe(m).length >= 2 ? chaveDe(m) : null
-    const irmas = chave
-      ? soltos.filter(s => s.id !== m.id && regraPara(s.descricao, [{ id: '', chave, nome: '', categoria_id: categoriaId }]))
-      : []
-    const guardar = () => aoAlocar({ movimento: m, categoriaId, chave, irmas })
+  const prontos = soltos.filter(m => escolhas[m.id])
+
+  /**
+   * O lote do que já tem categoria escolhida.
+   *
+   * Uma linha que arruma as suas irmãs tira-as da conta das seguintes: sem
+   * isto, escolher categoria em duas compras do mesmo Lidl mandava a
+   * mesma linha duas vezes, e a segunda ia para a categoria errada.
+   */
+  const fazerLote = (): Arrumacao[] => {
+    const feitos = new Set<string>()
+    const lote: Arrumacao[] = []
+    for (const m of prontos) {
+      if (feitos.has(m.id)) continue
+      const categoriaId = escolhas[m.id]
+      const chave = lembrarDe(m) && chaveDe(m).length >= 2 ? chaveDe(m) : null
+      const irmas = chave
+        ? soltos.filter(s => s.id !== m.id && !feitos.has(s.id)
+            && regraPara(s.descricao, [{ id: '', chave, nome: '', categoria_id: categoriaId }]))
+        : []
+      feitos.add(m.id)
+      for (const i of irmas) feitos.add(i.id)
+      lote.push({ movimento: m, categoriaId, chave, irmas })
+    }
+    return lote
+  }
+
+  const arrumarTudo = () => {
+    const lote = fazerLote()
+    if (lote.length === 0) return
+    const guardar = () => { aoAlocar(lote); definirEscolhas({}) }
     if (reduzido) { guardar(); return }
-    definirASair(a => ({ ...a, [m.id]: true, ...Object.fromEntries(irmas.map(i => [i.id, true])) }))
+    const saem: Record<string, boolean> = {}
+    for (const a of lote) { saem[a.movimento.id] = true; for (const i of a.irmas) saem[i.id] = true }
+    definirASair(x => ({ ...x, ...saem }))
     setTimeout(guardar, 260)
   }
+
+  /** Quantas linhas saem da lista, contando as irmãs que vão à boleia. */
+  const quantasSaem = fazerLote().reduce((n, a) => n + 1 + a.irmas.length, 0)
 
   return (
     <section className="modulo alocar com-cor" style={{ '--cor': 'var(--c-lista)' } as CSSProperties} aria-labelledby="alocar-titulo">
@@ -137,19 +169,28 @@ export function PorAlocar({ movimentos, categorias, aoAlocar }: {
               disabled={!lembrarDe(m)}
               maxLength={40}
             />
-            <button
-              type="button"
-              className="pilula alocar-arrumar"
-              disabled={!escolhas[m.id]}
-              onClick={() => arrumar(m)}
-            >
-              Arrumar
-            </button>
           </div>
         </div>
       ))}
       {soltos.length > 30 && (
         <p className="vazio">e mais {soltos.length - 30} — aparecem à medida que estes se arrumam.</p>
+      )}
+
+      {/* Um gesto para o lote inteiro, a flutuar sobre a lista enquanto ela
+          lhe passa por baixo: escolhe-se de cima a baixo e arruma-se uma
+          vez, em vez de carregar setenta e sete vezes no mesmo botão. Só
+          existe quando há alguma coisa para arrumar — uma barra parada a
+          meio de uma lista é uma divisória a fingir de acção. */}
+      {prontos.length > 0 && (
+        <div className="alocar-rodape">
+          <span className="total-nome">
+            {prontos.length === 1 ? '1 escolhida' : `${prontos.length} escolhidas`}
+            {quantasSaem > prontos.length && ` · mais ${quantasSaem - prontos.length} ${quantasSaem - prontos.length === 1 ? 'irmã' : 'irmãs'}`}
+          </span>
+          <button type="button" className="pilula alocar-arrumar" onClick={arrumarTudo}>
+            Arrumar {quantasSaem}
+          </button>
+        </div>
       )}
     </section>
   )

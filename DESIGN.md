@@ -745,6 +745,11 @@ the floor.
   stops being confirmed loses information, not decoration.
 - **Do** give a module exactly one opening gesture and make the whole surface the target.
 - **Do** write empty states as one sentence inside the module.
+- **Do** collect a repeated gesture into one. Where a list asks for the same press over and
+  over — filing seventy statement lines — the choices are made down the list and a single
+  floating action, rounded and shadowed so the list clearly passes beneath it, commits the
+  batch. It exists only while it has something to do; a bar parked in a list is a divider
+  pretending to be an action.
 - **Do** ask once, in the line, before a destructive bulk action: the button becomes
   "Apagar 12" beside a "deixar estar" and a plain sentence saying there is no way back. No
   modal — the task needs a second thought, not a protected screen.
