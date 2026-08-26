@@ -1169,6 +1169,78 @@
 .envelope-conta { color: var(--tinta-3); font-weight: 600; }
 .envelope-limite { width: calc(var(--u) * 12); padding: calc(var(--u) * 0.5) calc(var(--u) * 1); font-variant-numeric: tabular-nums; }
 .compromisso-atraso { color: var(--perigo); font-weight: 800; }
+
+/* ---------------- Finanças: o comprometido, por dentro ---------------- */
+/* A linha abre como um envelope: um gesto, a superfície toda — só o visto
+   de "pago" guarda o seu próprio alvo à esquerda. */
+.compromisso-abrir {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+  border-radius: calc(var(--u) * 1);
+}
+.compromisso-abrir:hover .fila-nome { color: var(--cor-texto); }
+.compromisso-novo { width: 100%; appearance: none; border: 0; background: none; cursor: pointer; text-align: start; }
+.compromisso-novo:hover .fila-nome { color: var(--tinta); }
+
+.compromisso-editor {
+  display: grid;
+  gap: calc(var(--u) * 1.5);
+  padding: calc(var(--u) * 1.5) 0 calc(var(--u) * 1);
+  animation: chegar 240ms var(--mola) both;
+}
+/* Os campos em duas colunas onde há largura, um por linha onde não há: o
+   nome e a categoria valem a linha inteira, quanto e o dia partilham-na. */
+.compromisso-campos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: calc(var(--u) * 1.5);
+}
+/* "Quanto" e "Dia do mês" partilham a linha em qualquer largura: são dois
+   campos curtos, e um por linha fazia o editor crescer um terço no
+   telemóvel sem ganhar nada. O nome, a categoria e o fornecedor é que
+   valem a linha inteira. */
+.compromisso-nome, .compromisso-categoria, .compromisso-fornecedor { grid-column: 1 / -1; }
+.compromisso-valor, .compromisso-dia { font-variant-numeric: tabular-nums; }
+.campo-opcional { font-weight: 600; color: var(--tinta-3); text-transform: none; letter-spacing: 0; }
+.compromisso-aviso { margin: 0; font-size: var(--t-etiqueta); font-weight: 700; color: var(--tinta-2); }
+.compromisso-accoes {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 1.5);
+  flex-wrap: wrap;
+}
+.compromisso-retirar { margin-inline-start: auto; }
+.compromisso-falta { font-size: var(--t-etiqueta); font-weight: 700; color: var(--tinta-3); width: 100%; }
+/* Os retirados vivem abaixo da linha do total, mais calados: estão fora do
+   mês e só ali para poderem voltar. */
+.compromisso-retirados {
+  margin: calc(var(--u) * 2) 0 0;
+  padding-top: calc(var(--u) * 1.5);
+  border-top: 1px solid var(--linha-d);
+  display: grid;
+  gap: calc(var(--u) * 1);
+  justify-items: start;
+}
+.compromisso-retirado {
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--u) * 1.5);
+  width: 100%;
+  color: var(--tinta-3);
+  font-size: var(--t-etiqueta);
+}
+.compromisso-retirado .fila-nome { font-size: var(--t-etiqueta); font-weight: 700; }
+.compromisso-retirado .fila-numero { font-size: var(--t-etiqueta); color: var(--tinta-3); }
 .movimento-cat { color: var(--cor-texto); font-weight: 800; }
 .movimento-mes { color: var(--c-financas); font-weight: 800; }
 .fila-numero[data-entrada] { color: var(--c-ementa); }

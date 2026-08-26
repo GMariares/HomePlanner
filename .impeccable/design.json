@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-26T22:00:00Z",
+  "generatedAt": "2026-08-26T23:00:00Z",
   "title": "Design System: HomePlanner",
   "extensions": {
     "colorMeta": {
@@ -737,6 +737,11 @@
         "name": "The Consequence Rule",
         "section": "components",
         "body": "Registering a gasto is not a number changing — the envelope takes the blow, and that visible consequence is the whole reward for having registered. The tile flashes its category hue, the total counts to its new figure, the ceiling line counts with it so the two numbers never contradict each other mid-flight, and the stretch of meter between where the bar was and where it landed lights up and settles. None of it ever fires on mount."
+      },
+      {
+        "name": "The Writable Number Rule",
+        "section": "components",
+        "body": "A block that feeds a number the interface judges you against must let you write that number. The committed-bills block supplies half of the month previsto, and for its first weeks it was read-only with no way to add a bill at all — and it vanished entirely when empty, so the door could never appear."
       }
     ],
     "dos": [
@@ -756,6 +761,7 @@
       "Do say what is missing when a number has no estimate behind it, and show no difference at all rather than a difference against zero.",
       "Do animate a number only when it changes while someone is watching. On mount every figure is already its final value.",
       "Do reduce movement rather than erase it under prefers-reduced-motion: spatial motion goes, colour, opacity and a meter settling at 120ms stay.",
+      "Do let the household write every number the interface judges them against, and keep the door visible when the block is empty — an empty state with no way in is a dead end.",
       "Do collect a repeated gesture into one. Where a list asks for the same press over and over — filing seventy statement lines — the choices are made down the list and a single floating action commits the batch. It exists only while it has something to do; a bar parked in a list is a divider pretending to be an action.",
       "Do ask once, in the line, before a destructive bulk action: the button becomes \"Apagar 12\" beside a \"deixar estar\" and a plain sentence saying there is no way back. No modal — the task needs a second thought, not a protected screen."
     ],

@@ -232,11 +232,16 @@ export function Financas({ casa }: { casa: Casa }) {
               />
               <Comprometido
                 compromissos={f.compromissos}
+                retirados={f.retirados}
                 pagamentos={f.pagamentos}
                 categorias={f.porCategoria}
+                categoriasVivas={f.categorias}
+                mes={mes}
                 comprometido={f.comprometido}
                 porPagar={f.porPagar}
                 aoPagar={pagar}
+                aoGuardar={f.guardarCompromisso}
+                aoRetirar={c => f.guardarCompromisso({ id: c.id, activo: false })}
               />
             </div>
           </div>

@@ -10,6 +10,7 @@ import { useContagem, useMudanca } from '../dominio/animar'
 import { useAdiar } from '../dominio/adiar'
 import { useRascunho } from '../dominio/rascunho'
 import { iconeDeCategoria } from './IconesFinancas'
+import { EscolhaDeCategoria } from './Alocar'
 
 /**
  * O tecto, editável no sítio onde se lê.
@@ -373,65 +374,263 @@ export function Envelopes({ envelopes, movimentos, raizDe, natureza = 'despesa',
 }
 
 /**
+ * O editor de um compromisso — o mesmo para o que nasce e para o que muda.
+ *
+ * Quatro coisas fazem um compromisso: o nome, quanto, em que dia do mês, e
+ * de que categoria é. O fornecedor é opcional e vive no fim, onde as
+ * coisas opcionais devem viver.
+ */
+function EditorDeCompromisso({ compromisso, categorias, dias, aoGuardar, aoFechar, aoRetirar }: {
+  compromisso: Compromisso | null
+  categorias: Categoria[]
+  /** Quantos dias tem o mês que se está a ver, para o dia não mentir. */
+  dias: number
+  aoGuardar: (c: Partial<Compromisso> & { id?: string }) => void
+  aoFechar: () => void
+  aoRetirar?: (c: Compromisso) => void
+}) {
+  const [nome, definirNome] = useState(compromisso?.nome ?? '')
+  const [valor, definirValor] = useState(
+    compromisso ? String(compromisso.valor_cents / 100).replace('.', ',') : '')
+  const [dia, definirDia] = useState(String(compromisso?.dia_do_mes ?? 1))
+  const [categoria, definirCategoria] = useState(compromisso?.categoria_id ?? '')
+  const [fornecedor, definirFornecedor] = useState(compromisso?.fornecedor ?? '')
+
+  const cents = lerCents(valor)
+  const numeroDoDia = Number(dia)
+  const diaValido = Number.isInteger(numeroDoDia) && numeroDoDia >= 1 && numeroDoDia <= 31
+  /* A renda "do dia 31" em Fevereiro não existe: diz-se o que acontece. */
+  const diaTardio = diaValido && numeroDoDia > dias
+  const nomeCurto = nome.trim().length < 2
+  const podeGuardar = !nomeCurto && cents !== null && cents > 0 && diaValido
+
+  const guardar = () => {
+    if (!podeGuardar) return
+    aoGuardar({
+      ...(compromisso ? { id: compromisso.id } : {}),
+      nome: nome.trim(),
+      valor_cents: Math.abs(cents!),
+      dia_do_mes: numeroDoDia,
+      categoria_id: categoria || null,
+      fornecedor: fornecedor.trim() || null,
+      activo: true,
+    })
+    aoFechar()
+  }
+
+  return (
+    <div className="compromisso-editor">
+      <div className="compromisso-campos">
+        <label className="campo compromisso-nome">
+          <span className="campo-nome">O que é</span>
+          <input className="campo-escrita" value={nome} autoFocus maxLength={60}
+            onChange={e => definirNome(e.target.value)}
+            placeholder="Renda, escola, seguro…" aria-label="O que é este compromisso" />
+        </label>
+        <label className="campo">
+          <span className="campo-nome">Quanto</span>
+          <input className="campo-escrita compromisso-valor" value={valor} inputMode="decimal" maxLength={12}
+            onChange={e => definirValor(e.target.value)} placeholder="0,00" aria-label="Quanto é todos os meses" />
+        </label>
+        <label className="campo">
+          <span className="campo-nome">Dia do mês</span>
+          <input className="campo-escrita compromisso-dia" value={dia} inputMode="numeric" maxLength={2}
+            onChange={e => definirDia(e.target.value.replace(/\D/g, ''))} aria-label="Em que dia do mês" />
+        </label>
+        <label className="campo compromisso-categoria">
+          <span className="campo-nome">Categoria</span>
+          <EscolhaDeCategoria categorias={categorias} valor={categoria}
+            aoEscolher={definirCategoria} rotulo="Categoria do compromisso" vazio="sem categoria" />
+        </label>
+        <label className="campo compromisso-fornecedor">
+          <span className="campo-nome">A quem se paga <span className="campo-opcional">se interessar</span></span>
+          <input className="campo-escrita" value={fornecedor} maxLength={40}
+            onChange={e => definirFornecedor(e.target.value)}
+            placeholder="Senhorio, NOS, Colégio…" aria-label="A quem se paga" />
+        </label>
+      </div>
+
+      {diaTardio && (
+        <p className="compromisso-aviso" role="status">
+          Este mês só tem {dias} dias: nos meses curtos conta-se no último.
+        </p>
+      )}
+
+      <div className="compromisso-accoes">
+        <button type="button" className="pilula" disabled={!podeGuardar} onClick={guardar}>
+          {compromisso ? 'Guardar' : 'Acrescentar'}
+        </button>
+        <button type="button" className="botao-texto" onClick={aoFechar}>deixar estar</button>
+        {compromisso && aoRetirar && (
+          <button type="button" className="botao-texto botao-texto--perigo compromisso-retirar"
+            onClick={() => { aoRetirar(compromisso); aoFechar() }}>
+            Retirar
+          </button>
+        )}
+        {!podeGuardar && (nome.trim() || valor) && (
+          <span className="compromisso-falta">
+            {nomeCurto ? 'falta o nome'
+              : cents === null || cents === 0 ? 'falta quanto é'
+              : !diaValido ? 'o dia é de 1 a 31'
+              : ''}
+          </span>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/**
  * O comprometido — fora dos envelopes de propósito.
  *
  * A renda não compete com o mercado, e o ritmo do mês só faz sentido sobre
- * o que ainda se pode decidir. Aqui só se vê o que já está prometido e o
- * que falta pagar.
+ * o que ainda se pode decidir. Aqui vê-se o que já está prometido, o que
+ * falta pagar, e é aqui que se acrescenta, se muda e se retira — o bloco
+ * alimenta o "previsto" da despesa, e um número que a casa não pode
+ * escrever é um número que a julga sem lhe dar a palavra.
  */
-export function Comprometido({ compromissos, pagamentos, categorias, comprometido, porPagar, aoPagar }: {
+export function Comprometido({ compromissos, retirados = [], pagamentos, categorias, categoriasVivas = [], mes, comprometido, porPagar, aoPagar, aoGuardar, aoRetirar }: {
   compromissos: Compromisso[]
+  retirados?: Compromisso[]
   pagamentos: Map<string, Movimento>
   categorias: Map<string, Categoria>
+  categoriasVivas?: Categoria[]
+  /** O mês que se está a ver, para saber o que está mesmo em atraso. */
+  mes?: string
   comprometido: number
   porPagar: number
   aoPagar: (c: Compromisso, pago: boolean) => void
+  aoGuardar?: (c: Partial<Compromisso> & { id?: string }) => void
+  aoRetirar?: (c: Compromisso) => void
 }) {
-  if (compromissos.length === 0) return null
-  const hoje = new Date().getDate()
+  const [aEditar, definirAEditar] = useState<string | null>(null)
+  const [aVerRetirados, definirAVerRetirados] = useState(false)
+  const podeMexer = Boolean(aoGuardar)
+
+  /* "Em atraso" só quer dizer alguma coisa no mês em que se está: a ver
+     Setembro em Agosto, o dia 8 ainda não chegou; a ver Julho, já passou
+     tudo. Com a data de hoje sozinha, um mês futuro abria em atraso. */
+  const agora = new Date()
+  const oMes = mes ? new Date(Number(mes.slice(0, 4)), Number(mes.slice(5, 7)) - 1, 1) : agora
+  const dias = new Date(oMes.getFullYear(), oMes.getMonth() + 1, 0).getDate()
+  const mesmoMes = oMes.getFullYear() === agora.getFullYear() && oMes.getMonth() === agora.getMonth()
+  const jaPassou = oMes < new Date(agora.getFullYear(), agora.getMonth(), 1)
+  const diaDeHoje = mesmoMes ? agora.getDate() : jaPassou ? 32 : 0
+
+  if (compromissos.length === 0 && !podeMexer) return null
 
   return (
     <section className="modulo" aria-labelledby="comprometido-titulo">
       <header className="dia-cabeca">
         <h3 id="comprometido-titulo" className="dia-nome">Já prometido</h3>
         <span className="dia-data modulo-numero">
-          {porPagar === 0 ? 'está tudo pago' : `${escreverEuros(porPagar)} por pagar`}
+          {compromissos.length === 0 ? 'ainda nada'
+            : porPagar === 0 ? 'está tudo pago' : `${escreverEuros(porPagar)} por pagar`}
         </span>
       </header>
 
-      {compromissos
-        .slice()
-        .sort((a, b) => a.dia_do_mes - b.dia_do_mes)
-        .map(c => {
-          const pago = pagamentos.get(c.id)
-          const atrasado = !pago && c.dia_do_mes < hoje
-          const cor = c.categoria_id ? categorias.get(c.categoria_id)?.cor : undefined
-          return (
-            <div className="fila com-cor" key={c.id} style={{ '--cor': cor ?? 'var(--c-financas)' } as CSSProperties}
+      {compromissos.length === 0 && (
+        <p className="vazio">
+          A renda, a escola, os seguros — o que chega todos os meses na mesma data.
+          Fica fora dos envelopes de propósito, e é o que o previsto da despesa
+          soma aos tectos.
+        </p>
+      )}
+
+      {compromissos.map(c => {
+        const pago = pagamentos.get(c.id)
+        const atrasado = !pago && Math.min(c.dia_do_mes, dias) < diaDeHoje
+        const cor = c.categoria_id ? categorias.get(c.categoria_id)?.cor : undefined
+        const aberto = aEditar === c.id
+        return (
+          <div key={c.id}>
+            <div className="fila com-cor" style={{ '--cor': cor ?? 'var(--c-financas)' } as CSSProperties}
               data-feita={pago ? true : undefined}>
               <Visto
                 feita={Boolean(pago)}
                 aoAlternar={() => aoPagar(c, !pago)}
                 rotulo={`Marcar ${c.nome} como pago`}
               />
-              <span className="fila-corpo">
-                <span className="fila-nome">{c.nome}</span>
-                <span className="fila-meta">
-                  <span>dia {c.dia_do_mes}</span>
-                  {c.fornecedor && <span>{c.fornecedor}</span>}
-                  {atrasado && <span className="compromisso-atraso">em atraso</span>}
+              {podeMexer ? (
+                <button type="button" className="compromisso-abrir" aria-expanded={aberto}
+                  onClick={() => definirAEditar(a => (a === c.id ? null : c.id))}>
+                  <span className="fila-nome">{c.nome}</span>
+                  <span className="fila-meta">
+                    <span>dia {c.dia_do_mes > dias ? `${c.dia_do_mes} — este mês, dia ${dias}` : c.dia_do_mes}</span>
+                    {c.fornecedor && <span>{c.fornecedor}</span>}
+                    {atrasado && <span className="compromisso-atraso">em atraso</span>}
+                  </span>
+                </button>
+              ) : (
+                <span className="fila-corpo">
+                  <span className="fila-nome">{c.nome}</span>
+                  <span className="fila-meta">
+                    <span>dia {c.dia_do_mes}</span>
+                    {c.fornecedor && <span>{c.fornecedor}</span>}
+                    {atrasado && <span className="compromisso-atraso">em atraso</span>}
+                  </span>
                 </span>
-              </span>
+              )}
               <span className="fila-numero">{escreverEuros(c.valor_cents)}</span>
             </div>
-          )
-        })}
+            {aberto && aoGuardar && (
+              <EditorDeCompromisso
+                compromisso={c}
+                categorias={categoriasVivas}
+                dias={dias}
+                aoGuardar={aoGuardar}
+                aoFechar={() => definirAEditar(null)}
+                aoRetirar={aoRetirar}
+              />
+            )}
+          </div>
+        )
+      })}
 
-      <p className="total-fila">
-        <span className="total-nome">Todos os meses</span>
-        <strong className="total-valor">{escreverEuros(comprometido)}</strong>
-        <span className="total-nota">fora dos envelopes: não entra no passo do mês</span>
-      </p>
+      {podeMexer && (aEditar === 'novo' ? (
+        <EditorDeCompromisso
+          compromisso={null}
+          categorias={categoriasVivas}
+          dias={dias}
+          aoGuardar={aoGuardar!}
+          aoFechar={() => definirAEditar(null)}
+        />
+      ) : (
+        <button type="button" className="fila fila--branca compromisso-novo"
+          onClick={() => definirAEditar('novo')}>
+          <span className="fila-mais" aria-hidden="true"><IMais lado={16} /></span>
+          <span className="fila-corpo"><span className="fila-nome">acrescentar um compromisso…</span></span>
+        </button>
+      ))}
+
+      {compromissos.length > 0 && (
+        <p className="total-fila">
+          <span className="total-nome">Todos os meses</span>
+          <strong className="total-valor">{escreverEuros(comprometido)}</strong>
+          <span className="total-nota">fora dos envelopes: não entra no passo do mês</span>
+        </p>
+      )}
+
+      {/* Retirar tem de ter volta: um seguro que se cancelou e afinal ficou,
+          ou um dedo enganado, não podem custar reescrever a linha. */}
+      {podeMexer && retirados.length > 0 && (
+        <p className="compromisso-retirados">
+          <button type="button" className="botao-texto" onClick={() => definirAVerRetirados(v => !v)}>
+            {aVerRetirados ? 'esconder os retirados'
+              : retirados.length === 1 ? 'ver 1 retirado' : `ver ${retirados.length} retirados`}
+          </button>
+          {aVerRetirados && retirados.map(c => (
+            <span className="compromisso-retirado" key={c.id}>
+              <span className="fila-nome">{c.nome}</span>
+              <span className="fila-numero">{escreverEuros(c.valor_cents)}</span>
+              <button type="button" className="botao-texto"
+                onClick={() => aoGuardar!({ id: c.id, activo: true })}>
+                repor
+              </button>
+            </span>
+          ))}
+        </p>
+      )}
     </section>
   )
 }

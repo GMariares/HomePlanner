@@ -683,6 +683,29 @@ missing — *sem tecto posto* — and drops the difference line entirely rather 
 a difference against zero. A red verdict a household did nothing to earn is the fastest
 way to teach it to stop reading verdicts.
 
+### O Comprometido (signature)
+
+What arrives every month on the same date — rent, school, insurance — kept out of the
+envelopes on purpose, so the month's pace measures only what can still be decided. Each
+row is a check to mark it paid, the name with its day and payee, and the amount; the row
+opens into the same editor that creates a new one, because a thing and the form that makes
+it should not be two different drawings.
+
+**The Writable Number Rule.** A block that feeds a number the interface judges you against
+must let you write that number. This one supplies half of the month's *previsto*, and for
+its first weeks it was read-only with no way to add a bill at all — the app graded a
+household on data it gave them no door to enter, and the block vanished entirely when
+empty, so the door could never appear.
+
+**Retire, don't delete, what history points at.** Past movements link to a compromisso, so
+cancelling one sets it inactive rather than removing it: it leaves the month, the movements
+keep their thread, and a quiet list under the total brings it back. An action with no way
+back is not a decision, it is a trap.
+
+Days are read against the month being viewed, never against today: a bill due on the 8th of
+next month is not overdue, and a day 31 in February says so in the line — *dia 31 — este
+mês, dia 28*.
+
 ### The Dobra
 
 A module that opens, for the things consulted rather than asked: the month's book, the
@@ -745,6 +768,8 @@ the floor.
   stops being confirmed loses information, not decoration.
 - **Do** give a module exactly one opening gesture and make the whole surface the target.
 - **Do** write empty states as one sentence inside the module.
+- **Do** let the household write every number the interface judges them against, and keep
+  the door visible when the block is empty — an empty state with no way in is a dead end.
 - **Do** collect a repeated gesture into one. Where a list asks for the same press over and
   over — filing seventy statement lines — the choices are made down the list and a single
   floating action, rounded and shadowed so the list clearly passes beneath it, commits the

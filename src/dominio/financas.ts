@@ -195,7 +195,7 @@ export function useFinancas(casaId: string | null, mes: string) {
     if (!casaId) return
     const [cats, comps, movs, orcs, forns] = await Promise.all([
       supabase.from('categorias').select('*').eq('casa_id', casaId).order('ordem'),
-      supabase.from('compromissos').select('*').eq('casa_id', casaId).eq('activo', true),
+      supabase.from('compromissos').select('*').eq('casa_id', casaId),
       supabase.from('movimentos').select('*').eq('casa_id', casaId).eq('mes_conta', mes),
       supabase.from('orcamentos').select('categoria_id, limite_cents').eq('casa_id', casaId).eq('mes', mes),
       supabase.from('fornecedores').select('*').eq('casa_id', casaId).order('chave'),
@@ -304,14 +304,23 @@ export function useFinancas(casaId: string | null, mes: string) {
     return mapa
   }, [movimentos])
 
-  const comprometido = useMemo(
-    () => compromissos.reduce((s, c) => s + c.valor_cents, 0),
+  /* Um compromisso retirado não se apaga: os movimentos dos meses passados
+     apontam para ele, e o histórico não se deita fora para se cancelar uma
+     assinatura. Sai da lista viva e fica a poder voltar. */
+  const activos = useMemo(
+    () => compromissos.filter(c => c.activo).sort((a, b) => a.dia_do_mes - b.dia_do_mes),
     [compromissos],
+  )
+  const retirados = useMemo(() => compromissos.filter(c => !c.activo), [compromissos])
+
+  const comprometido = useMemo(
+    () => activos.reduce((s, c) => s + c.valor_cents, 0),
+    [activos],
   )
 
   const porPagar = useMemo(
-    () => compromissos.filter(c => !pagamentos.has(c.id)).reduce((s, c) => s + c.valor_cents, 0),
-    [compromissos, pagamentos],
+    () => activos.filter(c => !pagamentos.has(c.id)).reduce((s, c) => s + c.valor_cents, 0),
+    [activos, pagamentos],
   )
 
   /**
@@ -458,7 +467,7 @@ export function useFinancas(casaId: string | null, mes: string) {
 
   return {
     estado, falhou, limparFalha: () => definirFalhou(false), recarregar: buscar,
-    categorias, compromissos, movimentos, envelopes, entradas, ritmo, entrou, resumo,
+    categorias, compromissos: activos, retirados, movimentos, envelopes, entradas, ritmo, entrou, resumo,
     comprometido, porPagar, pagamentos, orcamentoTotal, limiteDe, porCategoria,
     raizDe, fornecedores, semFornecedores,
     registar, alterarMovimento, apagarMovimento, apagarMovimentos, alocarMovimentos,
